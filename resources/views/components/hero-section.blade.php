@@ -1,35 +1,27 @@
 <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
     <!-- Background Video -->
     <div class="absolute inset-0 z-0">
-        <video autoplay muted loop class="w-full h-full object-cover">
-            <source src="{{ asset('videos/hero-bg.mp4') }}" type="video/mp4">
-        </video>
-        <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/70 via-blue-900/50 to-charcoal-grey/60"></div>
+        <img src="{{ asset('images/hero-bg.png') }}" alt="Latar belakang Begawi.id" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-br from-black/70 via-charcoal-grey/70 to-black/60"></div>
     </div>
     
     <!-- Animated Background Elements -->
     <div class="absolute inset-0 z-10">
         <div class="absolute top-20 left-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl animate-float"></div>
-        <div class="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-float" style="animation-delay: -1s;"></div>
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-emerald-500/5 to-blue-500/5 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-20 right-10 w-96 h-96 bg-emerald-400/10 rounded-full blur-3xl animate-float" style="animation-delay: -1s;"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-emerald-500/5 to-emerald-400/5 rounded-full blur-3xl animate-pulse"></div>
     </div>
     
     <!-- Content -->
-    <div class="relative z-20 container mx-auto px-4 text-center">
+    <div class="relative z-20 container mx-auto px-4 text-center pt-24 md:pt-32">
         <div class="max-w-4xl mx-auto">
-            <!-- Badge -->
-            <div class="inline-flex items-center px-4 py-2 glassmorphism rounded-full text-white mb-6 animate-fadeInUp">
-                <span class="w-2 h-2 bg-emerald-400 rounded-full mr-2 animate-pulse"></span>
-                <span class="text-sm font-medium">Platform Digital Terdepan untuk Desa & UMKM</span>
-            </div>
             
             <!-- Main Heading -->
             <h1 class="font-manrope font-extrabold text-4xl md:text-6xl lg:text-7xl text-white mb-6 animate-fadeInUp" style="animation-delay: 0.2s;">
                 Digitalisasi Desa dan UMKM.
-                <span class="text-gradient bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+                <span class="text-white">
                     Mulai dari Begawi.id
                 </span>
-                <span class="text-4xl">🌾</span>
             </h1>
             
             <!-- Subheading -->
@@ -72,7 +64,7 @@
     </div>
     
     <div class="absolute bottom-20 right-20 z-20 animate-float" style="animation-delay: -0.5s;">
-        <div class="w-20 h-20 glassmorphism rounded-full flex items-center justify-center text-blue-400">
+        <div class="w-20 h-20 glassmorphism rounded-full flex items-center justify-center text-emerald-300">
             <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9"></path>
             </svg>

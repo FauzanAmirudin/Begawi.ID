@@ -37,7 +37,7 @@
                         <div class="text-sm text-gray-600">Video</div>
                     </div>
                     <div class="bg-white rounded-xl px-4 py-3 shadow-lg">
-                        <div class="text-2xl font-bold text-blue-600">25+</div>
+                        <div class="text-2xl font-bold text-emerald-600">25+</div>
                         <div class="text-sm text-gray-600">Webinar</div>
                     </div>
                     <div class="bg-white rounded-xl px-4 py-3 shadow-lg">
@@ -120,18 +120,18 @@
                 </div>
                 
                 <!-- Learning Path 2 -->
-                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 border border-blue-200 hover:shadow-xl transition-all hover-tilt">
+                <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl p-8 border border-emerald-200 hover:shadow-xl transition-all hover-tilt">
                     <div class="text-center mb-6">
-                        <div class="w-20 h-20 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <div class="w-20 h-20 bg-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                             <span class="text-3xl text-white">⚡</span>
                         </div>
                         <h3 class="font-poppins font-bold text-2xl text-charcoal-grey mb-2">Menengah</h3>
-                        <p class="text-blue-700 font-semibold">Tingkatkan Skill</p>
+                        <p class="text-emerald-700 font-semibold">Tingkatkan Skill</p>
                     </div>
                     
                     <div class="space-y-4 mb-8">
                         <div class="flex items-center">
-                            <div class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center mr-3">
+                            <div class="w-6 h-6 bg-emerald-600 rounded-full flex items-center justify-center mr-3">
                                 <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
@@ -139,7 +139,7 @@
                             <span class="text-gray-700">Kustomisasi Lanjutan</span>
                         </div>
                         <div class="flex items-center">
-                            <div class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center mr-3">
+                            <div class="w-6 h-6 bg-emerald-600 rounded-full flex items-center justify-center mr-3">
                                 <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
@@ -147,7 +147,7 @@
                             <span class="text-gray-700">SEO & Optimisasi</span>
                         </div>
                         <div class="flex items-center">
-                            <div class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center mr-3">
+                            <div class="w-6 h-6 bg-emerald-600 rounded-full flex items-center justify-center mr-3">
                                 <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
@@ -168,7 +168,7 @@
                         <div class="text-sm text-gray-600 mb-4">
                             <span class="font-semibold">12 Tutorial</span> • <span class="font-semibold">4 jam</span>
                         </div>
-                        <a href="{{ route('education.category', 'menengah') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all">
+                        <a href="{{ route('education.category', 'menengah') }}" class="inline-flex items-center px-6 py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition-all">
                             <span class="mr-2">📈</span>
                             Mulai Belajar
                         </a>
@@ -415,7 +415,7 @@
             
             <div class="max-w-4xl mx-auto space-y-6">
                 <!-- Webinar Item 1 -->
-                <div class="bg-gradient-to-r from-emerald-50 to-blue-50 rounded-2xl p-8 border border-emerald-200">
+                <div class="bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-2xl p-8 border border-emerald-200">
                     <div class="flex flex-col md:flex-row items-center">
                         <div class="md:w-2/3 mb-6 md:mb-0 md:pr-8">
                             <div class="flex items-center mb-4">
@@ -462,12 +462,12 @@
                 </div>
                 
                 <!-- Webinar Item 2 -->
-                <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 border border-blue-200">
+                <div class="bg-gradient-to-r from-emerald-50 to-purple-50 rounded-2xl p-8 border border-emerald-200">
                     <div class="flex flex-col md:flex-row items-center">
                         <div class="md:w-2/3 mb-6 md:mb-0 md:pr-8">
                             <div class="flex items-center mb-4">
-                                <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full mr-3">WEBINAR</span>
-                                <span class="text-blue-600 font-semibold text-sm">28 Desember 2024 • 14:00 WIB</span>
+                                <span class="bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full mr-3">WEBINAR</span>
+                                <span class="text-emerald-600 font-semibold text-sm">28 Desember 2024 • 14:00 WIB</span>
                             </div>
                             <h3 class="font-poppins font-bold text-2xl text-charcoal-grey mb-3">
                                 Membangun Website Desa yang Efektif
@@ -499,7 +499,7 @@
                         <div class="md:w-1/3 text-center">
                             <div class="bg-white rounded-2xl p-6 shadow-lg">
                                 <div class="text-4xl mb-4">🌾</div>
-                                <button class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl hover:bg-blue-700 transition-all mb-3">
+                                <button class="w-full bg-emerald-600 text-white font-semibold py-3 px-6 rounded-xl hover:bg-emerald-700 transition-all mb-3">
                                     Daftar Gratis
                                 </button>
                                 <p class="text-xs text-gray-500">Sisa 11 kursi tersedia</p>

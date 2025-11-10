@@ -5,7 +5,7 @@
 
 @section('content')
     <!-- Header Section -->
-    <section class="pt-24 pb-12 bg-gradient-to-br from-emerald-50 to-blue-50">
+    <section class="pt-24 pb-12 bg-gradient-to-br from-emerald-50 to-emerald-100">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto text-center">
                 <h1 class="font-manrope font-extrabold text-4xl md:text-6xl text-charcoal-grey mb-6">
@@ -33,7 +33,7 @@
                         <div class="text-sm text-gray-600">Template Tersedia</div>
                     </div>
                     <div class="bg-white rounded-xl px-6 py-4 shadow-lg">
-                        <div class="text-2xl font-bold text-blue-600">100%</div>
+                        <div class="text-2xl font-bold text-emerald-600">100%</div>
                         <div class="text-sm text-gray-600">Responsive</div>
                     </div>
                     <div class="bg-white rounded-xl px-6 py-4 shadow-lg">

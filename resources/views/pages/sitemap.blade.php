@@ -4,7 +4,7 @@
 @section('description', 'Peta situs Begawi.id. Temukan semua halaman dan fitur yang tersedia.')
 
 @section('content')
-    <section class="pt-24 pb-12 bg-gradient-to-br from-blue-50 to-emerald-50">
+    <section class="pt-24 pb-12 bg-gradient-to-br from-emerald-50 to-emerald-100">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto text-center">
                 <h1 class="font-manrope font-extrabold text-4xl md:text-5xl text-charcoal-grey mb-6">

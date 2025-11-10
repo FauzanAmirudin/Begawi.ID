@@ -1,7 +1,7 @@
 <section class="py-20 bg-white relative overflow-hidden">
     <!-- Background Pattern -->
     <div class="absolute inset-0 opacity-5">
-        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 25px 25px, #2ECC71 2px, transparent 0), radial-gradient(circle at 75px 75px, #007AFF 2px, transparent 0); background-size: 100px 100px;"></div>
+        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 25px 25px, #2ECC71 2px, transparent 0), radial-gradient(circle at 75px 75px, #34D399 2px, transparent 0); background-size: 100px 100px;"></div>
     </div>
     
     <div class="container mx-auto px-4 relative z-10">
@@ -44,8 +44,8 @@
             
             <!-- Quick Action 2 -->
             <div class="quick-action-card group">
-                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 text-center hover-tilt hover-glow transition-all duration-300 border border-blue-200">
-                    <div class="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl p-8 text-center hover-tilt hover-glow transition-all duration-300 border border-emerald-200">
+                    <div class="w-20 h-20 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
                         <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                         </svg>
@@ -56,13 +56,13 @@
                     <p class="text-gray-600 mb-6 leading-relaxed">
                         Lihat koleksi template khusus desa, UMKM, dan komunitas
                     </p>
-                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all group-hover:shadow-lg">
+                    <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-xl transition-all group-hover:shadow-lg">
                         <span class="flex items-center justify-center">
                             <span class="mr-2">👁️</span>
                             Lihat Template
                         </span>
                     </button>
-                    <div class="mt-4 text-sm text-blue-600 font-medium">
+                    <div class="mt-4 text-sm text-emerald-600 font-medium">
                         🎨 50+ Template Siap Pakai
                     </div>
                 </div>
@@ -146,7 +146,7 @@
                 
                 <!-- Step 2 -->
                 <div class="text-center relative">
-                    <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">2</div>
+                    <div class="w-16 h-16 bg-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">2</div>
                     <h4 class="font-semibold text-lg mb-2">Isi Konten</h4>
                     <p class="text-gray-600 text-sm">Tambahkan teks, gambar, dan informasi</p>
                     <!-- Arrow -->

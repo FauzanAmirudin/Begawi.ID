@@ -9,14 +9,14 @@
         <!-- Background Elements -->
         <div class="absolute inset-0">
             <div class="absolute top-0 left-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-float"></div>
-            <div class="absolute bottom-0 right-0 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-float" style="animation-delay: -2s;"></div>
+            <div class="absolute bottom-0 right-0 w-72 h-72 bg-emerald-400/10 rounded-full blur-3xl animate-float" style="animation-delay: -2s;"></div>
         </div>
         
         <div class="container mx-auto px-4 relative z-10">
             <div class="max-w-4xl mx-auto text-center">
                 <h1 class="font-manrope font-extrabold text-4xl md:text-6xl mb-6">
                     Membangun Indonesia Digital
-                    <span class="text-gradient bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+                    <span class="text-gradient bg-gradient-to-r from-emerald-500 to-emerald-300 bg-clip-text text-transparent">
                         dari Akar Rumput
                     </span>
                 </h1>
@@ -31,7 +31,7 @@
                         <div class="text-sm text-gray-400">Tahun Berdiri</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-3xl font-bold text-blue-400 mb-2">1,250+</div>
+                        <div class="text-3xl font-bold text-emerald-400 mb-2">1,250+</div>
                         <div class="text-sm text-gray-400">Desa Aktif</div>
                     </div>
                     <div class="text-center">
@@ -108,7 +108,7 @@
                         <div class="absolute -top-6 -right-6 w-24 h-24 bg-emerald-600 rounded-2xl flex items-center justify-center text-white text-2xl animate-float">
                             🚀
                         </div>
-                        <div class="absolute -bottom-6 -left-6 w-20 h-20 bg-blue-600 rounded-xl flex items-center justify-center text-white text-xl animate-float" style="animation-delay: -1s;">
+                        <div class="absolute -bottom-6 -left-6 w-20 h-20 bg-emerald-600 rounded-xl flex items-center justify-center text-white text-xl animate-float" style="animation-delay: -1s;">
                             💡
                         </div>
                     </div>
@@ -134,7 +134,7 @@
             <div class="max-w-4xl mx-auto">
                 <div class="relative">
                     <!-- Timeline Line -->
-                    <div class="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-emerald-400 to-blue-400 rounded-full"></div>
+                    <div class="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-emerald-500 to-emerald-300 rounded-full"></div>
                     
                     <!-- Timeline Items -->
                     <div class="space-y-12">
@@ -156,10 +156,10 @@
                         <!-- Item 2 -->
                         <div class="flex items-center">
                             <div class="w-1/2 pr-8"></div>
-                            <div class="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-blue-500 rounded-full border-4 border-white shadow-lg z-10"></div>
+                            <div class="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-emerald-500 rounded-full border-4 border-white shadow-lg z-10"></div>
                             <div class="w-1/2 pl-8">
                                 <div class="bg-white rounded-xl p-6 shadow-lg">
-                                    <div class="text-blue-600 font-bold text-sm mb-2">2024 - PENGEMBANGAN</div>
+                                    <div class="text-emerald-600 font-bold text-sm mb-2">2024 - PENGEMBANGAN</div>
                                     <h3 class="font-poppins font-bold text-lg mb-3">Membangun Solusi</h3>
                                     <p class="text-gray-600 text-sm">
                                         Mengembangkan platform dengan fokus pada kemudahan penggunaan dan kebutuhan spesifik Indonesia.
@@ -233,7 +233,7 @@
                         10+ tahun pengalaman dalam teknologi dan pemberdayaan masyarakat. Alumni ITB dengan passion untuk Indonesia digital.
                     </p>
                     <div class="flex justify-center space-x-3">
-                        <a href="#" class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition-all">
+                        <a href="#" class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                             </svg>
@@ -250,19 +250,19 @@
                 <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all hover-tilt text-center">
                     <div class="relative mb-6">
                         <img src="{{ asset('images/team/cto.jpg') }}" alt="CTO" class="w-24 h-24 rounded-full mx-auto object-cover">
-                        <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                        <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-emerald-600 rounded-full flex items-center justify-center">
                             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
                             </svg>
                         </div>
                     </div>
                     <h3 class="font-poppins font-bold text-xl text-charcoal-grey mb-2">Sari Indrawati</h3>
-                    <p class="text-blue-600 font-semibold mb-4">CTO & Co-Founder</p>
+                    <p class="text-emerald-600 font-semibold mb-4">CTO & Co-Founder</p>
                     <p class="text-gray-600 text-sm mb-6 leading-relaxed">
                         Expert dalam pengembangan platform scalable. Berpengalaman membangun sistem untuk jutaan pengguna.
                     </p>
                     <div class="flex justify-center space-x-3">
-                        <a href="#" class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition-all">
+                        <a href="#" class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                             </svg>
@@ -291,7 +291,7 @@
                         Ahli dalam community building dan digital marketing. Fokus pada pengembangan ekosistem pengguna.
                     </p>
                     <div class="flex justify-center space-x-3">
-                        <a href="#" class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition-all">
+                        <a href="#" class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                             </svg>
@@ -308,7 +308,7 @@
     </section>
     
     <!-- Values Section -->
-    <section class="py-20 bg-gradient-to-br from-emerald-50 to-blue-50">
+    <section class="py-20 bg-gradient-to-br from-emerald-50 to-emerald-100">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
                 <h2 class="font-manrope font-extrabold text-3xl md:text-4xl text-charcoal-grey mb-6">
@@ -334,7 +334,7 @@
                 
                 <!-- Value 2 -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all hover-tilt text-center">
-                    <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
                         <span class="text-2xl">💎</span>
                     </div>
                     <h3 class="font-poppins font-bold text-xl text-charcoal-grey mb-4">Kualitas</h3>
@@ -396,7 +396,7 @@
             <div class="max-w-3xl mx-auto text-center">
                 <h2 class="font-manrope font-extrabold text-3xl md:text-4xl text-white mb-6">
                     Bergabunglah dalam Misi
-                    <span class="text-gradient bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+                    <span class="text-gradient bg-gradient-to-r from-emerald-500 to-emerald-300 bg-clip-text text-transparent">
                         Indonesia Digital
                     </span>
                 </h2>

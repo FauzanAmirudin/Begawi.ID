@@ -5,7 +5,7 @@
 
 @section('content')
     <!-- Header Section -->
-    <section class="pt-24 pb-12 bg-gradient-to-br from-blue-50 to-emerald-50">
+    <section class="pt-24 pb-12 bg-gradient-to-br from-emerald-50 to-emerald-100">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto text-center">
                 <h1 class="font-manrope font-extrabold text-4xl md:text-6xl text-charcoal-grey mb-6">
@@ -20,12 +20,12 @@
                 <div class="max-w-3xl mx-auto">
                     <div class="flex flex-col md:flex-row gap-4">
                         <div class="flex-1 relative">
-                            <input type="text" id="directorySearch" placeholder="Cari desa, UMKM, atau produk..." class="w-full px-6 py-4 pl-12 bg-white border border-gray-300 rounded-2xl text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-lg">
+                            <input type="text" id="directorySearch" placeholder="Cari desa, UMKM, atau produk..." class="w-full px-6 py-4 pl-12 bg-white border border-gray-300 rounded-2xl text-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent shadow-lg">
                             <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
-                        <select class="px-6 py-4 bg-white border border-gray-300 rounded-2xl text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg">
+                        <select class="px-6 py-4 bg-white border border-gray-300 rounded-2xl text-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-lg">
                             <option>Semua Provinsi</option>
                             <option>DKI Jakarta</option>
                             <option>Jawa Barat</option>
@@ -53,7 +53,7 @@
             </div>
             
             <!-- Indonesia Map -->
-            <div class="bg-gradient-to-br from-blue-50 to-emerald-50 rounded-3xl p-8 shadow-lg">
+            <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-3xl p-8 shadow-lg">
                 <div id="indonesiaMap" class="w-full h-96 bg-white rounded-2xl shadow-inner flex items-center justify-center">
                     <!-- Placeholder for interactive map -->
                     <div class="text-center">
@@ -72,7 +72,7 @@
                         <div class="text-sm text-gray-600">Desa Aktif</div>
                     </div>
                     <div class="text-center p-4 bg-white rounded-xl shadow">
-                        <div class="text-2xl font-bold text-blue-600">3,420</div>
+                        <div class="text-2xl font-bold text-emerald-600">3,420</div>
                         <div class="text-sm text-gray-600">UMKM Aktif</div>
                     </div>
                     <div class="text-center p-4 bg-white rounded-xl shadow">
@@ -122,16 +122,16 @@
                 <!-- UMKM Category -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all hover-tilt">
                     <div class="text-center">
-                        <div class="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <div class="w-20 h-20 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
                             <span class="text-3xl">🛍️</span>
                         </div>
                         <h3 class="font-poppins font-bold text-2xl text-charcoal-grey mb-4">UMKM Digital</h3>
                         <p class="text-gray-600 mb-6 leading-relaxed">
                             Toko online dan bisnis UMKM yang telah go digital
                         </p>
-                        <div class="text-3xl font-bold text-blue-600 mb-2">3,420</div>
+                        <div class="text-3xl font-bold text-emerald-600 mb-2">3,420</div>
                         <div class="text-sm text-gray-500 mb-6">UMKM Aktif</div>
-                        <a href="{{ route('directory.type', 'umkm') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all">
+                        <a href="{{ route('directory.type', 'umkm') }}" class="inline-flex items-center px-6 py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition-all">
                             Jelajahi UMKM
                             <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
@@ -217,7 +217,7 @@
                     <div class="relative">
                         <img src="{{ asset('images/directory/batik-nusantara.jpg') }}" alt="Batik Nusantara" class="w-full h-48 object-cover">
                         <div class="absolute top-4 left-4">
-                            <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">UMKM</span>
+                            <span class="bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full">UMKM</span>
                         </div>
                         <div class="absolute top-4 right-4">
                             <span class="bg-yellow-500 text-white text-xs font-bold px-3 py-1 rounded-full">⭐ FEATURED</span>
@@ -240,7 +240,7 @@
                                 150+ produk
                             </span>
                         </div>
-                        <a href="#" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all">
+                        <a href="#" class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition-all">
                             Belanja Sekarang
                             <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
@@ -290,7 +290,7 @@
     </section>
     
     <!-- Join Directory CTA -->
-    <section class="py-16 bg-gradient-to-br from-emerald-600 to-blue-600">
+    <section class="py-16 bg-gradient-to-br from-emerald-600 to-emerald-500">
         <div class="container mx-auto px-4">
             <div class="max-w-3xl mx-auto text-center">
                 <h2 class="font-manrope font-extrabold text-3xl md:text-4xl text-white mb-6">

@@ -89,13 +89,13 @@
                                 <button class="flex-1 bg-white/20 backdrop-blur-sm text-white font-medium py-2 px-4 rounded-lg hover:bg-white/30 transition-all">
                                     👁️ Preview
                                 </button>
-                                <button class="flex-1 bg-blue-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-blue-700 transition-all">
+                                <button class="flex-1 bg-emerald-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-emerald-700 transition-all">
                                     🚀 Pakai
                                 </button>
                             </div>
                         </div>
                         <div class="absolute top-4 left-4">
-                            <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">🛍️ UMKM</span>
+                            <span class="bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full">🛍️ UMKM</span>
                         </div>
                         <div class="absolute top-4 right-4">
                             <span class="bg-orange-500 text-white text-xs font-medium px-2 py-1 rounded-full">PREMIUM</span>

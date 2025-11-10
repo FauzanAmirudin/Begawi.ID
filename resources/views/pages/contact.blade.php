@@ -5,10 +5,10 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="pt-24 pb-12 bg-gradient-to-br from-blue-50 to-emerald-50 relative overflow-hidden">
+    <section class="pt-24 pb-12 bg-gradient-to-br from-emerald-50 to-emerald-100 relative overflow-hidden">
         <!-- Background Elements -->
         <div class="absolute inset-0">
-            <div class="absolute top-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-float"></div>
+            <div class="absolute top-0 left-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-float"></div>
             <div class="absolute bottom-0 right-0 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl animate-float" style="animation-delay: -2s;"></div>
         </div>
         
@@ -26,7 +26,7 @@
     </section>
     
     <!-- Contact Form Section -->
-    <section class="py-20 bg-gradient-to-br from-blue-50 via-white to-emerald-50">
+    <section class="py-20 bg-gradient-to-br from-emerald-50 via-white to-emerald-100">
         <div class="container mx-auto px-4">
             <div class="max-w-6xl mx-auto">
                 <div class="text-center mb-16">
@@ -56,7 +56,7 @@
                                         id="name" 
                                         name="name" 
                                         required
-                                        class="w-full px-4 py-3 pl-12 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        class="w-full px-4 py-3 pl-12 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
                                         placeholder="Masukkan nama Anda"
                                     >
                                     <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-xl" id="nameEmoji">👤</span>
@@ -76,7 +76,7 @@
                                         id="email" 
                                         name="email" 
                                         required
-                                        class="w-full px-4 py-3 pl-12 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        class="w-full px-4 py-3 pl-12 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
                                         placeholder="nama@email.com"
                                     >
                                     <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-xl" id="emailEmoji">📧</span>
@@ -95,7 +95,7 @@
                                         type="tel" 
                                         id="phone" 
                                         name="phone"
-                                        class="w-full px-4 py-3 pl-12 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        class="w-full px-4 py-3 pl-12 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
                                         placeholder="08xx xxxx xxxx"
                                     >
                                     <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-xl" id="phoneEmoji">📱</span>
@@ -116,7 +116,7 @@
                                     id="subject" 
                                     name="subject" 
                                     required
-                                    class="w-full px-4 py-3 pl-12 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    class="w-full px-4 py-3 pl-12 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
                                     placeholder="Apa yang ingin Anda tanyakan?"
                                 >
                                 <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-xl" id="subjectEmoji">💬</span>
@@ -136,7 +136,7 @@
                                     name="message" 
                                     required
                                     rows="6"
-                                    class="w-full px-4 py-3 pl-12 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+                                    class="w-full px-4 py-3 pl-12 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all resize-none"
                                     placeholder="Tulis pesan Anda di sini..."
                                 ></textarea>
                                 <span class="absolute left-4 top-4 text-xl" id="messageEmoji">✍️</span>
@@ -150,7 +150,7 @@
                             <button 
                                 type="submit" 
                                 id="submitBtn"
-                                class="inline-flex items-center px-12 py-5 bg-gradient-to-r from-blue-600 to-emerald-600 text-white font-poppins font-bold text-xl rounded-2xl hover-glow transition-all transform hover:scale-105 shadow-xl"
+                                class="inline-flex items-center px-12 py-5 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-poppins font-bold text-xl rounded-2xl hover-glow transition-all transform hover:scale-105 shadow-xl"
                             >
                                 <span class="mr-3 text-2xl">🚀</span>
                                 Kirim Pesan Sekarang
@@ -220,7 +220,7 @@
                     
                     <!-- Info Box -->
                     <div class="lg:col-span-1">
-                        <div class="bg-gradient-to-br from-blue-50 to-emerald-50 rounded-2xl p-8 shadow-xl h-full">
+                        <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl p-8 shadow-xl h-full">
                             <h3 class="font-poppins font-bold text-2xl text-charcoal-grey mb-6">
                                 Informasi Kontak
                             </h3>
@@ -228,7 +228,7 @@
                             <div class="space-y-6">
                                 <!-- Address -->
                                 <div class="flex items-start">
-                                    <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
+                                    <div class="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
                                         <span class="text-2xl">🏢</span>
                                     </div>
                                     <div>
@@ -344,7 +344,7 @@
                     <a 
                         href="https://facebook.com/begawi.id" 
                         target="_blank"
-                        class="group relative bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-8 text-center transition-all transform hover:scale-105 shadow-lg social-glow"
+                        class="group relative bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-2xl p-8 text-center transition-all transform hover:scale-105 shadow-lg social-glow"
                     >
                         <div class="absolute inset-0 bg-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         <div class="relative z-10">
@@ -361,7 +361,7 @@
                     <a 
                         href="https://twitter.com/begawi_id" 
                         target="_blank"
-                        class="group relative bg-gradient-to-br from-sky-500 to-blue-500 rounded-2xl p-8 text-center transition-all transform hover:scale-105 shadow-lg social-glow"
+                        class="group relative bg-gradient-to-br from-emerald-500 to-emerald-400 rounded-2xl p-8 text-center transition-all transform hover:scale-105 shadow-lg social-glow"
                     >
                         <div class="absolute inset-0 bg-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         <div class="relative z-10">

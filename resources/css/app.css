@@ -4,10 +4,11 @@
 /* Custom CSS Variables */
 :root {
     --emerald-green: #2ecc71;
-    --royal-blue: #007aff;
+    --emerald-dark: #059669;
+    --emerald-light: #34d399;
     --warm-ivory: #fff9f3;
     --charcoal-grey: #1c1c1e;
-    --accent-gradient: linear-gradient(135deg, #2ecc71, #007aff);
+    --accent-gradient: linear-gradient(135deg, #059669, #34d399);
 }
 
 /* Base Styles */
@@ -136,6 +137,38 @@ body {
     animation: bounceIn 0.6s ease-out forwards;
 }
 
+/* Testimonial card visibility */
+.testimonial-card .glassmorphism-dark {
+    box-shadow: 0 14px 40px rgba(16, 185, 129, 0.28),
+        0 10px 20px rgba(0, 0, 0, 0.45);
+}
+
+/* Marquee (auto-scrolling carousel) */
+@keyframes marquee-scroll-x {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.marquee {
+    position: relative;
+}
+
+.marquee-track {
+    will-change: transform;
+    animation: marquee-scroll-x 35s linear infinite;
+}
+
+/* Pause animation for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+        animation: none;
+    }
+}
+
 /* Hover Effects */
 .hover-tilt {
     transition: transform 0.3s ease;
@@ -188,7 +221,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #2ecc71;
+    background: #059669;
 }
 
 /* Responsive Design */

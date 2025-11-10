@@ -2,7 +2,6 @@ import "./bootstrap";
 import "./components/navbar";
 import "./components/hero-animations";
 import "./components/stats-counter";
-import "./components/testimonial-carousel";
 import "./animations";
 
 // Alpine.js
@@ -212,7 +211,7 @@ window.showNotification = function (message, type = "success") {
             ? "bg-emerald-600 text-white"
             : type === "error"
             ? "bg-red-600 text-white"
-            : "bg-blue-600 text-white"
+            : "bg-emerald-600 text-white"
     }`;
     notification.textContent = message;
 

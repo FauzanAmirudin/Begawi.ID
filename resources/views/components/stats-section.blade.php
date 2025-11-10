@@ -42,12 +42,12 @@
             <!-- Stat Card 2 -->
             <div class="stat-card group">
                 <div class="glassmorphism rounded-2xl p-8 text-center hover-tilt hover-glow transition-all duration-300">
-                    <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                         </svg>
                     </div>
-                    <div class="counter text-3xl font-manrope font-extrabold text-blue-600 mb-2" data-target="3420">0</div>
+                    <div class="counter text-3xl font-manrope font-extrabold text-emerald-600 mb-2" data-target="3420">0</div>
                     <div class="text-sm font-medium text-gray-600 flex items-center justify-center">
                         <span class="mr-1">🛍️</span>
                         UMKM Aktif
@@ -85,17 +85,6 @@
                         Total Pengunjung
                     </div>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Additional Info -->
-        <div class="text-center mt-16">
-            <p class="text-gray-600 mb-6">Dipercaya oleh berbagai instansi dan organisasi</p>
-            <div class="flex flex-wrap justify-center items-center space-x-8 opacity-60">
-                <div class="text-2xl font-bold text-gray-400">KEMENDESA</div>
-                <div class="text-2xl font-bold text-gray-400">KEMENDAG</div>
-                <div class="text-2xl font-bold text-gray-400">KADIN</div>
-                <div class="text-2xl font-bold text-gray-400">HIPMI</div>
             </div>
         </div>
     </div>
