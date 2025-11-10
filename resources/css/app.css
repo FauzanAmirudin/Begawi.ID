@@ -1,6 +1,12 @@
 /* Import Tailwind CSS v4 */
 @import "tailwindcss";
 
+/* Tailwind v4 Design Tokens */
+@theme {
+    --color-warm-ivory: #fff9f3;
+    --color-charcoal-grey: #1c1c1e;
+}
+
 /* Custom CSS Variables */
 :root {
     --emerald-green: #2ecc71;

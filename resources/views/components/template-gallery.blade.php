@@ -20,12 +20,6 @@
                 <button class="category-filter px-6 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-emerald-500 hover:text-emerald-600 transition-all" data-category="umkm">
                     🛍️ UMKM
                 </button>
-                <button class="category-filter px-6 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-emerald-500 hover:text-emerald-600 transition-all" data-category="komunitas">
-                    👥 Komunitas
-                </button>
-                <button class="category-filter px-6 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-emerald-500 hover:text-emerald-600 transition-all" data-category="ecommerce">
-                    🛒 E-Commerce
-                </button>
             </div>
         </div>
         

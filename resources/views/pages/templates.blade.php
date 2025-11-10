@@ -36,10 +36,6 @@
                         <div class="text-2xl font-bold text-emerald-600">100%</div>
                         <div class="text-sm text-gray-600">Responsive</div>
                     </div>
-                    <div class="bg-white rounded-xl px-6 py-4 shadow-lg">
-                        <div class="text-2xl font-bold text-purple-600">Gratis</div>
-                        <div class="text-sm text-gray-600">Selamanya</div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -59,12 +55,6 @@
                 <button class="category-filter px-6 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-emerald-500 hover:text-emerald-600 transition-all" data-category="umkm">
                     🛍️ UMKM
                 </button>
-                <button class="category-filter px-6 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-emerald-500 hover:text-emerald-600 transition-all" data-category="komunitas">
-                    👥 Komunitas
-                </button>
-                <button class="category-filter px-6 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-emerald-500 hover:text-emerald-600 transition-all" data-category="ecommerce">
-                    🛒 E-Commerce
-                </button>
             </div>
             
             <!-- Sort & View Options -->
@@ -78,13 +68,8 @@
                         <option>Nama A-Z</option>
                     </select>
                 </div>
-                <div class="flex items-center space-x-2">
-                    <button id="gridView" class="p-2 bg-emerald-600 text-white rounded-lg">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
-                        </svg>
-                    </button>
-                    <button id="listView" class="p-2 bg-gray-200 text-gray-600 rounded-lg">
+                <div class="flex items-center">
+                    <button id="listView" class="p-2 bg-emerald-600 text-white rounded-lg">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
                         </svg>
@@ -93,41 +78,10 @@
             </div>
             
             <!-- Templates Grid -->
-            <div id="templatesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div id="templatesGrid" class="grid grid-cols-1 gap-6">
                 @include('components.template-gallery')
             </div>
-            
-            <!-- Load More -->
-            <div class="text-center mt-12">
-                <button id="loadMore" class="inline-flex items-center px-8 py-4 bg-gradient-accent text-white font-poppins font-semibold text-lg rounded-xl hover-glow transition-all">
-                    <span class="mr-2">🔄</span>
-                    Muat Template Lainnya
-                </button>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Template Builder CTA -->
-    <section class="py-16 bg-gradient-to-br from-charcoal-grey to-gray-900">
-        <div class="container mx-auto px-4">
-            <div class="max-w-3xl mx-auto text-center">
-                <h2 class="font-manrope font-extrabold text-3xl md:text-4xl text-white mb-6">
-                    Tidak Menemukan Template yang Cocok?
-                </h2>
-                <p class="text-xl text-gray-300 mb-8">
-                    Buat template custom sesuai kebutuhan Anda dengan Template Builder kami
-                </p>
-                <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                    <a href="#" class="inline-flex items-center px-6 py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition-all">
-                        <span class="mr-2">🎨</span>
-                        Custom Template
-                    </a>
-                    <a href="{{ route('contact') }}" class="inline-flex items-center px-6 py-3 border border-white/30 text-white font-semibold rounded-xl hover:bg-white/10 transition-all">
-                        <span class="mr-2">💬</span>
-                        Request Template
-                    </a>
-                </div>
-            </div>
+        
         </div>
     </section>
 @endsection
@@ -154,26 +108,20 @@
             });
         });
         
-        // View toggle functionality
-        const gridView = document.getElementById('gridView');
+        // View (fixed to list view)
         const listView = document.getElementById('listView');
         const templatesGrid = document.getElementById('templatesGrid');
         
-        gridView.addEventListener('click', function() {
-            templatesGrid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8';
-            gridView.classList.add('bg-emerald-600', 'text-white');
-            gridView.classList.remove('bg-gray-200', 'text-gray-600');
-            listView.classList.add('bg-gray-200', 'text-gray-600');
-            listView.classList.remove('bg-emerald-600', 'text-white');
-        });
-        
-        listView.addEventListener('click', function() {
-            templatesGrid.className = 'grid grid-cols-1 gap-6';
+        // Ensure list view is applied by default
+        templatesGrid.className = 'grid grid-cols-1 gap-6';
+        if (listView) {
             listView.classList.add('bg-emerald-600', 'text-white');
             listView.classList.remove('bg-gray-200', 'text-gray-600');
-            gridView.classList.add('bg-gray-200', 'text-gray-600');
-            gridView.classList.remove('bg-emerald-600', 'text-white');
-        });
+            // Optional: clicking keeps list view (idempotent)
+            listView.addEventListener('click', function() {
+                templatesGrid.className = 'grid grid-cols-1 gap-6';
+            });
+        }
         
         // Load more functionality
         let currentPage = 1;
