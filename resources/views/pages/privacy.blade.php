@@ -4,8 +4,8 @@
 @section('description', 'Kebijakan privasi dan perlindungan data pengguna Begawi.id. Kami berkomitmen melindungi privasi Anda.')
 
 @section('content')
-    <section class="pt-24 pb-12 bg-gradient-to-br from-emerald-50 to-emerald-100">
-        <div class="container mx-auto px-4">
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-50 to-emerald-100">
+        <div class="container mx-auto px-4 relative z-10 pt-24 md:pt-32">
             <div class="max-w-4xl mx-auto">
                 <h1 class="font-manrope font-extrabold text-4xl md:text-5xl text-charcoal-grey mb-6">
                     Kebijakan Privasi

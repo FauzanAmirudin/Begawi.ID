@@ -1,4 +1,4 @@
-<section class="py-20 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
+<section class="py-12 px-4 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
     <div class="container mx-auto px-4 relative z-10">
         <div class="text-center mb-16">
             <h2 class="font-manrope font-extrabold text-4xl md:text-5xl text-charcoal-grey mb-4">
@@ -29,7 +29,7 @@
             <div class="template-card group" data-category="desa">
                 <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover-tilt">
                     <div class="relative overflow-hidden">
-                        <img src="{{ asset('images/templates/desa-modern.jpg') }}" alt="Template Desa Modern" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500">
+                        <img src="{{ asset('images/web1.png') }}" alt="Template Desa Modern" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
                             <div class="absolute bottom-4 left-4 right-4 flex space-x-2">
                                 <button class="flex-1 bg-white/20 backdrop-blur-sm text-white font-medium py-2 px-4 rounded-lg hover:bg-white/30 transition-all">
@@ -170,14 +170,6 @@
             </div>
             
             <!-- More template cards... -->
-        </div>
-        
-        <!-- Load More Button -->
-        <div class="text-center mt-12">
-            <button class="inline-flex items-center px-8 py-4 bg-gradient-accent text-white font-poppins font-semibold text-lg rounded-xl hover-glow transition-all">
-                <span class="mr-2">🔄</span>
-                Muat Template Lainnya
-            </button>
         </div>
     </div>
 </section>

@@ -1,4 +1,4 @@
-<section class="py-20 bg-white relative overflow-hidden">
+<section class="py-20 px-8 bg-white relative overflow-hidden">
     <!-- Background Pattern -->
     <div class="absolute inset-0 opacity-5">
         <div class="absolute inset-0" style="background-image: radial-gradient(circle at 25px 25px, #2ECC71 2px, transparent 0), radial-gradient(circle at 75px 75px, #34D399 2px, transparent 0); background-size: 100px 100px;"></div>

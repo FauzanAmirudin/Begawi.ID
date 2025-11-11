@@ -5,14 +5,14 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="pt-24 pb-12 bg-gradient-to-br from-emerald-50 to-emerald-100 relative overflow-hidden">
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-50 to-emerald-100">
         <!-- Background Elements -->
         <div class="absolute inset-0">
             <div class="absolute top-0 left-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-float"></div>
             <div class="absolute bottom-0 right-0 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl animate-float" style="animation-delay: -2s;"></div>
         </div>
         
-        <div class="container mx-auto px-4 relative z-10">
+        <div class="container mx-auto px-4 relative z-10 pt-24 md:pt-32">
             <div class="max-w-4xl mx-auto text-center">
                 <h1 class="font-manrope font-extrabold text-4xl md:text-6xl text-charcoal-grey mb-6">
                     Hubungi Kami
@@ -389,53 +389,6 @@
                                 Subscribe →
                             </div>
                         </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Instagram Feed Section (in footer area) -->
-    <section class="py-16 bg-charcoal-grey text-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="font-manrope font-extrabold text-2xl md:text-3xl mb-4">
-                    Ikuti Perjalanan Kami di Instagram
-                    <span class="text-gradient bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">📸</span>
-                </h2>
-                <p class="text-gray-300 max-w-2xl mx-auto">
-                    Lihat update terbaru dari komunitas Begawi.id
-                </p>
-            </div>
-            
-            <!-- Instagram Feed Grid -->
-            <div class="max-w-6xl mx-auto">
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4" id="instagramFeed">
-                    <!-- Placeholder for Instagram posts -->
-                    <!-- These will be populated via JavaScript or API -->
-                    @for($i = 1; $i <= 6; $i++)
-                    <div class="relative group cursor-pointer">
-                        <div class="aspect-square bg-gradient-to-br from-pink-500/20 to-purple-600/20 rounded-xl overflow-hidden">
-                            <div class="w-full h-full flex items-center justify-center text-4xl">
-                                📷
-                            </div>
-                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <span class="text-white font-semibold">Lihat Post</span>
-                            </div>
-                        </div>
-                    </div>
-                    @endfor
-                </div>
-                
-                <!-- Follow Button -->
-                <div class="text-center mt-8">
-                    <a 
-                        href="https://instagram.com/begawi.id" 
-                        target="_blank"
-                        class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold rounded-xl hover-glow transition-all"
-                    >
-                        <span class="mr-2">📷</span>
-                        Ikuti @begawi.id di Instagram
                     </a>
                 </div>
             </div>

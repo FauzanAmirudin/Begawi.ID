@@ -5,8 +5,8 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="pt-24 pb-12 bg-gradient-to-br from-purple-50 to-pink-50">
-        <div class="container mx-auto px-4">
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-purple-50 to-pink-50">
+        <div class="container mx-auto px-4 relative z-10 pt-24 md:pt-32">
             <div class="max-w-4xl mx-auto text-center">
                 <h1 class="font-manrope font-extrabold text-4xl md:text-6xl text-charcoal-grey mb-6">
                     Pusat Edukasi
@@ -24,218 +24,77 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
-                </div>
-                
-                <!-- Quick Stats -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="bg-white rounded-xl px-4 py-3 shadow-lg">
-                        <div class="text-2xl font-bold text-purple-600">150+</div>
-                        <div class="text-sm text-gray-600">Tutorial</div>
-                    </div>
-                    <div class="bg-white rounded-xl px-4 py-3 shadow-lg">
-                        <div class="text-2xl font-bold text-pink-600">50+</div>
-                        <div class="text-sm text-gray-600">Video</div>
-                    </div>
-                    <div class="bg-white rounded-xl px-4 py-3 shadow-lg">
-                        <div class="text-2xl font-bold text-emerald-600">25+</div>
-                        <div class="text-sm text-gray-600">Webinar</div>
-                    </div>
-                    <div class="bg-white rounded-xl px-4 py-3 shadow-lg">
-                        <div class="text-2xl font-bold text-emerald-600">Gratis</div>
-                        <div class="text-sm text-gray-600">Semua</div>
-                    </div>
-                </div>
+                </div>                
             </div>
         </div>
     </section>
     
-    <!-- Learning Paths -->
-    <section class="py-20 bg-white">
+    <!-- Articles & Guides Section -->
+    <section class="py-20 px-6 bg-gray-50">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
                 <h2 class="font-manrope font-extrabold text-3xl md:text-4xl text-charcoal-grey mb-6">
-                    Jalur Pembelajaran
-                    <span class="text-gradient">Terstruktur</span>
+                    Artikel &amp; Panduan
                 </h2>
                 <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                    Pilih jalur pembelajaran sesuai dengan kebutuhan dan tingkat kemampuan Anda
+                    Temukan inspirasi, pengetahuan, dan tips praktis untuk mempercepat perjalanan digital Anda
                 </p>
             </div>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Learning Path 1 -->
-                <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl p-8 border border-emerald-200 hover:shadow-xl transition-all hover-tilt">
-                    <div class="text-center mb-6">
-                        <div class="w-20 h-20 bg-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                            <span class="text-3xl text-white">🌱</span>
-                        </div>
-                        <h3 class="font-poppins font-bold text-2xl text-charcoal-grey mb-2">Pemula</h3>
-                        <p class="text-emerald-700 font-semibold">Mulai dari Nol</p>
+                <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all hover-tilt">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center mb-6 mx-auto md:mx-0">
+                        <span class="text-2xl text-white">🛠️</span>
                     </div>
-                    
-                    <div class="space-y-4 mb-8">
-                        <div class="flex items-center">
-                            <div class="w-6 h-6 bg-emerald-600 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                            </div>
-                            <span class="text-gray-700">Pengenalan Website</span>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-6 h-6 bg-emerald-600 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                            </div>
-                            <span class="text-gray-700">Cara Memilih Template</span>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-6 h-6 bg-emerald-600 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                            </div>
-                            <span class="text-gray-700">Menambahkan Konten</span>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                </svg>
-                            </div>
-                            <span class="text-gray-500">Publikasi Website</span>
-                        </div>
-                    </div>
-                    
-                    <div class="text-center">
-                        <div class="text-sm text-gray-600 mb-4">
-                            <span class="font-semibold">8 Tutorial</span> • <span class="font-semibold">2 jam</span>
-                        </div>
-                        <a href="{{ route('education.category', 'pemula') }}" class="inline-flex items-center px-6 py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition-all">
-                            <span class="mr-2">🚀</span>
-                            Mulai Belajar
-                        </a>
-                    </div>
+                    <h3 class="font-poppins font-bold text-2xl text-charcoal-grey mb-4">Tutorial Penggunaan</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Panduan praktis pembuatan website untuk pengguna baru agar dapat memulai tanpa kebingungan.
+                    </p>
+                    <a href="#" class="inline-flex items-center mt-6 text-emerald-600 font-semibold hover:text-emerald-700 transition-all">
+                        Pelajari Lebih Lanjut
+                        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                        </svg>
+                    </a>
                 </div>
-                
-                <!-- Learning Path 2 -->
-                <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl p-8 border border-emerald-200 hover:shadow-xl transition-all hover-tilt">
-                    <div class="text-center mb-6">
-                        <div class="w-20 h-20 bg-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                            <span class="text-3xl text-white">⚡</span>
-                        </div>
-                        <h3 class="font-poppins font-bold text-2xl text-charcoal-grey mb-2">Menengah</h3>
-                        <p class="text-emerald-700 font-semibold">Tingkatkan Skill</p>
+
+                <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all hover-tilt">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-6 mx-auto md:mx-0">
+                        <span class="text-2xl text-white">✨</span>
                     </div>
-                    
-                    <div class="space-y-4 mb-8">
-                        <div class="flex items-center">
-                            <div class="w-6 h-6 bg-emerald-600 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                            </div>
-                            <span class="text-gray-700">Kustomisasi Lanjutan</span>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-6 h-6 bg-emerald-600 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                            </div>
-                            <span class="text-gray-700">SEO & Optimisasi</span>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-6 h-6 bg-emerald-600 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                            </div>
-                            <span class="text-gray-700">Analisis Website</span>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                </svg>
-                            </div>
-                            <span class="text-gray-500">Digital Marketing</span>
-                        </div>
-                    </div>
-                    
-                    <div class="text-center">
-                        <div class="text-sm text-gray-600 mb-4">
-                            <span class="font-semibold">12 Tutorial</span> • <span class="font-semibold">4 jam</span>
-                        </div>
-                        <a href="{{ route('education.category', 'menengah') }}" class="inline-flex items-center px-6 py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition-all">
-                            <span class="mr-2">📈</span>
-                            Mulai Belajar
-                        </a>
-                    </div>
+                    <h3 class="font-poppins font-bold text-2xl text-charcoal-grey mb-4">Artikel Inspiratif</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Kisah sukses digitalisasi desa dan UMKM di berbagai daerah sebagai sumber motivasi dan ide baru.
+                    </p>
+                    <a href="#" class="inline-flex items-center mt-6 text-purple-600 font-semibold hover:text-purple-700 transition-all">
+                        Baca Ceritanya
+                        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                        </svg>
+                    </a>
                 </div>
-                
-                <!-- Learning Path 3 -->
-                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-8 border border-purple-200 hover:shadow-xl transition-all hover-tilt">
-                    <div class="text-center mb-6">
-                        <div class="w-20 h-20 bg-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                            <span class="text-3xl text-white">🏆</span>
-                        </div>
-                        <h3 class="font-poppins font-bold text-2xl text-charcoal-grey mb-2">Mahir</h3>
-                        <p class="text-purple-700 font-semibold">Jadi Expert</p>
+
+                <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all hover-tilt">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center mb-6 mx-auto md:mx-0">
+                        <span class="text-2xl text-white">📣</span>
                     </div>
-                    
-                    <div class="space-y-4 mb-8">
-                        <div class="flex items-center">
-                            <div class="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                            </div>
-                            <span class="text-gray-700">E-commerce Advanced</span>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                            </div>
-                            <span class="text-gray-700">Automation & API</span>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                            </div>
-                            <span class="text-gray-700">Advanced Analytics</span>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                </svg>
-                            </div>
-                            <span class="text-gray-500">Scale & Growth</span>
-                        </div>
-                    </div>
-                    
-                    <div class="text-center">
-                        <div class="text-sm text-gray-600 mb-4">
-                            <span class="font-semibold">15 Tutorial</span> • <span class="font-semibold">6 jam</span>
-                        </div>
-                        <a href="{{ route('education.category', 'mahir') }}" class="inline-flex items-center px-6 py-3 bg-purple-600 text-white font-semibold rounded-xl hover:bg-purple-700 transition-all">
-                            <span class="mr-2">🔥</span>
-                            Mulai Belajar
-                        </a>
-                    </div>
+                    <h3 class="font-poppins font-bold text-2xl text-charcoal-grey mb-4">Tips Pemasaran Digital</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Konten edukatif mengenai promosi efektif, strategi branding, dan pemasaran online yang relevan.
+                    </p>
+                    <a href="#" class="inline-flex items-center mt-6 text-pink-600 font-semibold hover:text-pink-700 transition-all">
+                        Lihat Tipsnya
+                        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                        </svg>
+                    </a>
                 </div>
             </div>
         </div>
     </section>
     
     <!-- Featured Content -->
-    <section class="py-20 bg-gray-50">
+    <section class="py-20 px-6 bg-gray-50">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
                 <h2 class="font-manrope font-extrabold text-3xl md:text-4xl text-charcoal-grey mb-6">
@@ -396,141 +255,6 @@
                     <span class="mr-2">📚</span>
                     Muat Konten Lainnya
                 </button>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Upcoming Webinars -->
-    <section class="py-20 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="font-manrope font-extrabold text-3xl md:text-4xl text-charcoal-grey mb-6">
-                    Webinar
-                    <span class="text-gradient">Mendatang</span>
-                </h2>
-                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                    Ikuti webinar gratis untuk mendapatkan insight terbaru tentang digitalisasi
-                </p>
-            </div>
-            
-            <div class="max-w-4xl mx-auto space-y-6">
-                <!-- Webinar Item 1 -->
-                <div class="bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-2xl p-8 border border-emerald-200">
-                    <div class="flex flex-col md:flex-row items-center">
-                        <div class="md:w-2/3 mb-6 md:mb-0 md:pr-8">
-                            <div class="flex items-center mb-4">
-                                <span class="bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full mr-3">WEBINAR</span>
-                                <span class="text-emerald-600 font-semibold text-sm">25 Desember 2024 • 19:00 WIB</span>
-                            </div>
-                            <h3 class="font-poppins font-bold text-2xl text-charcoal-grey mb-3">
-                                Strategi Digital Marketing untuk UMKM 2025
-                            </h3>
-                            <p class="text-gray-600 mb-4 leading-relaxed">
-                                Pelajari strategi terbaru untuk memasarkan produk UMKM secara digital. Dari social media marketing hingga e-commerce optimization.
-                            </p>
-                            <div class="flex items-center text-sm text-gray-600 mb-6">
-                                <div class="flex items-center mr-6">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                    </svg>
-                                    Andi Prasetyo
-                                </div>
-                                <div class="flex items-center mr-6">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    90 menit
-                                </div>
-                                <div class="flex items-center">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-                                    </svg>
-                                    245 peserta
-                                </div>
-                            </div>
-                        </div>
-                        <div class="md:w-1/3 text-center">
-                            <div class="bg-white rounded-2xl p-6 shadow-lg">
-                                <div class="text-4xl mb-4">🎯</div>
-                                <button class="w-full bg-emerald-600 text-white font-semibold py-3 px-6 rounded-xl hover:bg-emerald-700 transition-all mb-3">
-                                    Daftar Gratis
-                                </button>
-                                <p class="text-xs text-gray-500">Sisa 55 kursi tersedia</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Webinar Item 2 -->
-                <div class="bg-gradient-to-r from-emerald-50 to-purple-50 rounded-2xl p-8 border border-emerald-200">
-                    <div class="flex flex-col md:flex-row items-center">
-                        <div class="md:w-2/3 mb-6 md:mb-0 md:pr-8">
-                            <div class="flex items-center mb-4">
-                                <span class="bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full mr-3">WEBINAR</span>
-                                <span class="text-emerald-600 font-semibold text-sm">28 Desember 2024 • 14:00 WIB</span>
-                            </div>
-                            <h3 class="font-poppins font-bold text-2xl text-charcoal-grey mb-3">
-                                Membangun Website Desa yang Efektif
-                            </h3>
-                            <p class="text-gray-600 mb-4 leading-relaxed">
-                                Workshop praktis untuk aparatur desa dalam membangun dan mengelola website desa yang informatif dan transparan.
-                            </p>
-                            <div class="flex items-center text-sm text-gray-600 mb-6">
-                                <div class="flex items-center mr-6">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                    </svg>
-                                    Sari Indrawati
-                                </div>
-                                <div class="flex items-center mr-6">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    120 menit
-                                </div>
-                                <div class="flex items-center">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-                                    </svg>
-                                    189 peserta
-                                </div>
-                            </div>
-                        </div>
-                        <div class="md:w-1/3 text-center">
-                            <div class="bg-white rounded-2xl p-6 shadow-lg">
-                                <div class="text-4xl mb-4">🌾</div>
-                                <button class="w-full bg-emerald-600 text-white font-semibold py-3 px-6 rounded-xl hover:bg-emerald-700 transition-all mb-3">
-                                    Daftar Gratis
-                                </button>
-                                <p class="text-xs text-gray-500">Sisa 11 kursi tersedia</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- CTA Section -->
-    <section class="py-20 bg-gradient-to-br from-purple-600 to-pink-600">
-        <div class="container mx-auto px-4">
-            <div class="max-w-3xl mx-auto text-center">
-                <h2 class="font-manrope font-extrabold text-3xl md:text-4xl text-white mb-6">
-                    Siap Menjadi Expert Digital?
-                </h2>
-                <p class="text-xl text-purple-100 mb-8">
-                    Bergabunglah dengan ribuan orang yang telah meningkatkan skill digitalnya bersama Begawi.id
-                </p>
-                <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                    <a href="#" class="inline-flex items-center px-6 py-3 bg-white text-purple-600 font-semibold rounded-xl hover:bg-gray-100 transition-all">
-                        <span class="mr-2">🚀</span>
-                        Mulai Belajar Gratis
-                    </a>
-                    <a href="#" class="inline-flex items-center px-6 py-3 border border-white/30 text-white font-semibold rounded-xl hover:bg-white/10 transition-all">
-                        <span class="mr-2">📞</span>
-                        Konsultasi 1-on-1
-                    </a>
-                </div>
             </div>
         </div>
     </section>

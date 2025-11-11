@@ -68,7 +68,7 @@
                             </div>
                             <div class="lg:w-1/2 lg:pl-12">
                                 <div class="relative">
-                                    <img src="{{ asset('images/features/easy-to-use.jpg') }}" alt="Easy to Use" class="w-full rounded-2xl shadow-2xl">
+                                    <img src="{{ asset('images/web1.png') }}" alt="Easy to Use" class="w-full rounded-2xl shadow-2xl">
                                     <div class="absolute inset-0 bg-gradient-to-tr from-emerald-600/20 to-transparent rounded-2xl"></div>
                                 </div>
                             </div>

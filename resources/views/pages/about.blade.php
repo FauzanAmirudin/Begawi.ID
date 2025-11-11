@@ -5,14 +5,14 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="pt-24 pb-12 bg-gradient-to-br from-charcoal-grey to-gray-900 text-white relative overflow-hidden">
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-charcoal-grey to-gray-900 text-white">
         <!-- Background Elements -->
         <div class="absolute inset-0">
             <div class="absolute top-0 left-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-float"></div>
             <div class="absolute bottom-0 right-0 w-72 h-72 bg-emerald-400/10 rounded-full blur-3xl animate-float" style="animation-delay: -2s;"></div>
         </div>
         
-        <div class="container mx-auto px-4 relative z-10">
+        <div class="container mx-auto px-4 relative z-10 pt-24 md:pt-32">
             <div class="max-w-4xl mx-auto text-center">
                 <h1 class="font-manrope font-extrabold text-4xl md:text-6xl mb-6">
                     Membangun Indonesia Digital
