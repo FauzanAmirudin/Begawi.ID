@@ -4,15 +4,15 @@
 
 @section('content')
 <!-- 1. Hero Section -->
-<section class="bg-gradient-to-r from-green-50 to-amber-50 py-20">
+<section class="bg-gradient-light py-20">
     <div class="max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-12">
         <div class="grid grid-cols-12 items-center gap-8">
             <!-- Left Content -->
             <div class="col-span-12 lg:col-span-7 animate-fadeInUp">
                 <div class="flex items-center space-x-4 mb-6 animate-scaleIn">
-                    <img src="https://via.placeholder.com/80x80" alt="Logo Desa" class="w-20 h-20 rounded-full shadow-lg">
+                    <img src="{{ asset('images/Logo-Begawi.png') }}" alt="Logo Desa" class="w-20 h-20 object-contain shadow-lg">
                     <div>
-                        <h1 class="text-4xl lg:text-6xl font-display font-bold text-green-900 leading-tight">
+                        <h1 class="text-4xl lg:text-6xl font-display font-bold text-primary-700 leading-tight">
                             Desa Sejahtera
                         </h1>
                         <p class="text-base lg:text-lg text-slate-600 mt-2">
@@ -27,11 +27,8 @@
                 </p>
                 
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <a href="{{ route('desa.about') }}" class="bg-green-700 hover:bg-green-800 text-white px-8 py-4 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-300 text-center">
+                    <a href="{{ route('desa.about') }}" class="bg-gradient-accent hover:bg-primary-700 text-white px-8 py-4 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-300 text-center">
                         Lihat Profil Desa
-                    </a>
-                    <a href="{{ route('desa.contact') }}" class="border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 text-center">
-                        Hubungi Kami
                     </a>
                 </div>
             </div>
@@ -39,9 +36,9 @@
             <!-- Right Content - Slideshow -->
             <div class="col-span-12 lg:col-span-5">
                 <div class="relative rounded-2xl overflow-hidden shadow-2xl">
-                    <div class="aspect-[4/3] bg-gradient-to-br from-green-900/20 to-transparent relative">
-                        <img src="https://via.placeholder.com/600x450" alt="Kegiatan Desa" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                    <div class="aspect-[4/3] bg-gradient-to-br from-primary-700/20 to-transparent relative">
+                        <img src="{{ asset('images/awan.jpeg') }}" alt="Kegiatan Desa" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy-900/30 to-transparent"></div>
                         <div class="absolute bottom-4 left-4 text-white">
                             <h3 class="font-semibold text-lg">Gotong Royong Membangun Desa</h3>
                             <p class="text-sm opacity-90">Kebersamaan warga dalam pembangunan</p>
@@ -57,7 +54,7 @@
 <section class="py-20 bg-white">
     <div class="max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-12">
         <div class="text-center mb-16">
-            <h2 class="text-3xl lg:text-4xl font-display font-bold text-green-900 border-b-4 border-yellow-400 inline-block pb-2">
+            <h2 class="text-3xl lg:text-4xl font-display font-bold text-primary-700 border-b-4 border-primary-500 inline-block pb-2">
                 Berita Terbaru
             </h2>
             <p class="text-slate-600 mt-4 text-lg">Informasi terkini seputar kegiatan dan perkembangan desa</p>
@@ -71,16 +68,16 @@
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                 </div>
                 <div class="p-6">
-                    <div class="text-sm text-green-700 font-medium mb-2">
+                    <div class="text-sm text-primary-600 font-medium mb-2">
                         {{ \Carbon\Carbon::parse($item['tanggal'])->format('d M Y') }}
                     </div>
-                    <h3 class="text-xl font-display font-semibold text-slate-800 mb-3 group-hover:text-green-700 transition-colors">
+                    <h3 class="text-xl font-display font-semibold text-slate-800 mb-3 group-hover:text-primary-600 transition-colors">
                         {{ $item['judul'] }}
                     </h3>
                     <p class="text-slate-600 mb-4 leading-relaxed">
                         {{ $item['ringkasan'] }}
                     </p>
-                    <a href="#" class="inline-flex items-center text-green-700 font-semibold hover:text-green-800 transition-colors">
+                    <a href="#" class="inline-flex items-center text-primary-600 font-semibold hover:text-primary-700 transition-colors">
                         Baca Selengkapnya 
                         <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -94,14 +91,14 @@
 </section>
 
 <!-- 3. Produk UMKM Terbaru -->
-<section class="py-20 bg-gradient-to-r from-green-50 to-amber-50">
+<section class="py-20 bg-gradient-light">
     <div class="max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-12">
         <div class="flex justify-between items-center mb-12">
             <div>
-                <h2 class="text-3xl lg:text-4xl font-display font-bold text-green-900">Produk UMKM Terbaru</h2>
+                <h2 class="text-3xl lg:text-4xl font-display font-bold text-primary-700">Produk UMKM Terbaru</h2>
                 <p class="text-slate-600 mt-2 text-lg">Produk-produk inovatif dari UMKM lokal</p>
             </div>
-            <a href="#" class="hidden md:inline-flex bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-xl font-semibold transition-colors">
+            <a href="#" class="hidden md:inline-flex bg-gradient-accent hover:bg-primary-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors">
                 Lihat Semua Produk
             </a>
         </div>
@@ -117,8 +114,8 @@
                     <h3 class="font-display font-semibold text-lg text-slate-800 mb-1">{{ $produk['nama'] }}</h3>
                     <p class="text-xs text-slate-500 mb-3">{{ $produk['umkm'] }}</p>
                     <div class="flex justify-between items-center">
-                        <span class="text-green-700 font-bold text-lg">{{ $produk['harga'] }}</span>
-                        <button class="bg-blue-600 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        <span class="text-primary-600 font-bold text-lg">{{ $produk['harga'] }}</span>
+                        <button class="bg-gradient-accent hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                             Lihat Detail
                         </button>
                     </div>
@@ -128,7 +125,7 @@
         </div>
         
         <div class="text-center mt-8 md:hidden">
-            <a href="#" class="bg-green-700 hover:bg-green-800 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
+            <a href="#" class="bg-gradient-accent hover:bg-primary-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
                 Lihat Semua Produk
             </a>
         </div>
@@ -139,7 +136,7 @@
 <section class="py-20 bg-white">
     <div class="max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-12">
         <div class="text-center mb-16">
-            <h2 class="text-3xl lg:text-4xl font-display font-bold text-green-900">Produk UMKM Populer</h2>
+            <h2 class="text-3xl lg:text-4xl font-display font-bold text-primary-700">Produk UMKM Populer</h2>
             <p class="text-slate-600 mt-4 text-lg">Produk-produk paling diminati oleh masyarakat</p>
         </div>
         
@@ -147,7 +144,7 @@
             @foreach($umkm_populer as $produk)
             <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group relative">
                 <!-- Badge Populer -->
-                <div class="absolute top-3 right-3 bg-yellow-400 text-xs font-bold text-slate-800 rounded-full px-3 py-1 z-10">
+                <div class="absolute top-3 right-3 bg-primary-500 text-xs font-bold text-white rounded-full px-3 py-1 z-10">
                     🔥 Populer
                 </div>
                 
@@ -164,7 +161,7 @@
                     <div class="flex items-center gap-1 mb-3">
                         @for($i = 1; $i <= 5; $i++)
                             @if($i <= floor($produk['rating']))
-                                <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-4 h-4 text-primary-500" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                                 </svg>
                             @else
@@ -177,8 +174,8 @@
                     </div>
                     
                     <div class="flex justify-between items-center">
-                        <span class="text-green-700 font-bold text-lg">{{ $produk['harga'] }}</span>
-                        <button class="bg-blue-600 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        <span class="text-primary-600 font-bold text-lg">{{ $produk['harga'] }}</span>
+                        <button class="bg-gradient-accent hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                             Beli Sekarang
                         </button>
                     </div>
@@ -193,7 +190,7 @@
 <section class="py-20 bg-slate-100">
     <div class="max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-12">
         <div class="text-center mb-16">
-            <h2 class="text-3xl lg:text-4xl font-display font-bold text-green-900">Galeri Terbaru</h2>
+            <h2 class="text-3xl lg:text-4xl font-display font-bold text-primary-700">Galeri Terbaru</h2>
             <p class="text-slate-600 mt-4 text-lg">Dokumentasi kegiatan dan momen berharga di desa</p>
         </div>
         
@@ -215,7 +212,7 @@
         </div>
         
         <div class="text-center mt-12">
-            <a href="#" class="bg-green-700 hover:bg-green-800 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
+            <a href="#" class="bg-gradient-accent hover:bg-primary-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
                 Lihat Semua Foto
             </a>
         </div>
@@ -226,7 +223,7 @@
 <section class="py-20 bg-white">
     <div class="max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-12">
         <div class="text-center mb-16">
-            <h2 class="text-3xl lg:text-4xl font-display font-bold text-green-900">Wisata Populer</h2>
+            <h2 class="text-3xl lg:text-4xl font-display font-bold text-primary-700">Wisata Populer</h2>
             <p class="text-slate-600 mt-4 text-lg">Destinasi wisata menarik yang wajib dikunjungi</p>
         </div>
         
@@ -238,20 +235,20 @@
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                 </div>
                 <div class="p-6">
-                    <h3 class="text-xl font-display font-bold text-green-900 mb-3">{{ $tempat['nama'] }}</h3>
+                    <h3 class="text-xl font-display font-bold text-primary-700 mb-3">{{ $tempat['nama'] }}</h3>
                     <p class="text-slate-600 mb-4 leading-relaxed">{{ $tempat['deskripsi'] }}</p>
                     
                     <!-- Mini Map Placeholder -->
                     <div class="h-32 w-full rounded-xl overflow-hidden bg-slate-200 mb-4">
-                        <div class="w-full h-full bg-gradient-to-br from-green-200 to-blue-200 flex items-center justify-center">
-                            <svg class="w-8 h-8 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-full h-full bg-gradient-primary flex items-center justify-center">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
                         </div>
                     </div>
                     
-                    <button class="w-full bg-blue-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold transition-colors">
+                    <button class="w-full bg-gradient-accent hover:bg-primary-700 text-white py-3 rounded-xl font-semibold transition-colors">
                         Lihat Detail Wisata
                     </button>
                 </div>
@@ -260,7 +257,7 @@
         </div>
         
         <div class="text-center mt-12">
-            <a href="#" class="bg-green-700 hover:bg-green-800 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
+            <a href="#" class="bg-gradient-accent hover:bg-primary-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
                 Jelajahi Semua Wisata
             </a>
         </div>
@@ -268,10 +265,10 @@
 </section>
 
 <!-- 7. Kalender Kegiatan Desa -->
-<section class="py-20 bg-gradient-to-r from-green-50 to-amber-50">
+<section class="py-20 bg-gradient-light">
     <div class="max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-12">
         <div class="text-center mb-16">
-            <h2 class="text-3xl lg:text-4xl font-display font-bold text-green-900">Kalender Kegiatan Desa</h2>
+            <h2 class="text-3xl lg:text-4xl font-display font-bold text-primary-700">Kalender Kegiatan Desa</h2>
             <p class="text-slate-600 mt-4 text-lg">Jadwal kegiatan dan acara yang akan datang</p>
         </div>
         
@@ -293,11 +290,11 @@
                     @if(in_array($i, [20, 22, 28]))
                         <div class="mt-1">
                             @if($i == 20)
-                                <div class="bg-green-200 text-green-800 text-xs px-2 py-1 rounded mb-1">Rapat</div>
+                                <div class="bg-primary-200 text-primary-800 text-xs px-2 py-1 rounded mb-1">Rapat</div>
                             @elseif($i == 22)
-                                <div class="bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded mb-1">Pelatihan</div>
+                                <div class="bg-primary-300 text-primary-800 text-xs px-2 py-1 rounded mb-1">Pelatihan</div>
                             @elseif($i == 28)
-                                <div class="bg-yellow-200 text-yellow-800 text-xs px-2 py-1 rounded mb-1">Acara</div>
+                                <div class="bg-primary-400 text-white text-xs px-2 py-1 rounded mb-1">Acara</div>
                             @endif
                         </div>
                     @endif
@@ -335,11 +332,11 @@
                         </div>
                         <div class="mt-3">
                             @if($acara['jenis'] == 'rapat')
-                                <span class="bg-green-200 text-green-800 text-xs px-3 py-1 rounded-full">Rapat</span>
+                                <span class="bg-primary-200 text-primary-800 text-xs px-3 py-1 rounded-full">Rapat</span>
                             @elseif($acara['jenis'] == 'pelatihan')
-                                <span class="bg-blue-200 text-blue-800 text-xs px-3 py-1 rounded-full">Pelatihan</span>
+                                <span class="bg-primary-300 text-primary-800 text-xs px-3 py-1 rounded-full">Pelatihan</span>
                             @else
-                                <span class="bg-yellow-200 text-yellow-800 text-xs px-3 py-1 rounded-full">Acara Umum</span>
+                                <span class="bg-primary-400 text-white text-xs px-3 py-1 rounded-full">Acara Umum</span>
                             @endif
                         </div>
                     </div>
@@ -349,7 +346,7 @@
         </div>
         
         <div class="text-center mt-12">
-            <a href="#" class="bg-green-700 hover:bg-green-800 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
+            <a href="#" class="bg-gradient-accent hover:bg-primary-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
                 Lihat Kalender Lengkap
             </a>
         </div>

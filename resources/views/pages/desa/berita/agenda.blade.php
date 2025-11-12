@@ -14,7 +14,7 @@
     }
     
     .agenda-item:hover {
-        background: #f0fdf4;
+        background: #F1F5EB;
         transform: translateY(-2px);
     }
     
@@ -23,13 +23,13 @@
     }
     
     .date-circle {
-        background: linear-gradient(135deg, #166534, #22c55e);
+        background: linear-gradient(135deg, #1A723D, #83CD20);
     }
     
-    .category-rapat { background: #dcfce7; color: #166534; }
-    .category-pelatihan { background: #dbeafe; color: #1d4ed8; }
-    .category-acara { background: #fef3c7; color: #d97706; }
-    .category-kesehatan { background: #fce7f3; color: #be185d; }
+    .category-rapat { background: #e8f0d8; color: #1A723D; }
+    .category-pelatihan { background: #d1e1b1; color: #1A723D; }
+    .category-acara { background: #bad28a; color: #1A723D; }
+    .category-kesehatan { background: #a3c363; color: #ffffff; }
     
     .fade-in-up {
         opacity: 0;
@@ -54,27 +54,42 @@
         margin-bottom: 1.5rem !important;
     }
     
+    .fc-button-group {
+        gap: 0.5rem !important;
+    }
+    
+    .fc-button-group .fc-button {
+        padding: 0.5rem 0.625rem !important;
+        font-size: 0.75rem !important;
+        margin-right: 0.5rem !important;
+    }
+    
     .fc-button {
-        background: #166534 !important;
-        border-color: #166534 !important;
-        border-radius: 0.75rem !important;
-        padding: 0.5rem 1rem !important;
+        background: #1A723D !important;
+        border-color: #1A723D !important;
+        border-radius: 0.5rem !important;
+        padding: 0.25rem 0.625rem !important;
         font-weight: 600 !important;
+        font-size: 0.75rem !important;
+        margin-right: 0.5rem !important;
     }
     
     .fc-button:hover {
-        background: #15803d !important;
-        border-color: #15803d !important;
+        background: #83CD20 !important;
+        border-color: #83CD20 !important;
     }
     
     .fc-today-button {
-        background: #FACC15 !important;
-        border-color: #FACC15 !important;
-        color: #166534 !important;
+        background: #83CD20 !important;
+        border-color: #83CD20 !important;
+        color: #ffffff !important;
+        padding: 0.25rem 0.625rem !important;
+        font-size: 0.75rem !important;
+        margin-right: 0.5rem !important;
     }
     
     .fc-daygrid-day.fc-day-today {
-        background: #f0fdf4 !important;
+        background: #F1F5EB !important;
     }
     
     .fc-event {
@@ -85,10 +100,10 @@
         font-weight: 500 !important;
     }
     
-    .fc-event-rapat { background: #166534 !important; }
-    .fc-event-pelatihan { background: #3b82f6 !important; }
-    .fc-event-acara { background: #f59e0b !important; }
-    .fc-event-kesehatan { background: #ec4899 !important; }
+    .fc-event-rapat { background: #1A723D !important; }
+    .fc-event-pelatihan { background: #83CD20 !important; }
+    .fc-event-acara { background: #a5d85a !important; }
+    .fc-event-kesehatan { background: #c7e394 !important; }
     
     .bottom-nav {
         position: fixed;
@@ -135,10 +150,10 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="bg-gradient-to-r from-green-50 to-amber-50 py-16">
+<section class="bg-gradient-light py-16">
     <div class="max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-12">
         <div class="text-center">
-            <h1 class="text-4xl lg:text-6xl font-display font-bold text-green-900 mb-4">
+            <h1 class="text-4xl lg:text-6xl font-display font-bold text-primary-700 mb-4">
                 📅 Agenda Kegiatan
             </h1>
             <p class="text-lg lg:text-xl text-slate-600 max-w-3xl mx-auto">
@@ -154,17 +169,17 @@
         <div class="flex items-center justify-between py-4">
             <!-- Tab Navigation -->
             <div class="flex items-center space-x-8">
-                <a href="{{ route('desa.berita.index') }}" class="text-slate-600 hover:text-green-700 font-medium pb-2 transition-colors">
+                <a href="{{ route('desa.berita.index') }}" class="text-slate-600 hover:text-primary-600 font-medium pb-2 transition-colors">
                     📰 Berita
                 </a>
-                <a href="{{ route('desa.berita.agenda') }}" class="text-green-700 font-semibold border-b-2 border-green-700 pb-2">
+                <a href="{{ route('desa.berita.agenda') }}" class="text-primary-600 font-semibold border-b-2 border-primary-600 pb-2">
                     📅 Agenda
                 </a>
             </div>
             
             <!-- Filter & Add Button -->
             <div class="hidden md:flex items-center space-x-4">
-                <select class="border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-700 focus:outline-none text-sm" id="monthFilter">
+                <select class="border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary-600 focus:outline-none text-sm" id="monthFilter">
                     <option value="">Semua Bulan</option>
                     <option value="01">Januari</option>
                     <option value="02">Februari</option>
@@ -179,7 +194,7 @@
                     <option value="11">November</option>
                     <option value="12">Desember</option>
                 </select>
-                <button class="bg-green-700 text-white rounded-xl px-4 py-2 hover:bg-green-800 transition-colors text-sm font-medium" onclick="openAddEventModal()">
+                <button class="bg-gradient-accent hover:bg-primary-700 text-white rounded-xl px-4 py-2 transition-colors text-sm font-medium" onclick="openAddEventModal()">
                     + Tambah Jadwal
                 </button>
             </div>

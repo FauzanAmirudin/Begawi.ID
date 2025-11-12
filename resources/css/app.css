@@ -3,18 +3,33 @@
 
 /* Tailwind v4 Design Tokens */
 @theme {
-    --color-warm-ivory: #fff9f3;
-    --color-charcoal-grey: #1c1c1e;
+    --color-warm-ivory: #f1f5eb;
+    --color-charcoal-grey: #0c1724;
 }
 
 /* Custom CSS Variables */
 :root {
-    --emerald-green: #2ecc71;
-    --emerald-dark: #059669;
-    --emerald-light: #34d399;
-    --warm-ivory: #fff9f3;
-    --charcoal-grey: #1c1c1e;
-    --accent-gradient: linear-gradient(135deg, #059669, #34d399);
+    /* Primary Colors */
+    --primary-green: #83cd20;
+    --primary-dark: #1a723d;
+    --primary-light: #a5d85a;
+    --primary-lighter: #c7e394;
+
+    /* Background Colors */
+    --warm-ivory: #f1f5eb;
+    --charcoal-grey: #0c1724;
+    --navy-dark: #0c1724;
+
+    /* Legacy Support */
+    --emerald-green: #83cd20;
+    --emerald-dark: #1a723d;
+    --emerald-light: #a5d85a;
+
+    /* Gradients */
+    --accent-gradient: linear-gradient(135deg, #1a723d, #83cd20);
+    --gradient-primary: linear-gradient(135deg, #83cd20, #a5d85a);
+    --gradient-dark: linear-gradient(135deg, #0c1724, #1a723d);
+    --gradient-light: linear-gradient(135deg, #f1f5eb, #ffffff);
 }
 
 /* Base Styles */
@@ -73,10 +88,10 @@ body {
 @keyframes pulse-glow {
     0%,
     100% {
-        box-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
+        box-shadow: 0 0 20px rgba(131, 205, 32, 0.3);
     }
     50% {
-        box-shadow: 0 0 40px rgba(46, 204, 113, 0.6);
+        box-shadow: 0 0 40px rgba(131, 205, 32, 0.6);
     }
 }
 
@@ -145,7 +160,7 @@ body {
 
 /* Testimonial card visibility */
 .testimonial-card .glassmorphism-dark {
-    box-shadow: 0 14px 40px rgba(16, 185, 129, 0.28),
+    box-shadow: 0 14px 40px rgba(131, 205, 32, 0.28),
         0 10px 20px rgba(0, 0, 0, 0.45);
 }
 
@@ -189,7 +204,7 @@ body {
 }
 
 .hover-glow:hover {
-    box-shadow: 0 10px 40px rgba(46, 204, 113, 0.3);
+    box-shadow: 0 10px 40px rgba(131, 205, 32, 0.3);
     transform: translateY(-2px);
 }
 
@@ -227,7 +242,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #059669;
+    background: #1a723d;
 }
 
 /* Responsive Design */

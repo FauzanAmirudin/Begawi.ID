@@ -85,7 +85,11 @@ Route::prefix('desa')->name('desa.')->group(function () {
         Route::get('/video/{id}', [App\Http\Controllers\Desa\PusatBantuanController::class, 'getVideoDetail'])->name('video-detail');
         Route::get('/artikel/{id}', [App\Http\Controllers\Desa\PusatBantuanController::class, 'getArticleDetail'])->name('artikel-detail');
     });
-    
+        
+    // Routes Galeri & Wisata (Combined Page)
+    Route::get('/galeri-wisata', [App\Http\Controllers\Desa\GaleriWisataController::class, 'index'])->name('galeri-wisata.index');
+    Route::post('/galeri-wisata/upload', [App\Http\Controllers\Desa\GaleriWisataController::class, 'uploadStore'])->name('galeri-wisata.upload');
+
     Route::get('/contact', [DesaController::class, 'contact'])->name('contact');
     Route::get('/directory', [DesaController::class, 'directory'])->name('directory');
     Route::get('/education', [DesaController::class, 'education'])->name('education');

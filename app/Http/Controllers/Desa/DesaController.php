@@ -342,7 +342,7 @@ class DesaController extends Controller
             'geografi' => [
                 'ketinggian' => '450 mdpl',
                 'topografi' => 'Dataran tinggi berbukit',
-                'iklim' => 'Tropis dengan curah hujan 2.500mm/tahun',
+                'iklim' => 'Tropis',
                 'batas_wilayah' => [
                     'utara' => 'Desa Makmur Jaya',
                     'selatan' => 'Desa Sumber Rezeki',

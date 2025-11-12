@@ -3,11 +3,7 @@
         <div class="flex items-center justify-between h-16 lg:h-20">
             <!-- Logo -->
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-gradient-accent rounded-xl flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9"></path>
-                    </svg>
-                </div>
+                <img src="{{ asset('images/Logo-Begawi.png') }}" alt="Begawi.id" class="w-10 h-10 object-contain">
                 <div class="font-manrope font-extrabold text-xl text-gradient">
                     Begawi.id
                 </div>

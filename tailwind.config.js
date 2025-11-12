@@ -9,27 +9,61 @@ export default {
     ],
     theme: {
         extend: {
-            // Custom Colors - Sesuai dengan CSS Variables di app.css
+            // Custom Colors - Palet Warna Baru
             colors: {
-                // Emerald Green Palette (Primary Brand Color)
+                // Primary Green Palette (Brand Color)
+                primary: {
+                    DEFAULT: "#83CD20",
+                    light: "#a5d85a",
+                    lighter: "#c7e394",
+                    dark: "#6ba41a",
+                    darker: "#1A723D",
+                    50: "#F1F5EB",
+                    100: "#e8f0d8",
+                    200: "#d1e1b1",
+                    300: "#bad28a",
+                    400: "#a3c363",
+                    500: "#83CD20",
+                    600: "#6ba41a",
+                    700: "#1A723D",
+                    800: "#14552e",
+                    900: "#0e381f",
+                },
+                // Dark Navy (Text & Dark Backgrounds)
+                navy: {
+                    DEFAULT: "#0C1724",
+                    light: "#1a2a3d",
+                    lighter: "#283d56",
+                    50: "#f0f2f5",
+                    100: "#d9dee5",
+                    200: "#b3bdcb",
+                    300: "#8d9cb1",
+                    400: "#677b97",
+                    500: "#415a7d",
+                    600: "#344763",
+                    700: "#273549",
+                    800: "#1a222f",
+                    900: "#0C1724",
+                },
+                // Legacy support (mapping to new colors)
                 emerald: {
-                    green: "#2ecc71",
-                    dark: "#059669",
-                    light: "#34d399",
-                    50: "#ecfdf5",
-                    100: "#d1fae5",
-                    200: "#a7f3d0",
-                    300: "#6ee7b7",
-                    400: "#34d399",
-                    500: "#10b981",
-                    600: "#059669",
-                    700: "#047857",
-                    800: "#065f46",
-                    900: "#064e3b",
+                    green: "#83CD20",
+                    dark: "#1A723D",
+                    light: "#a5d85a",
+                    50: "#F1F5EB",
+                    100: "#e8f0d8",
+                    200: "#d1e1b1",
+                    300: "#bad28a",
+                    400: "#a3c363",
+                    500: "#83CD20",
+                    600: "#6ba41a",
+                    700: "#1A723D",
+                    800: "#14552e",
+                    900: "#0e381f",
                 },
                 // Custom Brand Colors
-                "warm-ivory": "#fff9f3",
-                "charcoal-grey": "#1c1c1e",
+                "warm-ivory": "#F1F5EB",
+                "charcoal-grey": "#0C1724",
             },
             // Custom Font Families
             fontFamily: {
@@ -39,10 +73,13 @@ export default {
             },
             // Custom Gradients
             backgroundImage: {
-                "gradient-accent": "linear-gradient(135deg, #059669, #34d399)",
-                "gradient-emerald": "linear-gradient(135deg, #059669, #34d399)",
+                "gradient-accent": "linear-gradient(135deg, #1A723D, #83CD20)",
+                "gradient-emerald": "linear-gradient(135deg, #1A723D, #83CD20)",
                 "gradient-hero":
-                    "linear-gradient(135deg, rgba(5, 150, 105, 0.9), rgba(52, 211, 153, 0.8))",
+                    "linear-gradient(135deg, rgba(26, 114, 61, 0.9), rgba(131, 205, 32, 0.8))",
+                "gradient-primary": "linear-gradient(135deg, #83CD20, #a5d85a)",
+                "gradient-dark": "linear-gradient(135deg, #0C1724, #1A723D)",
+                "gradient-light": "linear-gradient(135deg, #F1F5EB, #ffffff)",
             },
             // Custom Animations
             animation: {
@@ -60,9 +97,9 @@ export default {
                 },
                 "pulse-glow": {
                     "0%, 100%": {
-                        boxShadow: "0 0 20px rgba(46, 204, 113, 0.3)",
+                        boxShadow: "0 0 20px rgba(131, 205, 32, 0.3)",
                     },
-                    "50%": { boxShadow: "0 0 40px rgba(46, 204, 113, 0.6)" },
+                    "50%": { boxShadow: "0 0 40px rgba(131, 205, 32, 0.6)" },
                 },
                 fadeInUp: {
                     from: {
@@ -98,8 +135,10 @@ export default {
             },
             // Custom Box Shadows
             boxShadow: {
-                "glow-emerald": "0 10px 40px rgba(46, 204, 113, 0.3)",
-                "glow-emerald-lg": "0 20px 60px rgba(46, 204, 113, 0.4)",
+                "glow-emerald": "0 10px 40px rgba(131, 205, 32, 0.3)",
+                "glow-emerald-lg": "0 20px 60px rgba(131, 205, 32, 0.4)",
+                "glow-primary": "0 10px 40px rgba(131, 205, 32, 0.3)",
+                "glow-primary-lg": "0 20px 60px rgba(131, 205, 32, 0.4)",
             },
             // Custom Spacing (jika diperlukan)
             spacing: {

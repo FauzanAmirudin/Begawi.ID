@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Template Website Gratis - Begawi.id')
-@section('description', 'Koleksi template website gratis untuk desa, UMKM, dan komunitas. Responsive, SEO-friendly, dan mudah dikustomisasi.')
+@section('description', 'Koleksi template website gratis untuk Desa dan UMKM. Responsive, SEO-friendly, dan mudah dikustomisasi.')
 
 @section('content')
     <!-- Header Section -->
@@ -13,7 +13,7 @@
                     <span class="text-gradient">Premium Gratis</span>
                 </h1>
                 <p class="text-xl text-gray-600 mb-8 leading-relaxed">
-                    Koleksi template profesional yang dirancang khusus untuk desa, UMKM, dan komunitas Indonesia. Semua gratis dan mudah dikustomisasi.
+                    Koleksi template profesional yang dirancang khusus untuk Desa dan UMKM Indonesia. Semua gratis dan mudah dikustomisasi.
                 </p>
             
             </div>
