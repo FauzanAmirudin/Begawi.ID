@@ -51,6 +51,9 @@ class AuthenticatedSessionController extends Controller
                 ], 'login');
         }
 
+        // Update last login timestamp
+        $user->update(['last_login_at' => now()]);
+
         return redirect()->route('admin.dashboard.index');
     }
 

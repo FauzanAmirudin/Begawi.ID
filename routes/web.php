@@ -114,4 +114,25 @@ Route::prefix('desa')->name('desa.')->group(function () {
 // Admin Dashboard Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    
+    // User Management (Super Admin Only)
+    Route::resource('users', \App\Http\Controllers\Admin\UserManagementController::class);
+    Route::post('/users/{user}/toggle-status', [\App\Http\Controllers\Admin\UserManagementController::class, 'toggleStatus'])->name('users.toggle-status');
+    Route::post('/users/{user}/reset-password', [\App\Http\Controllers\Admin\UserManagementController::class, 'resetPassword'])->name('users.reset-password');
+    
+    // Website Management (Super Admin Only)
+    Route::prefix('websites')->name('websites.')->group(function () {
+        Route::get('/desa', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'desa'])->name('desa');
+        Route::get('/umkm', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'umkm'])->name('umkm');
+        Route::get('/domain', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'domain'])->name('domain');
+        Route::get('/template', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'template'])->name('template');
+        Route::post('/template', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'updateTemplate'])->name('template.update');
+        Route::get('/{website}', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'show'])->name('show');
+        Route::get('/{website}/edit', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'edit'])->name('edit');
+        Route::put('/{website}', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'update'])->name('update');
+        Route::post('/{website}/suspend', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'suspend'])->name('suspend');
+        Route::post('/{website}/activate', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'activate'])->name('activate');
+        Route::post('/{website}/activate-domain', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'activateDomain'])->name('activate-domain');
+        Route::delete('/{website}', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'destroy'])->name('destroy');
+    });
 });

@@ -2,18 +2,39 @@
     <!-- Left Side - Navigation -->
     <div class="flex items-center gap-6">
         <div class="flex items-center gap-4">
-            <span class="text-lg font-semibold text-gray-800">Constructor</span>
             <nav class="flex items-center gap-6 ml-8">
-                <a href="#" class="text-purple-600 font-semibold border-b-2 border-purple-600 pb-1">Dashboard</a>
-                <a href="#" class="text-gray-500 hover:text-gray-700">Pages</a>
-                <a href="#" class="text-gray-500 hover:text-gray-700">Posts</a>
-                <a href="#" class="text-gray-500 hover:text-gray-700">Files</a>
-                <a href="#" class="text-gray-500 hover:text-gray-700">Users</a>
-                <button class="text-gray-400">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
-                    </svg>
-                </button>
+                <a href="{{ route('admin.dashboard.index') }}" class="{{ request()->routeIs('admin.dashboard.*') ? 'text-purple-600 font-semibold border-b-2 border-purple-600 pb-1' : 'text-gray-500 hover:text-gray-700' }}">
+                    Dashboard
+                </a>
+                @if(auth()->user()->role === \App\Models\User::ROLE_SUPER_ADMIN)
+                <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'text-purple-600 font-semibold border-b-2 border-purple-600 pb-1' : 'text-gray-500 hover:text-gray-700' }}">
+                    Manajemen Pengguna
+                </a>
+                <div class="relative group">
+                    <a href="#" class="{{ request()->routeIs('admin.websites.*') ? 'text-purple-600 font-semibold border-b-2 border-purple-600 pb-1' : 'text-gray-500 hover:text-gray-700' }}">
+                        Manajemen Website
+                        <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+                    <div class="absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                        <div class="py-2">
+                            <a href="{{ route('admin.websites.desa') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.websites.desa') ? 'bg-emerald-50 text-emerald-700' : '' }}">
+                                Website Desa
+                            </a>
+                            <a href="{{ route('admin.websites.umkm') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.websites.umkm') ? 'bg-emerald-50 text-emerald-700' : '' }}">
+                                Website UMKM
+                            </a>
+                            <a href="{{ route('admin.websites.domain') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.websites.domain') ? 'bg-emerald-50 text-emerald-700' : '' }}">
+                                Status Aktivasi & Domain
+                            </a>
+                            <a href="{{ route('admin.websites.template') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.websites.template') ? 'bg-emerald-50 text-emerald-700' : '' }}">
+                                Integrasi Template
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </nav>
         </div>
     </div>
@@ -22,7 +43,7 @@
     <div class="flex-1 max-w-md mx-8">
         <div class="relative">
             <input type="text" 
-                   placeholder="Try searching other Pages Today" 
+                   placeholder="Cari..." 
                    class="w-full pl-4 pr-10 py-2 bg-gray-100 border-0 rounded-lg text-sm text-gray-600 placeholder-gray-400 focus:bg-white focus:ring-2 focus:ring-purple-500 focus:outline-none">
             <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -42,26 +63,25 @@
             <span class="absolute -top-1 -right-1 w-5 h-5 bg-purple-500 text-white text-xs rounded-full flex items-center justify-center font-bold">1</span>
         </button>
 
-        <!-- Messages -->
-        <button class="p-2 text-gray-400 hover:text-gray-600">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-            </svg>
-        </button>
-
         <!-- Profile -->
-        <button class="p-2 text-gray-400 hover:text-gray-600">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-            </svg>
-        </button>
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-xs font-semibold">
+                {{ substr(auth()->user()->name, 0, 2) }}
+            </div>
+            <div class="text-sm">
+                <div class="font-medium text-gray-900">{{ auth()->user()->name }}</div>
+                <div class="text-xs text-gray-500">{{ ucfirst(str_replace('_', ' ', auth()->user()->role)) }}</div>
+            </div>
+        </div>
 
-        <!-- Settings -->
-        <button class="p-2 text-gray-400 hover:text-gray-600">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg>
-        </button>
+        <!-- Logout -->
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="p-2 text-gray-400 hover:text-gray-600" title="Logout">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+            </button>
+        </form>
     </div>
 </div>
