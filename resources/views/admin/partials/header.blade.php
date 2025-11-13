@@ -1,12 +1,12 @@
 <div class="flex items-center justify-between">
     <!-- Left Side - Navigation -->
-    <div class="flex items-center gap-6">
+    {{-- <div class="flex items-center gap-6">
         <div class="flex items-center gap-4">
             <nav class="flex items-center gap-6 ml-8">
-                <a href="{{ route('admin.dashboard.index') }}" class="{{ request()->routeIs('admin.dashboard.*') ? 'text-purple-600 font-semibold border-b-2 border-purple-600 pb-1' : 'text-gray-500 hover:text-gray-700' }}">
-                    Dashboard
-                </a>
                 @if(auth()->user()->role === \App\Models\User::ROLE_SUPER_ADMIN)
+                <a href="{{ route('admin.platform-directory.index') }}" class="{{ request()->routeIs('admin.platform-directory.*') ? 'text-emerald-600 font-semibold border-b-2 border-emerald-600 pb-1' : 'text-gray-500 hover:text-gray-700' }}">
+                    Direktori Platform
+                </a>
                 <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'text-purple-600 font-semibold border-b-2 border-purple-600 pb-1' : 'text-gray-500 hover:text-gray-700' }}">
                     Manajemen Pengguna
                 </a>
@@ -34,10 +34,95 @@
                         </div>
                     </div>
                 </div>
+                <div class="relative group">
+                    <a href="#" class="{{ request()->routeIs('admin.finance.*') ? 'text-purple-600 font-semibold border-b-2 border-purple-600 pb-1' : 'text-gray-500 hover:text-gray-700' }}">
+                        Keuangan & Transaksi
+                        <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+                    <div class="absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                        <div class="py-2">
+                            <a href="{{ route('admin.finance.packages.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.finance.packages.*') ? 'bg-purple-50 text-purple-700' : '' }}">
+                                Paket Langganan
+                            </a>
+                            <a href="{{ route('admin.finance.transactions.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.finance.transactions.*') ? 'bg-purple-50 text-purple-700' : '' }}">
+                                Riwayat Pembayaran
+                            </a>
+                            <a href="{{ route('admin.finance.payment-gateways.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.finance.payment-gateways.*') ? 'bg-purple-50 text-purple-700' : '' }}">
+                                Integrasi Payment Gateway
+                            </a>
+                            <a href="{{ route('admin.finance.reports.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.finance.reports.*') ? 'bg-purple-50 text-purple-700' : '' }}">
+                                Laporan Keuangan
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative group">
+                    <a href="#" class="{{ request()->routeIs('admin.content.*') ? 'text-indigo-600 font-semibold border-b-2 border-indigo-600 pb-1' : 'text-gray-500 hover:text-gray-700' }}">
+                        Konten & Edukasi
+                        <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+                    <div class="absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                        <div class="py-2">
+                            <a href="{{ route('admin.content.articles.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.content.articles.*') ? 'bg-indigo-50 text-indigo-700' : '' }}">
+                                Artikel / Berita
+                            </a>
+                            <a href="{{ route('admin.content.videos.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.content.videos.*') ? 'bg-indigo-50 text-indigo-700' : '' }}">
+                                Video & Dokumentasi
+                            </a>
+                            <a href="{{ route('admin.content.pages.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.content.pages.*') ? 'bg-indigo-50 text-indigo-700' : '' }}">
+                                Pusat Informasi & Edukasi
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative group">
+                    <a href="#" class="{{ request()->routeIs('admin.logs.*') ? 'text-purple-600 font-semibold border-b-2 border-purple-600 pb-1' : 'text-gray-500 hover:text-gray-700' }}">
+                        Audit & Log Aktivitas
+                        <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+                    <div class="absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                        <div class="py-2">
+                            <a href="{{ route('admin.logs.user') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.logs.user') ? 'bg-purple-50 text-purple-700' : '' }}">
+                                Aktivitas Pengguna
+                            </a>
+                            <a href="{{ route('admin.logs.system') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.logs.system') ? 'bg-purple-50 text-purple-700' : '' }}">
+                                Audit Sistem
+                            </a>
+                            <a href="{{ route('admin.logs.download.page') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.logs.download.page') ? 'bg-purple-50 text-purple-700' : '' }}">
+                                Download Report
+                            </a>
+                        </div>
+                    </div>
+                </div>
                 @endif
+
+                <div class="relative group">
+                    <a href="{{ route('admin.support.index') }}" class="{{ request()->routeIs('admin.support.*') ? 'text-cyan-600 font-semibold border-b-2 border-cyan-600 pb-1' : 'text-gray-500 hover:text-gray-700' }}">
+                        Support & Pengaduan
+                        <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+                    <div class="absolute left-0 mt-2 w-60 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                        <div class="py-2">
+                            <a href="{{ route('admin.support.tickets') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.support.tickets') ? 'bg-cyan-50 text-cyan-700' : '' }}">
+                                Tiket Pengaduan
+                            </a>
+                            <a href="{{ route('admin.support.documentation') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.support.documentation') ? 'bg-cyan-50 text-cyan-700' : '' }}">
+                                Dokumentasi Bantuan
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </nav>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Center - Search -->
     <div class="flex-1 max-w-md mx-8">

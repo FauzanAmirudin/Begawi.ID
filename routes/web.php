@@ -11,7 +11,11 @@ use App\Http\Controllers\Desa\DesaController;
 use App\Http\Controllers\Desa\BeritaController;
 use App\Http\Controllers\Desa\UmkmController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\SupportController;
+use App\Http\Controllers\Admin\SupportArticleController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\PlatformDirectoryController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -32,6 +36,7 @@ Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/education', [EducationController::class, 'index'])->name('education');
 Route::get('/education/{category}', [EducationController::class, 'category'])->name('education.category');
 Route::get('/education/article/{slug}', [EducationController::class, 'article'])->name('education.article');
+Route::get('/education/video/{slug}', [EducationController::class, 'video'])->name('education.video');
 
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
@@ -114,6 +119,7 @@ Route::prefix('desa')->name('desa.')->group(function () {
 // Admin Dashboard Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/platform-directory', [PlatformDirectoryController::class, 'index'])->name('platform-directory.index');
     
     // User Management (Super Admin Only)
     Route::resource('users', \App\Http\Controllers\Admin\UserManagementController::class);
@@ -134,5 +140,56 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::post('/{website}/activate', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'activate'])->name('activate');
         Route::post('/{website}/activate-domain', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'activateDomain'])->name('activate-domain');
         Route::delete('/{website}', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'destroy'])->name('destroy');
+    });
+
+    // Finance & Transactions (Super Admin Only)
+    Route::prefix('finance')->name('finance.')->group(function () {
+        // Subscription Packages
+        Route::resource('packages', \App\Http\Controllers\Admin\SubscriptionPackageController::class);
+        
+        // Transactions
+        Route::get('/transactions', [\App\Http\Controllers\Admin\TransactionController::class, 'index'])->name('transactions.index');
+        Route::get('/transactions/{transaction}', [\App\Http\Controllers\Admin\TransactionController::class, 'show'])->name('transactions.show');
+        
+        // Payment Gateways
+        Route::get('/payment-gateways', [\App\Http\Controllers\Admin\PaymentGatewayController::class, 'index'])->name('payment-gateways.index');
+        Route::get('/payment-gateways/{paymentGateway}/edit', [\App\Http\Controllers\Admin\PaymentGatewayController::class, 'edit'])->name('payment-gateways.edit');
+        Route::put('/payment-gateways/{paymentGateway}', [\App\Http\Controllers\Admin\PaymentGatewayController::class, 'update'])->name('payment-gateways.update');
+        Route::post('/payment-gateways', [\App\Http\Controllers\Admin\PaymentGatewayController::class, 'store'])->name('payment-gateways.store');
+        
+        // Finance Reports
+        Route::get('/reports', [\App\Http\Controllers\Admin\FinanceReportController::class, 'index'])->name('reports.index');
+    });
+
+    // Content & Education (Super Admin Only)
+    Route::prefix('content')->name('content.')->group(function () {
+        // Articles
+        Route::resource('articles', \App\Http\Controllers\Admin\ArticleController::class);
+        
+        // Videos & Documentation
+        Route::resource('videos', \App\Http\Controllers\Admin\VideoDocumentationController::class);
+        
+        // Information Pages
+        Route::resource('pages', \App\Http\Controllers\Admin\InformationPageController::class);
+    });
+
+    // Audit & Log Aktivitas (Super Admin Only)
+    Route::prefix('logs')->name('logs.')->group(function () {
+        Route::get('/user-activity', [ActivityLogController::class, 'userActivity'])->name('user');
+        Route::get('/system-audit', [ActivityLogController::class, 'systemAudit'])->name('system');
+        Route::get('/download-report-page', [ActivityLogController::class, 'reportPage'])->name('download.page');
+        Route::get('/download-report', [ActivityLogController::class, 'downloadReport'])->name('download');
+    });
+
+    // Support & Pengaduan (All Admin Roles)
+    Route::prefix('support')->name('support.')->group(function () {
+        Route::get('/', [SupportController::class, 'index'])->name('index');
+        Route::get('/tickets', [SupportController::class, 'tickets'])->name('tickets');
+        Route::get('/tickets/{ticket}', [SupportController::class, 'show'])->name('tickets.show');
+        Route::get('/documentation', [SupportController::class, 'documentation'])->name('documentation');
+        Route::get('/documentation/{slug}', [SupportController::class, 'documentationShow'])->name('documentation.show');
+        Route::get('/contact', [SupportController::class, 'contact'])->name('contact');
+        Route::post('/contact', [SupportController::class, 'submitContact'])->name('contact.submit');
+        Route::resource('articles', SupportArticleController::class)->except(['show']);
     });
 });

@@ -10,7 +10,7 @@
     </div>
 
     <!-- Navigation Menu -->
-    <nav class="space-y-2 flex-1">
+    <nav class="space-y-2 flex-1 overflow-y-auto pr-2">
         <!-- Dashboard -->
         <a href="{{ route('admin.dashboard.index') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-orange-500 to-pink-500 rounded-xl font-medium {{ request()->routeIs('admin.dashboard.*') ? 'ring-2 ring-orange-300' : '' }}">
             <div class="flex items-center gap-3">
@@ -22,6 +22,17 @@
         </a>
 
         @if(auth()->user()->role === \App\Models\User::ROLE_SUPER_ADMIN)
+        <!-- Direktori Platform -->
+        <a href="{{ route('admin.platform-directory.index') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl font-medium {{ request()->routeIs('admin.platform-directory.*') ? 'ring-2 ring-emerald-300' : '' }}">
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h12m-7 5h7"></path>
+                </svg>
+                <span>Direktori Platform</span>
+            </div>
+            <span class="bg-white/20 text-xs px-2 py-1 rounded-full">{{ \App\Models\Website::where('status', 'active')->count() }}</span>
+        </a>
+
         <!-- Manajemen Pengguna -->
         <a href="{{ route('admin.users.index') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl font-medium {{ request()->routeIs('admin.users.*') ? 'ring-2 ring-emerald-300' : '' }}">
             <div class="flex items-center gap-3">
@@ -76,6 +87,147 @@
                 </a>
             </div>
         </div>
+
+        <!-- Keuangan & Transaksi - Dropdown -->
+        <div class="space-y-1">
+            <button onclick="toggleDropdown('finance-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl font-medium {{ request()->routeIs('admin.finance.*') ? 'ring-2 ring-purple-300' : '' }} hover:opacity-90 transition">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>Keuangan & Transaksi</span>
+                </div>
+                <svg id="finance-dropdown-icon" class="w-4 h-4 transition-transform duration-200 {{ request()->routeIs('admin.finance.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div id="finance-dropdown" class="ml-4 space-y-1 overflow-hidden transition-all duration-300 {{ request()->routeIs('admin.finance.*') ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0' }}">
+                <a href="{{ route('admin.finance.packages.index') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition {{ request()->routeIs('admin.finance.packages.*') ? 'bg-purple-50 text-purple-700 font-medium' : '' }}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                    <span>Paket Langganan</span>
+                </a>
+                <a href="{{ route('admin.finance.transactions.index') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition {{ request()->routeIs('admin.finance.transactions.*') ? 'bg-purple-50 text-purple-700 font-medium' : '' }}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>Riwayat Pembayaran</span>
+                </a>
+                <a href="{{ route('admin.finance.payment-gateways.index') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition {{ request()->routeIs('admin.finance.payment-gateways.*') ? 'bg-purple-50 text-purple-700 font-medium' : '' }}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>Integrasi Payment Gateway</span>
+                </a>
+                <a href="{{ route('admin.finance.reports.index') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition {{ request()->routeIs('admin.finance.reports.*') ? 'bg-purple-50 text-purple-700 font-medium' : '' }}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <span>Laporan Keuangan</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Konten & Edukasi - Dropdown -->
+        <div class="space-y-1">
+            <button onclick="toggleDropdown('content-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-xl font-medium {{ request()->routeIs('admin.content.*') ? 'ring-2 ring-indigo-300' : '' }} hover:opacity-90 transition">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                    <span>Konten & Edukasi</span>
+                </div>
+                <svg id="content-dropdown-icon" class="w-4 h-4 transition-transform duration-200 {{ request()->routeIs('admin.content.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div id="content-dropdown" class="ml-4 space-y-1 overflow-hidden transition-all duration-300 {{ request()->routeIs('admin.content.*') ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0' }}">
+                <a href="{{ route('admin.content.articles.index') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition {{ request()->routeIs('admin.content.articles.*') ? 'bg-indigo-50 text-indigo-700 font-medium' : '' }}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>Artikel / Berita</span>
+                </a>
+                <a href="{{ route('admin.content.videos.index') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition {{ request()->routeIs('admin.content.videos.*') ? 'bg-indigo-50 text-indigo-700 font-medium' : '' }}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Video & Dokumentasi</span>
+                </a>
+                <a href="{{ route('admin.content.pages.index') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition {{ request()->routeIs('admin.content.pages.*') ? 'bg-indigo-50 text-indigo-700 font-medium' : '' }}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>Pusat Informasi & Edukasi</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Audit & Log Aktivitas - Dropdown -->
+        <div class="space-y-1">
+            <button onclick="toggleDropdown('logs-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl font-medium {{ request()->routeIs('admin.logs.*') ? 'ring-2 ring-gray-600' : '' }} hover:opacity-90 transition">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h6m-8 8h8a2 2 0 002-2V7a2 2 0 00-2-2H9a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Audit & Log Aktivitas</span>
+                </div>
+                <svg id="logs-dropdown-icon" class="w-4 h-4 transition-transform duration-200 {{ request()->routeIs('admin.logs.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div id="logs-dropdown" class="ml-4 space-y-1 overflow-hidden transition-all duration-300 {{ request()->routeIs('admin.logs.*') ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0' }}">
+                <a href="{{ route('admin.logs.user') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition {{ request()->routeIs('admin.logs.user') ? 'bg-gray-100 text-gray-900 font-medium' : '' }}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>Aktivitas Pengguna</span>
+                </a>
+                <a href="{{ route('admin.logs.system') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition {{ request()->routeIs('admin.logs.system') ? 'bg-gray-100 text-gray-900 font-medium' : '' }}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 11V7a1 1 0 012 0v4h4a1 1 0 010 2h-4v4a1 1 0 01-2 0v-4H7a1 1 0 010-2h4z"></path>
+                    </svg>
+                    <span>Audit Sistem</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Support & Pengaduan -->
+        <div class="space-y-1">
+            <button onclick="toggleDropdown('support-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl font-medium {{ request()->routeIs('admin.support.*') ? 'ring-2 ring-cyan-300' : '' }} hover:opacity-90 transition">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-1.414 1.414M6.05 17.95l-1.414 1.414M9 5H5a2 2 0 00-2 2v4m16 0v4a2 2 0 01-2 2h-4M15 9h.01M19 9h.01M9 15h.01M5 15h.01"></path>
+                    </svg>
+                    <span>Support & Pengaduan</span>
+                </div>
+                <svg id="support-dropdown-icon" class="w-4 h-4 transition-transform duration-200 {{ request()->routeIs('admin.support.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div id="support-dropdown" class="ml-4 space-y-1 overflow-hidden transition-all duration-300 {{ request()->routeIs('admin.support.*') ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0' }}">
+                <a href="{{ route('admin.support.index') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition {{ request()->routeIs('admin.support.index') ? 'bg-cyan-50 text-cyan-700 font-medium' : '' }}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M8 7h8M5 11h14M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"></path>
+                    </svg>
+                    <span>Ringkasan Support</span>
+                </a>
+                <a href="{{ route('admin.support.tickets') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition {{ request()->routeIs('admin.support.tickets') ? 'bg-cyan-50 text-cyan-700 font-medium' : '' }}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>Tiket Pengaduan</span>
+                </a>
+                <a href="{{ route('admin.support.documentation') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition {{ request()->routeIs('admin.support.documentation') ? 'bg-cyan-50 text-cyan-700 font-medium' : '' }}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>Dokumentasi Bantuan</span>
+                </a>
+            </div>
+        </div>
         @endif
     </nav>
 
@@ -120,6 +272,46 @@ document.addEventListener('DOMContentLoaded', function() {
         dropdown.classList.remove('max-h-0', 'opacity-0');
         dropdown.classList.add('max-h-96', 'opacity-100');
         if (icon) icon.classList.add('rotate-180');
+    }
+    @endif
+    
+    @if(request()->routeIs('admin.finance.*'))
+    const financeDropdown = document.getElementById('finance-dropdown');
+    const financeIcon = document.getElementById('finance-dropdown-icon');
+    if (financeDropdown && !financeDropdown.classList.contains('max-h-96')) {
+        financeDropdown.classList.remove('max-h-0', 'opacity-0');
+        financeDropdown.classList.add('max-h-96', 'opacity-100');
+        if (financeIcon) financeIcon.classList.add('rotate-180');
+    }
+    @endif
+    
+    @if(request()->routeIs('admin.content.*'))
+    const contentDropdown = document.getElementById('content-dropdown');
+    const contentIcon = document.getElementById('content-dropdown-icon');
+    if (contentDropdown && !contentDropdown.classList.contains('max-h-96')) {
+        contentDropdown.classList.remove('max-h-0', 'opacity-0');
+        contentDropdown.classList.add('max-h-96', 'opacity-100');
+        if (contentIcon) contentIcon.classList.add('rotate-180');
+    }
+    @endif
+
+    @if(request()->routeIs('admin.logs.*'))
+    const logsDropdown = document.getElementById('logs-dropdown');
+    const logsIcon = document.getElementById('logs-dropdown-icon');
+    if (logsDropdown && !logsDropdown.classList.contains('max-h-96')) {
+        logsDropdown.classList.remove('max-h-0', 'opacity-0');
+        logsDropdown.classList.add('max-h-96', 'opacity-100');
+        if (logsIcon) logsIcon.classList.add('rotate-180');
+    }
+    @endif
+
+    @if(request()->routeIs('admin.support.*'))
+    const supportDropdown = document.getElementById('support-dropdown');
+    const supportIcon = document.getElementById('support-dropdown-icon');
+    if (supportDropdown && !supportDropdown.classList.contains('max-h-96')) {
+        supportDropdown.classList.remove('max-h-0', 'opacity-0');
+        supportDropdown.classList.add('max-h-96', 'opacity-100');
+        if (supportIcon) supportIcon.classList.add('rotate-180');
     }
     @endif
 });

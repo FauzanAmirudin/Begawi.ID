@@ -117,59 +117,21 @@
                 <button class="content-tab px-6 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-purple-500 hover:text-purple-600 transition-all" data-tab="video">
                     🎥 Video
                 </button>
-                <button class="content-tab px-6 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-purple-500 hover:text-purple-600 transition-all" data-tab="webinar">
-                    🎪 Webinar
+                <button class="content-tab px-6 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-purple-500 hover:text-purple-600 transition-all" data-tab="tips">
+                    💡 Tips
                 </button>
-                <button class="content-tab px-6 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-purple-500 hover:text-purple-600 transition-all" data-tab="case-study">
-                    📊 Case Study
+                <button class="content-tab px-6 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-purple-500 hover:text-purple-600 transition-all" data-tab="update">
+                    📢 Update
                 </button>
             </div>
             
             <!-- Content Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Content Item 1 -->
-                <div class="content-item bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all hover-tilt" data-category="tutorial">
+                @forelse($featured_content as $content)
+                <div class="content-item bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all hover-tilt" data-category="{{ $content['type'] }}">
                     <div class="relative">
-                        <img src="{{ asset('images/education/tutorial-1.jpg') }}" alt="Tutorial" class="w-full h-48 object-cover">
-                        <div class="absolute top-4 left-4">
-                            <span class="bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full">TUTORIAL</span>
-                        </div>
-                        <div class="absolute top-4 right-4">
-                            <span class="bg-yellow-500 text-white text-xs font-bold px-3 py-1 rounded-full">🔥 HOT</span>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="font-poppins font-bold text-xl text-charcoal-grey mb-3">Cara Membuat Website Desa dalam 10 Menit</h3>
-                        <p class="text-gray-600 text-sm mb-4 leading-relaxed">
-                            Panduan step-by-step membuat website desa yang profesional dan informatif menggunakan template Begawi.id.
-                        </p>
-                        <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
-                            <span class="flex items-center">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                10 menit
-                            </span>
-                            <span class="flex items-center">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                2.5k views
-                            </span>
-                        </div>
-                        <a href="#" class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition-all">
-                            Baca Tutorial
-                            <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Content Item 2 -->
-                <div class="content-item bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all hover-tilt" data-category="video">
-                    <div class="relative">
-                        <img src="{{ asset('images/education/video-1.jpg') }}" alt="Video" class="w-full h-48 object-cover">
+                        <img src="{{ $content['image'] }}" alt="{{ $content['title'] }}" class="w-full h-48 object-cover">
+                        @if($content['type'] === 'video')
                         <div class="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/60 transition-all">
                             <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
                                 <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
@@ -177,76 +139,73 @@
                                 </svg>
                             </div>
                         </div>
+                        @endif
                         <div class="absolute top-4 left-4">
-                            <span class="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full">VIDEO</span>
+                            @if($content['type'] === 'tutorial')
+                                <span class="bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full">TUTORIAL</span>
+                            @elseif($content['type'] === 'video')
+                                <span class="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full">VIDEO</span>
+                            @elseif($content['type'] === 'tips')
+                                <span class="bg-orange-600 text-white text-xs font-bold px-3 py-1 rounded-full">TIPS</span>
+                            @elseif($content['type'] === 'update')
+                                <span class="bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full">UPDATE</span>
+                            @endif
                         </div>
+                        @if(isset($content['is_hot']) && $content['is_hot'])
+                        <div class="absolute top-4 right-4">
+                            <span class="bg-yellow-500 text-white text-xs font-bold px-3 py-1 rounded-full">🔥 HOT</span>
+                        </div>
+                        @endif
+                        @if($content['type'] === 'video' && isset($content['duration']))
                         <div class="absolute bottom-4 right-4">
-                            <span class="bg-black/50 text-white text-xs px-2 py-1 rounded">15:30</span>
+                            <span class="bg-black/50 text-white text-xs px-2 py-1 rounded">{{ $content['duration'] }}</span>
                         </div>
+                        @endif
                     </div>
                     <div class="p-6">
-                        <h3 class="font-poppins font-bold text-xl text-charcoal-grey mb-3">Setup Toko Online untuk UMKM</h3>
+                        <h3 class="font-poppins font-bold text-xl text-charcoal-grey mb-3">{{ Str::limit($content['title'], 60) }}</h3>
                         <p class="text-gray-600 text-sm mb-4 leading-relaxed">
-                            Video tutorial lengkap cara setup toko online, menambahkan produk, dan mengatur sistem pembayaran.
+                            {{ Str::limit($content['description'], 120) }}
                         </p>
                         <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
                             <span class="flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2h4a1 1 0 011 1v1a1 1 0 01-1 1h-1v12a2 2 0 01-2 2H6a2 2 0 01-2-2V7H3a1 1 0 01-1-1V5a1 1 0 011-1h4zM9 3v1h6V3H9zM6 7v12h12V7H6z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
-                                15 menit
+                                {{ $content['duration'] ?? '5 menit' }}
                             </span>
                             <span class="flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 </svg>
-                                1.8k likes
+                                {{ number_format($content['views']) }} views
                             </span>
                         </div>
-                        <a href="#" class="inline-flex items-center px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-all">
+                        @if($content['type'] === 'video')
+                        <a href="{{ route('education.video', $content['slug']) }}" class="inline-flex items-center px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-all">
                             Tonton Video
                             <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </a>
-                    </div>
-                </div>
-                
-                <!-- Content Item 3 -->
-                <div class="content-item bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all hover-tilt" data-category="case-study">
-                    <div class="relative">
-                        <img src="{{ asset('images/education/case-study-1.jpg') }}" alt="Case Study" class="w-full h-48 object-cover">
-                        <div class="absolute top-4 left-4">
-                            <span class="bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full">CASE STUDY</span>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="font-poppins font-bold text-xl text-charcoal-grey mb-3">Sukses UMKM Batik Go Digital</h3>
-                        <p class="text-gray-600 text-sm mb-4 leading-relaxed">
-                            Kisah sukses UMKM batik yang berhasil meningkatkan penjualan 300% setelah menggunakan platform digital.
-                        </p>
-                        <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
-                            <span class="flex items-center">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                                </svg>
-                                +300% Sales
-                            </span>
-                            <span class="flex items-center">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                </svg>
-                                Yogyakarta
-                            </span>
-                        </div>
-                        <a href="#" class="inline-flex items-center px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-all">
-                            Baca Selengkapnya
+                        @else
+                        <a href="{{ route('education.article', $content['slug']) }}" class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition-all">
+                            Baca {{ $content['type'] === 'tips' ? 'Tips' : ($content['type'] === 'update' ? 'Update' : 'Tutorial') }}
                             <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                             </svg>
                         </a>
+                        @endif
                     </div>
                 </div>
+                @empty
+                <div class="col-span-full text-center py-12">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <p class="mt-2 text-sm text-gray-500">Belum ada konten yang tersedia</p>
+                </div>
+                @endforelse
             </div>
             
             <!-- Load More -->
@@ -273,12 +232,12 @@
                 
                 // Update active tab
                 contentTabs.forEach(t => {
-                    t.classList.remove('active', 'bg-gradient-accent', 'text-white');
+                    t.classList.remove('active', 'bg-gradient-accent', 'text-white', 'border-purple-500', 'text-purple-600');
                     t.classList.add('bg-white', 'border-gray-300', 'text-gray-700');
                 });
                 
                 this.classList.add('active', 'bg-gradient-accent', 'text-white');
-                this.classList.remove('bg-white', 'border-gray-300', 'text-gray-700');
+                this.classList.remove('bg-white', 'border-gray-300', 'text-gray-700', 'border-purple-500', 'text-purple-600');
                 
                 // Filter content
                 contentItems.forEach(item => {

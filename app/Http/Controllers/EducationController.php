@@ -2,17 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
+use App\Models\VideoDocumentation;
+use App\Models\InformationPage;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
 class EducationController extends Controller
 {
     public function index()
     {
+        // Get stats from database
         $stats = [
-            'tutorials' => 150,
-            'videos' => 50,
-            'webinars' => 25,
+            'tutorials' => Article::where('is_published', true)
+                ->where('category', 'Tutorial')
+                ->count(),
+            'videos' => VideoDocumentation::where('is_published', true)
+                ->where('type', 'youtube')
+                ->count(),
+            'webinars' => 0, // Can be added later if needed
             'is_free' => true
         ];
         
+        // Learning paths (can be kept static or made dynamic later)
         $learning_paths = [
             [
                 'id' => 'pemula',
@@ -26,7 +39,9 @@ class EducationController extends Controller
                     ['title' => 'Menambahkan Konten', 'completed' => true],
                     ['title' => 'Publikasi Website', 'completed' => false]
                 ],
-                'tutorial_count' => 8,
+                'tutorial_count' => Article::where('is_published', true)
+                    ->where('category', 'Tutorial')
+                    ->count(),
                 'duration' => '2 jam'
             ],
             [
@@ -41,7 +56,9 @@ class EducationController extends Controller
                     ['title' => 'Analisis Website', 'completed' => true],
                     ['title' => 'Digital Marketing', 'completed' => false]
                 ],
-                'tutorial_count' => 12,
+                'tutorial_count' => Article::where('is_published', true)
+                    ->where('category', 'Tips')
+                    ->count(),
                 'duration' => '4 jam'
             ],
             [
@@ -56,97 +73,187 @@ class EducationController extends Controller
                     ['title' => 'Advanced Analytics', 'completed' => true],
                     ['title' => 'Scale & Growth', 'completed' => false]
                 ],
-                'tutorial_count' => 15,
+                'tutorial_count' => Article::where('is_published', true)
+                    ->where('category', 'Update')
+                    ->count(),
                 'duration' => '6 jam'
             ]
         ];
         
-        $featured_content = [
-            [
-                'id' => 1,
-                'type' => 'tutorial',
-                'title' => 'Cara Membuat Website Desa dalam 10 Menit',
-                'description' => 'Panduan step-by-step membuat website desa yang profesional dan informatif menggunakan template Begawi.id.',
-                'image' => 'education/tutorial-1.jpg',
-                'duration' => '10 menit',
-                'views' => 2500,
-                'is_hot' => true
-            ],
-            [
-                'id' => 2,
-                'type' => 'video',
-                'title' => 'Setup Toko Online untuk UMKM',
-                'description' => 'Video tutorial lengkap cara setup toko online, menambahkan produk, dan mengatur sistem pembayaran.',
-                'image' => 'education/video-1.jpg',
-                'duration' => '15 menit',
-                'likes' => 1800
-            ],
-            [
-                'id' => 3,
-                'type' => 'case-study',
-                'title' => 'Sukses UMKM Batik Go Digital',
-                'description' => 'Kisah sukses UMKM batik yang berhasil meningkatkan penjualan 300% setelah menggunakan platform digital.',
-                'image' => 'education/case-study-1.jpg',
-                'location' => 'Yogyakarta',
-                'metric' => '+300% Sales'
-            ]
-        ];
+        // Get featured content from database
+        $featured_articles = Article::where('is_published', true)
+            ->with('creator')
+            ->orderBy('views', 'desc')
+            ->orderBy('published_at', 'desc')
+            ->take(6)
+            ->get()
+            ->map(function ($article) {
+                return [
+                    'id' => $article->id,
+                    'type' => $this->mapCategoryToType($article->category),
+                    'title' => $article->title,
+                    'description' => $article->excerpt ?? Str::limit(strip_tags($article->content), 150),
+                    'image' => $article->featured_image ? Storage::url($article->featured_image) : asset('images/education/tutorial-1.jpg'),
+                    'duration' => $this->estimateReadingTime($article->content),
+                    'views' => $article->views,
+                    'is_hot' => $article->views > 1000,
+                    'slug' => $article->slug,
+                    'category' => $article->category,
+                    'published_at' => $article->published_at
+                ];
+            });
         
-        $upcoming_webinars = [
-            [
-                'id' => 1,
-                'title' => 'Strategi Digital Marketing untuk UMKM 2025',
-                'description' => 'Pelajari strategi terbaru untuk memasarkan produk UMKM secara digital. Dari social media marketing hingga e-commerce optimization.',
-                'date' => '25 Desember 2024',
-                'time' => '19:00 WIB',
-                'duration' => '90 menit',
-                'speaker' => 'Andi Prasetyo',
-                'participants' => 245,
-                'available_seats' => 55,
-                'color' => 'emerald'
-            ],
-            [
-                'id' => 2,
-                'title' => 'Membangun Website Desa yang Efektif',
-                'description' => 'Workshop praktis untuk aparatur desa dalam membangun dan mengelola website desa yang informatif dan transparan.',
-                'date' => '28 Desember 2024',
-                'time' => '14:00 WIB',
-                'duration' => '120 menit',
-                'speaker' => 'Sari Indrawati',
-                'participants' => 189,
-                'available_seats' => 11,
-                'color' => 'blue'
-            ]
-        ];
+        // Get featured videos
+        $featured_videos = VideoDocumentation::where('is_published', true)
+            ->where('type', 'youtube')
+            ->with('creator')
+            ->orderBy('views', 'desc')
+            ->orderBy('published_at', 'desc')
+            ->take(3)
+            ->get()
+            ->map(function ($video) {
+                return [
+                    'id' => $video->id,
+                    'type' => 'video',
+                    'title' => $video->title,
+                    'description' => $video->description ?? '',
+                    'image' => $video->thumbnail ? Storage::url($video->thumbnail) : asset('images/education/video-1.jpg'),
+                    'duration' => $video->formatted_duration ?? '15 menit',
+                    'views' => $video->views,
+                    'youtube_url' => $video->youtube_embed_url,
+                    'slug' => $video->slug
+                ];
+            });
+        
+        // Combine featured content
+        $featured_content = $featured_articles->merge($featured_videos)->shuffle()->take(6);
+        
+        // Get upcoming webinars (can be kept static or made dynamic later)
+        $upcoming_webinars = [];
         
         return view('pages.education', compact('stats', 'learning_paths', 'featured_content', 'upcoming_webinars'));
     }
     
     public function category($category)
     {
-        $validCategories = ['pemula', 'menengah', 'mahir'];
+        $validCategories = ['pemula', 'menengah', 'mahir', 'tutorial', 'update', 'tips'];
         
         if (!in_array($category, $validCategories)) {
             abort(404);
         }
         
         $categoryData = $this->getCategoryData($category);
-        $tutorials = $this->getTutorialsByCategory($category);
+        
+        // Map category to article category
+        $articleCategory = $this->mapTypeToCategory($category);
+        
+        if ($articleCategory) {
+            $tutorials = Article::where('is_published', true)
+                ->where('category', $articleCategory)
+                ->with('creator')
+                ->orderBy('views', 'desc')
+                ->orderBy('published_at', 'desc')
+                ->get()
+                ->map(function ($article) {
+                    return [
+                        'id' => $article->id,
+                        'title' => $article->title,
+                        'slug' => $article->slug,
+                        'category' => $article->category,
+                        'type' => 'tutorial',
+                        'duration' => $this->estimateReadingTime($article->content),
+                        'views' => $article->views,
+                        'difficulty' => $this->mapCategoryToDifficulty($article->category),
+                        'excerpt' => $article->excerpt ?? Str::limit(strip_tags($article->content), 150),
+                        'image' => $article->featured_image ? Storage::url($article->featured_image) : null,
+                        'published_at' => $article->published_at
+                    ];
+                });
+        } else {
+            $tutorials = collect([]);
+        }
         
         return view('pages.education-category', compact('category', 'categoryData', 'tutorials'));
     }
     
     public function article($slug)
     {
-        $article = $this->getArticleBySlug($slug);
+        $article = Article::where('slug', $slug)
+            ->where('is_published', true)
+            ->with('creator')
+            ->first();
         
         if (!$article) {
             abort(404);
         }
         
-        $related_articles = $this->getRelatedArticles($article['category'], $slug);
+        // Increment views
+        $article->increment('views');
         
-        return view('pages.education-article', compact('article', 'related_articles'));
+        // Get related articles
+        $related_articles = Article::where('is_published', true)
+            ->where('category', $article->category)
+            ->where('id', '!=', $article->id)
+            ->with('creator')
+            ->orderBy('views', 'desc')
+            ->take(3)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'title' => $item->title,
+                    'slug' => $item->slug,
+                    'category' => $item->category,
+                    'type' => 'tutorial',
+                    'duration' => $this->estimateReadingTime($item->content),
+                    'views' => $item->views,
+                    'excerpt' => $item->excerpt ?? Str::limit(strip_tags($item->content), 100),
+                    'image' => $item->featured_image ? Storage::url($item->featured_image) : null
+                ];
+            });
+        
+        $articleData = [
+            'id' => $article->id,
+            'title' => $article->title,
+            'slug' => $article->slug,
+            'category' => $article->category,
+            'type' => $this->mapCategoryToType($article->category),
+            'content' => $article->content,
+            'image' => $article->featured_image ? Storage::url($article->featured_image) : null,
+            'author' => $article->creator->name ?? 'Admin',
+            'published_at' => $article->published_at ? $article->published_at->format('d F Y') : $article->created_at->format('d F Y'),
+            'duration' => $this->estimateReadingTime($article->content),
+            'views' => $article->views,
+            'excerpt' => $article->excerpt
+        ];
+        
+        return view('pages.education-article', compact('articleData', 'related_articles'));
+    }
+    
+    public function video($slug)
+    {
+        $video = VideoDocumentation::where('slug', $slug)
+            ->where('is_published', true)
+            ->with('creator')
+            ->first();
+        
+        if (!$video) {
+            abort(404);
+        }
+        
+        // Increment views
+        $video->increment('views');
+        
+        // Get related videos
+        $related_videos = VideoDocumentation::where('is_published', true)
+            ->where('type', $video->type)
+            ->where('id', '!=', $video->id)
+            ->with('creator')
+            ->orderBy('views', 'desc')
+            ->take(3)
+            ->get();
+        
+        return view('pages.education-video', compact('video', 'related_videos'));
     }
     
     private function getCategoryData($category)
@@ -172,106 +279,78 @@ class EducationController extends Controller
                 'icon' => '🏆',
                 'color' => 'purple',
                 'description' => 'Pelajari teknik advanced untuk e-commerce, automation, dan scaling bisnis digital Anda.'
+            ],
+            'tutorial' => [
+                'title' => 'Tutorial',
+                'subtitle' => 'Panduan Lengkap',
+                'icon' => '📝',
+                'color' => 'emerald',
+                'description' => 'Panduan step-by-step untuk membuat dan mengelola website dengan mudah.'
+            ],
+            'update' => [
+                'title' => 'Update',
+                'subtitle' => 'Berita Terbaru',
+                'icon' => '📢',
+                'color' => 'purple',
+                'description' => 'Update terbaru tentang fitur, pembaruan platform, dan berita terkini.'
+            ],
+            'tips' => [
+                'title' => 'Tips',
+                'subtitle' => 'Tips & Trik',
+                'icon' => '💡',
+                'color' => 'orange',
+                'description' => 'Tips dan trik praktis untuk meningkatkan performa website dan bisnis digital Anda.'
             ]
         ];
         
         return $categories[$category] ?? null;
     }
     
-    private function getTutorialsByCategory($category)
+    private function mapCategoryToType($category)
     {
-        // Mock data - dalam implementasi nyata, ambil dari database
-        $allTutorials = [
-            [
-                'id' => 1,
-                'title' => 'Pengenalan Website dan Platform Begawi.id',
-                'slug' => 'pengenalan-website-dan-platform-begawi',
-                'category' => 'pemula',
-                'type' => 'tutorial',
-                'duration' => '15 menit',
-                'views' => 3200,
-                'difficulty' => 'Pemula'
-            ],
-            [
-                'id' => 2,
-                'title' => 'Cara Memilih Template yang Tepat',
-                'slug' => 'cara-memilih-template-yang-tepat',
-                'category' => 'pemula',
-                'type' => 'tutorial',
-                'duration' => '20 menit',
-                'views' => 2800,
-                'difficulty' => 'Pemula'
-            ],
-            [
-                'id' => 3,
-                'title' => 'Kustomisasi Template Lanjutan',
-                'slug' => 'kustomisasi-template-lanjutan',
-                'category' => 'menengah',
-                'type' => 'tutorial',
-                'duration' => '30 menit',
-                'views' => 1500,
-                'difficulty' => 'Menengah'
-            ],
-            [
-                'id' => 4,
-                'title' => 'SEO untuk Website Desa',
-                'slug' => 'seo-untuk-website-desa',
-                'category' => 'menengah',
-                'type' => 'tutorial',
-                'duration' => '45 menit',
-                'views' => 2100,
-                'difficulty' => 'Menengah'
-            ],
-            [
-                'id' => 5,
-                'title' => 'Membangun E-commerce yang Scalable',
-                'slug' => 'membangun-ecommerce-yang-scalable',
-                'category' => 'mahir',
-                'type' => 'tutorial',
-                'duration' => '60 menit',
-                'views' => 1200,
-                'difficulty' => 'Mahir'
-            ]
+        $mapping = [
+            'Tutorial' => 'tutorial',
+            'Update' => 'update',
+            'Tips' => 'tips'
         ];
         
-        return array_filter($allTutorials, function($tutorial) use ($category) {
-            return $tutorial['category'] === $category;
-        });
+        return $mapping[$category] ?? 'tutorial';
     }
     
-    private function getArticleBySlug($slug)
+    private function mapTypeToCategory($type)
     {
-        $articles = [
-            [
-                'id' => 1,
-                'title' => 'Cara Membuat Website Desa dalam 10 Menit',
-                'slug' => 'cara-membuat-website-desa-dalam-10-menit',
-                'category' => 'pemula',
-                'type' => 'tutorial',
-                'content' => 'Panduan lengkap membuat website desa...',
-                'image' => 'education/tutorial-1.jpg',
-                'author' => 'Andi Prasetyo',
-                'published_at' => '2024-12-01',
-                'duration' => '10 menit',
-                'views' => 2500,
-                'tags' => ['desa', 'website', 'pemula']
-            ]
+        $mapping = [
+            'pemula' => 'Tutorial',
+            'menengah' => 'Tips',
+            'mahir' => 'Update',
+            'tutorial' => 'Tutorial',
+            'update' => 'Update',
+            'tips' => 'Tips'
         ];
         
-        return collect($articles)->firstWhere('slug', $slug);
+        return $mapping[$type] ?? null;
     }
     
-    private function getRelatedArticles($category, $excludeSlug, $limit = 3)
+    private function mapCategoryToDifficulty($category)
     {
-        $tutorials = $this->getTutorialsByCategory($category);
+        $mapping = [
+            'Tutorial' => 'Pemula',
+            'Tips' => 'Menengah',
+            'Update' => 'Mahir'
+        ];
         
-        return collect($tutorials)
-            ->filter(function($tutorial) use ($excludeSlug) {
-                return $tutorial['slug'] !== $excludeSlug;
-            })
-            ->take($limit)
-            ->values()
-            ->all();
+        return $mapping[$category] ?? 'Pemula';
+    }
+    
+    private function estimateReadingTime($content)
+    {
+        $wordCount = str_word_count(strip_tags($content));
+        $minutes = ceil($wordCount / 200); // Average reading speed: 200 words per minute
+        
+        if ($minutes < 1) {
+            return '1 menit';
+        }
+        
+        return $minutes . ' menit';
     }
 }
-
