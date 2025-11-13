@@ -1,11 +1,6 @@
-/* Import Tailwind CSS v4 */
-@import "tailwindcss";
-
-/* Tailwind v4 Design Tokens */
-@theme {
-    --color-warm-ivory: #f1f5eb;
-    --color-charcoal-grey: #0c1724;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Custom CSS Variables */
 :root {

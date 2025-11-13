@@ -23,12 +23,19 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $roles = [
+            \App\Models\User::ROLE_SUPER_ADMIN,
+            \App\Models\User::ROLE_ADMIN_DESA,
+            \App\Models\User::ROLE_ADMIN_UMKM,
+        ];
+
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'role' => fake()->randomElement($roles),
         ];
     }
 

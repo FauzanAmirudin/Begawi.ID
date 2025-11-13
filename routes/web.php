@@ -10,6 +10,8 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Desa\DesaController;
 use App\Http\Controllers\Desa\BeritaController;
 use App\Http\Controllers\Desa\UmkmController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,6 +35,16 @@ Route::get('/education/article/{slug}', [EducationController::class, 'article'])
 
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+
+// Authentication
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
+    Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
+});
+
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('logout');
 
 // API Routes for AJAX
 Route::prefix('api')->group(function () {
@@ -98,17 +110,8 @@ Route::prefix('desa')->name('desa.')->group(function () {
     Route::get('/terms', [DesaController::class, 'terms'])->name('terms');
     Route::get('/templates', [DesaController::class, 'templates'])->name('templates');
 });
-// Website Builder Routes (untuk future development)
-Route::prefix('builder')->group(function () {
-    Route::get('/', function () {
-        return view('builder.index');
-    })->name('builder.index');
-    
-    Route::get('/templates', function () {
-        return view('builder.templates');
-    })->name('builder.templates');
-    
-    Route::get('/editor/{template?}', function ($template = null) {
-        return view('builder.editor', compact('template'));
-    })->name('builder.editor');
+
+// Admin Dashboard Routes
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 });

@@ -47,9 +47,21 @@
                 </a>
                 
                 <!-- Login Button -->
-                <a href="#" class="hidden lg:inline-flex items-center px-4 py-2 border border-emerald-600 text-emerald-600 font-medium text-sm rounded-lg hover:bg-emerald-600 hover:text-white transition-all">
-                    Login
-                </a>
+                @guest
+                    <a href="{{ route('login') }}" class="hidden lg:inline-flex items-center px-4 py-2 border border-emerald-600 text-emerald-600 font-medium text-sm rounded-lg hover:bg-emerald-600 hover:text-white transition-all">
+                        Login
+                    </a>
+                @else
+                    <a href="{{ route('admin.dashboard.index') }}" class="hidden lg:inline-flex items-center px-4 py-2 border border-emerald-600 text-emerald-600 font-medium text-sm rounded-lg hover:bg-emerald-600 hover:text-white transition-all">
+                        Dashboard
+                    </a>
+                    <form method="POST" action="{{ route('logout') }}" class="hidden lg:block">
+                        @csrf
+                        <button type="submit" class="lg:ml-2 inline-flex items-center px-4 py-2 border border-gray-200 text-gray-600 font-medium text-sm rounded-lg hover:bg-gray-100 transition-all">
+                            Keluar
+                        </button>
+                    </form>
+                @endguest
                 
                 <!-- Mobile Menu Button -->
                 <button id="mobileMenuToggle" class="lg:hidden w-10 h-10 rounded-lg glassmorphism flex items-center justify-center">
@@ -88,9 +100,21 @@
                         <span class="mr-2">🚀</span>
                         Buat Website
                     </a>
-                    <a href="#" class="inline-flex items-center justify-center px-4 py-2 border border-emerald-600 text-emerald-600 font-medium text-sm rounded-lg">
-                        Login
-                    </a>
+                    @guest
+                        <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-4 py-2 border border-emerald-600 text-emerald-600 font-medium text-sm rounded-lg">
+                            Login
+                        </a>
+                    @else
+                        <a href="{{ route('admin.dashboard.index') }}" class="inline-flex items-center justify-center px-4 py-2 border border-emerald-600 text-emerald-600 font-medium text-sm rounded-lg">
+                            Dashboard
+                        </a>
+                        <form method="POST" action="{{ route('logout') }}" class="w-full">
+                            @csrf
+                            <button type="submit" class="w-full mt-3 inline-flex items-center justify-center px-4 py-2 border border-gray-200 text-gray-600 font-medium text-sm rounded-lg">
+                                Keluar
+                            </button>
+                        </form>
+                    @endguest
                 </div>
             </div>
         </div>

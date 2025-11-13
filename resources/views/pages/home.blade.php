@@ -171,6 +171,30 @@
         </div>
     </section>
     
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-4 text-center">
+            <div class="max-w-3xl mx-auto space-y-6">
+                <span class="inline-flex items-center px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold">
+                    Akses Dashboard Begawi.id
+                </span>
+                <h2 class="font-manrope font-extrabold text-4xl text-charcoal-grey leading-tight">
+                    Semua Pengelola Bisa Masuk dari Satu Portal
+                </h2>
+                <p class="text-gray-600 text-lg leading-relaxed">
+                    Baik Super Admin, Admin Desa, maupun Admin UMKM dapat mengelola ekosistem digitalnya melalui dashboard Begawi.id. Klik tombol di bawah ini untuk menuju halaman login resmi.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-8 py-3 bg-gradient-accent text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition">
+                        Masuk ke Dashboard
+                    </a>
+                    <a href="{{ route('contact') }}" class="inline-flex items-center justify-center px-8 py-3 border border-emerald-600 text-emerald-600 font-semibold rounded-xl hover:bg-emerald-600 hover:text-white transition">
+                        Butuh Bantuan?
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Testimonials Section -->
     @include('components.testimonial-section')
 
