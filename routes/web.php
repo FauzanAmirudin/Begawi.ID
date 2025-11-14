@@ -23,6 +23,10 @@ use App\Http\Controllers\Admin\VillageGalleryController;
 use App\Http\Controllers\Admin\VillagePotentialController;
 use App\Http\Controllers\Admin\VillageAchievementController;
 use App\Http\Controllers\Admin\VillageProgramController;
+use App\Http\Controllers\Umkm\HomeController as UmkmHomeController;
+use App\Http\Controllers\Umkm\ProductController as UmkmProductController;
+use App\Http\Controllers\Umkm\AboutController as UmkmAboutController;
+use App\Http\Controllers\Umkm\CartController as UmkmCartController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -70,6 +74,15 @@ Route::prefix('api')->group(function () {
 Route::view('/privacy', 'pages.privacy')->name('privacy');
 Route::view('/terms', 'pages.terms')->name('terms');
 Route::view('/sitemap', 'pages.sitemap')->name('sitemap');
+
+// UMKM Website Routes
+Route::prefix('umkm')->name('umkm.')->group(function () {
+    Route::get('/', [UmkmHomeController::class, 'index'])->name('home');
+    Route::get('/product', [UmkmProductController::class, 'index'])->name('product');
+    Route::get('/product/{id}', [UmkmProductController::class, 'show'])->name('product.show');
+    Route::get('/about', [UmkmAboutController::class, 'index'])->name('about');
+    Route::get('/cart', [UmkmCartController::class, 'index'])->name('cart');
+});
 
 // Template Desa Routes
 Route::prefix('desa')->name('desa.')->group(function () {

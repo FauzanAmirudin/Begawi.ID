@@ -1,0 +1,128 @@
+<x-umkm.layout :linkWA="$linkWA" :socials="$socials">
+
+
+    {{-- Judul Halaman --}}
+    <x-slot:title>
+        Beranda
+    </x-slot:title>
+
+    {{-- Banner / Hero --}}
+    <section class="mb-8 md:mb-12 w-full bg-linear-to-t from-primary-dark to-primary">
+        <div class="max-w-7xl px-4 py-12 md:py-20 mx-auto flex flex-col items-center overflow-hidden h-100vh relative">
+            
+            {{-- Heading belakang --}}
+            <h1 class="text-6xl lg:text-8xl font-extrabold text-white mb-12 text-center z-0 absolute mt-20">
+                Kick Your Day <br> Sneak Your Way.
+            </h1>
+
+            {{-- Gambar banner --}}
+            <img src="/assets/Sneaker.png" alt="sneakers-banner" class="absolute h-96 z-1">
+
+            {{-- Heading depan --}}
+            <h1 class="text-6xl lg:text-8xl mt-20 font-extrabold mb-12 md:mb-24 text-center z-2 text-transparent [-webkit-text-stroke:2px_white]">
+                Kick Your Day <br> Sneak Your Way.
+            </h1>
+
+            {{-- Deskripsi --}}
+            <p class="text-md md:text-xl text-white text-center">
+                Sneaky adalah rumahnya sneaker streetwear dengan desain yang fresh dan kekinian. <br>
+                Cocok buat anak muda yang ingin tampil beda tanpa ribet.
+            </p>
+        </div>
+    </section>
+
+    {{-- Konten utama --}}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        {{-- Produk Unggulan --}}
+        <section class="mb-16">
+            <div class="flex justify-between items-end md:px-4 mb-6">
+                <h2 class="text-xl md:text-3xl font-bold text-center text-dark dark:text-white">
+                    🌟 Produk Unggulan Kami
+                </h2>
+                <a href="{{ route('umkm.product') }}" class="text-sm md:text-md font-semibold text-primary dark:text-primary-light hover:text-primary-dark hover:dark:text-primary mr-2">
+                    Lihat Semua &rarr;
+                </a>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                @foreach($produkUnggulan as $produk)
+                    <div class="bg-white dark:bg-dark rounded-lg md:rounded-xl shadow-md overflow-hidden border-2 border-gray-100 dark:border-gray-700
+                        transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                        <img src="{{ $produk['gambar'] }}" alt="{{ $produk['nama'] }}" class="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="p-3 md:p-6">
+                            <h3 class="text-md md:text-lg font-semibold text-dark dark:text-white truncate">{{ $produk['nama'] }}</h3>
+                            <p class="text-md md:text-lg text-dark dark:text-white font-bold mt-1">
+                                {{ 'Rp ' . number_format($produk['harga'], 0, ',', '.') }}
+                            </p>
+
+                            {{-- Tombol lihat detail --}}
+                            <a href="{{ route('umkm.product.show', $produk['id']) }}" 
+                               class="w-full block bg-accent mt-4 text-xs md:text-md text-dark p-2 md:p-2 text-center rounded hover:opacity-80 font-medium transition">
+                                Lihat Detail
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </section>
+
+        {{-- Produk Terbaru --}}
+        <section class="mb-16">
+            <div class="flex justify-between items-end md:px-4 mb-6">
+                <h2 class="text-xl md:text-3xl font-bold text-center text-dark dark:text-white">
+                    🆕 Produk Terbaru
+                </h2>
+                <a href="{{ route('umkm.product') }}" class="text-sm md:text-md font-semibold text-primary dark:text-primary-light hover:text-primary-dark hover:dark:text-primary mr-2">
+                    Lihat Semua &rarr;
+                </a>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                @foreach($produkTerbaru as $produk)
+                    <div class="bg-white dark:bg-dark rounded-lg md:rounded-xl shadow-md overflow-hidden border-2 border-gray-100 dark:border-gray-700
+                        transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                        <img src="{{ $produk['gambar'] }}" alt="{{ $produk['nama'] }}" class="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="p-3 md:p-6">
+                            <h3 class="text-md md:text-lg font-semibold text-dark dark:text-white truncate">{{ $produk['nama'] }}</h3>
+                            <p class="text-md md:text-lg text-dark dark:text-white font-bold mt-1">
+                                {{ 'Rp ' . number_format($produk['harga'], 0, ',', '.') }}
+                            </p>
+
+                            {{-- Tombol lihat detail --}}
+                            <a href="{{ route('umkm.product.show', $produk['id']) }}" 
+                               class="w-full block bg-accent mt-4 text-xs md:text-md text-dark p-2 md:p-2 text-center rounded hover:opacity-80 font-medium transition">
+                                Lihat Detail
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </section>
+
+        {{-- CTA WhatsApp --}}
+        <section id="call-to-action">
+            <div class="bg-gradient-to-r from-primary to-primary-dark p-8 rounded-lg text-center shadow-lg">
+                <h2 class="text-2xl font-bold text-white mb-4">
+                    Punya Pertanyaan atau Ingin Pesan Langsung?
+                </h2>
+                <p class="text-sm md:text-md text-white mb-6">
+                    Klik tombol di bawah untuk terhubung langsung dengan kami via WhatsApp.
+                </p>
+
+                <a href="{{ $linkWA ?? '#' }}" target="_blank" rel="noopener noreferrer"
+                   class="inline-flex items-center px-8 md:px-10 py-4 bg-white hover:bg-gray-100 text-green-600 text-sm md:text-xl font-bold rounded-full shadow-md transition-transform transform hover:scale-105">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.451-4.43-9.887-9.886-9.887-5.452 0-9.887 4.434-9.889 9.886-.001 2.225.651 4.315 1.849 6.039l-1.218 4.439 4.542-1.192z" />
+                    </svg>
+
+                    Pesan Cepat via WhatsApp
+                </a>
+            </div>
+        </section>
+
+    </div>{{-- End Kontainer Utama --}}
+
+</x-umkm.layout>
+
