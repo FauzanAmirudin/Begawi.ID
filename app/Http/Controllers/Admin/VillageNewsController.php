@@ -43,7 +43,7 @@ class VillageNewsController extends Controller
         VillageNews::create($validated);
 
         return redirect()
-            ->route('admin.desa-management.index')
+            ->route('admin.desa-management.news')
             ->with('success', 'Berita berhasil ditambahkan.');
     }
 
@@ -82,7 +82,7 @@ class VillageNewsController extends Controller
         $news->update($validated);
 
         return redirect()
-            ->route('admin.desa-management.index')
+            ->route('admin.desa-management.news')
             ->with('success', 'Berita berhasil diperbarui.');
     }
 
@@ -95,7 +95,7 @@ class VillageNewsController extends Controller
         $news->delete();
 
         return redirect()
-            ->route('admin.desa-management.index')
+            ->route('admin.desa-management.news')
             ->with('success', 'Berita berhasil dihapus.');
     }
 

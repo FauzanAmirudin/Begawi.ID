@@ -33,7 +33,7 @@ class PaymentGatewayController extends Controller
         
         $gateways = PaymentGatewayConfig::all();
 
-        return view('admin.finance.payment-gateways.index', compact('gateways'));
+        return view('admin.super-admin.finance.payment-gateways.index', compact('gateways'));
     }
 
     /**
@@ -43,7 +43,7 @@ class PaymentGatewayController extends Controller
     {
         $this->checkSuperAdmin();
         
-        return view('admin.finance.payment-gateways.edit', compact('paymentGateway'));
+        return view('admin.super-admin.finance.payment-gateways.edit', compact('paymentGateway'));
     }
 
     /**

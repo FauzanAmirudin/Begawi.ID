@@ -77,7 +77,7 @@
                     <p class="text-slate-600 mb-4 leading-relaxed">
                         {{ $item['ringkasan'] }}
                     </p>
-                    <a href="#" class="inline-flex items-center text-primary-600 font-semibold hover:text-primary-700 transition-colors">
+                    <a href="{{ route('desa.berita.detail', $item['slug'] ?? '#') }}" class="inline-flex items-center text-primary-600 font-semibold hover:text-primary-700 transition-colors">
                         Baca Selengkapnya 
                         <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -86,6 +86,12 @@
                 </div>
             </article>
             @endforeach
+        </div>
+        
+        <div class="text-center mt-12">
+            <a href="{{ route('desa.berita.index') }}" class="bg-gradient-accent hover:bg-primary-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
+                Lihat Semua Berita
+            </a>
         </div>
     </div>
 </section>
@@ -212,7 +218,7 @@
         </div>
         
         <div class="text-center mt-12">
-            <a href="#" class="bg-gradient-accent hover:bg-primary-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
+            <a href="{{ route('desa.galeri-wisata.index') }}" class="bg-gradient-accent hover:bg-primary-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
                 Lihat Semua Foto
             </a>
         </div>
@@ -248,16 +254,16 @@
                         </div>
                     </div>
                     
-                    <button class="w-full bg-gradient-accent hover:bg-primary-700 text-white py-3 rounded-xl font-semibold transition-colors">
+                    <a href="{{ route('desa.galeri-wisata.index') }}" class="w-full bg-gradient-accent hover:bg-primary-700 text-white py-3 rounded-xl font-semibold transition-colors inline-block text-center">
                         Lihat Detail Wisata
-                    </button>
+                    </a>
                 </div>
             </div>
             @endforeach
         </div>
         
         <div class="text-center mt-12">
-            <a href="#" class="bg-gradient-accent hover:bg-primary-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
+            <a href="{{ route('desa.galeri-wisata.index') }}" class="bg-gradient-accent hover:bg-primary-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
                 Jelajahi Semua Wisata
             </a>
         </div>
@@ -346,7 +352,7 @@
         </div>
         
         <div class="text-center mt-12">
-            <a href="#" class="bg-gradient-accent hover:bg-primary-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
+            <a href="{{ route('desa.berita.agenda') }}" class="bg-gradient-accent hover:bg-primary-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
                 Lihat Kalender Lengkap
             </a>
         </div>

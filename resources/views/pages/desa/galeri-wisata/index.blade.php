@@ -31,15 +31,47 @@
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <!-- Form Upload -->
                         <div>
+                                    @if (session('success'))
+                                    <div class="mb-6 bg-emerald-50 border border-emerald-200 rounded-2xl px-4 py-3 text-emerald-700 flex items-center gap-3">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        <span class="text-sm font-semibold">{{ session('success') }}</span>
+                                    </div>
+                                    @endif
+
+                                    @if (session('error'))
+                                    <div class="mb-6 bg-rose-50 border border-rose-200 rounded-2xl px-4 py-3 text-rose-600 flex items-center gap-3">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                        <span class="text-sm font-semibold">{{ session('error') }}</span>
+                                    </div>
+                                    @endif
+
+                                    @if ($errors->any())
+                                    <div class="mb-6 bg-rose-50 border border-rose-200 rounded-2xl px-4 py-3 text-rose-600">
+                                        <p class="text-sm font-semibold mb-2">Periksa kembali formulir:</p>
+                                        <ul class="list-disc list-inside text-sm space-y-1">
+                                            @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                    @endif
+
                             <form action="{{ route('desa.galeri-wisata.upload') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                                 @csrf
                                 
                                 <!-- Judul -->
                                 <div>
                                     <label class="block text-sm font-medium text-slate-700 mb-2">Judul Kegiatan</label>
-                                    <input type="text" name="title" required
+                                            <input type="text" name="title" value="{{ old('title') }}" required
                                            class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                                            placeholder="Contoh: Gotong Royong Januari 2025">
+                                            @error('title')
+                                            <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
+                                            @enderror
                                 </div>
 
                                 <!-- Upload Area -->
@@ -50,30 +82,39 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                                         </svg>
                                         <p class="text-slate-600 mb-2">Tarik file ke sini atau <span class="text-primary-600 font-semibold">pilih file</span></p>
-                                        <p class="text-xs text-slate-500">Maksimal 10MB - Format: JPG, PNG, MP4, AVI</p>
-                                        <input type="file" name="file" accept="image/*,video/*" required class="hidden">
+                                                <p class="text-xs text-slate-500">Maksimal 6MB - Format: JPG, JPEG, PNG, GIF</p>
+                                                <input type="file" name="file" accept="image/*" required class="hidden">
                                     </div>
+                                            @error('file')
+                                            <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
+                                            @enderror
                                 </div>
 
                                 <!-- Row: Kategori & Tahun -->
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-sm font-medium text-slate-700 mb-2">Kategori</label>
-                                        <select name="category" required
+                                                <select name="category" required
                                                 class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                                            <option value="">Pilih Kategori</option>
-                                            <option value="kegiatan">Kegiatan</option>
-                                            <option value="lomba">Lomba</option>
-                                            <option value="sosialisasi">Sosialisasi</option>
-                                            <option value="hari-besar">Hari Besar</option>
-                                            <option value="panen">Panen</option>
-                                            <option value="gotong-royong">Gotong Royong</option>
+                                                    <option value="">Pilih Kategori</option>
+                                                    <option value="kegiatan" {{ old('category') === 'kegiatan' ? 'selected' : '' }}>Kegiatan</option>
+                                                    <option value="lomba" {{ old('category') === 'lomba' ? 'selected' : '' }}>Lomba</option>
+                                                    <option value="sosialisasi" {{ old('category') === 'sosialisasi' ? 'selected' : '' }}>Sosialisasi</option>
+                                                    <option value="hari-besar" {{ old('category') === 'hari-besar' ? 'selected' : '' }}>Hari Besar</option>
+                                                    <option value="panen" {{ old('category') === 'panen' ? 'selected' : '' }}>Panen</option>
+                                                    <option value="gotong-royong" {{ old('category') === 'gotong-royong' ? 'selected' : '' }}>Gotong Royong</option>
                                         </select>
+                                                @error('category')
+                                                <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
+                                                @enderror
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-slate-700 mb-2">Tahun</label>
-                                        <input type="number" name="year" required min="2020" max="2030" value="{{ date('Y') }}"
+                                                <input type="number" name="year" required min="2000" max="{{ date('Y') + 1 }}" value="{{ old('year', date('Y')) }}"
                                                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                                                @error('year')
+                                                <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
+                                                @enderror
                                     </div>
                                 </div>
 
@@ -127,11 +168,11 @@
                                 <h4 class="font-semibold text-slate-800 mb-4">Statistik Upload</h4>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="text-center p-3 bg-primary-50 rounded-xl">
-                                        <div class="text-2xl font-bold text-primary-600">42</div>
+                                        <div class="text-2xl font-bold text-primary-600">{{ $totalFoto ?? 0 }}</div>
                                         <div class="text-sm text-slate-600">Total Foto</div>
                                     </div>
                                     <div class="text-center p-3 bg-amber-50 rounded-xl">
-                                        <div class="text-2xl font-bold text-amber-600">8</div>
+                                        <div class="text-2xl font-bold text-amber-600">{{ $totalVideo ?? 0 }}</div>
                                         <div class="text-sm text-slate-600">Total Video</div>
                                     </div>
                                 </div>
@@ -168,7 +209,7 @@
                         </select>
 
                         <!-- Button Lihat Semua Foto -->
-                        <a href="{{ route('desa.galeri-wisata.index') }}" 
+                        <a href="{{ route('desa.galeri-wisata.galeri-foto') }}" 
                            class="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-2 rounded-xl transition-colors duration-300 flex items-center gap-2 whitespace-nowrap">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -179,91 +220,56 @@
                 </div>
 
                 <!-- Gallery Grid -->
+                @if(isset($galleryItems) && $galleryItems->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <!-- Album Card 1 -->
+                    @foreach($galleryItems as $item)
                     <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer group">
                         <div class="relative aspect-[4/3] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=300&fit=crop" 
-                                 alt="Gotong Royong 2025" 
+                            @if($item['type'] === 'video')
+                            <div class="absolute inset-0 bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center">
+                                <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            @endif
+                            <img src="{{ $item['gambar'] }}" 
+                                 alt="{{ $item['judul'] }}" 
                                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            @if($item['type'] === 'video')
+                            <div class="absolute top-3 right-3 bg-black/60 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                                Video
+                            </div>
+                            @endif
                         </div>
                         <div class="p-4">
-                            <h3 class="text-xl font-bold text-slate-800 mb-1">Gotong Royong 2025</h3>
+                            <h3 class="text-xl font-bold text-slate-800 mb-1">{{ $item['judul'] }}</h3>
                             <p class="text-slate-500 text-sm flex items-center gap-1 mb-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                 </svg>
-                                Januari 2025
+                                {{ $item['tanggal'] }}
                             </p>
+                            @if(!empty($item['deskripsi']))
                             <p class="text-slate-600 text-sm leading-relaxed line-clamp-2">
-                                Kegiatan gotong royong membersihkan lingkungan desa bersama seluruh warga untuk menjaga kebersihan dan keindahan desa.
+                                {{ $item['deskripsi'] }}
                             </p>
+                            @endif
+                            @if(!empty($item['kategori']))
+                            <p class="text-xs text-primary-600 mt-2 font-medium">{{ $item['kategori'] }}</p>
+                            @endif
                         </div>
                     </div>
-
-                    <!-- Album Card 2 -->
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer group">
-                        <div class="relative aspect-[4/3] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=400&h=300&fit=crop" 
-                                 alt="Festival Budaya" 
-                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-xl font-bold text-slate-800 mb-1">Festival Budaya</h3>
-                            <p class="text-slate-500 text-sm flex items-center gap-1 mb-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                </svg>
-                                Desember 2024
-                            </p>
-                            <p class="text-slate-600 text-sm leading-relaxed line-clamp-2">
-                                Perayaan festival budaya yang menampilkan berbagai kesenian tradisional, tarian, dan kuliner khas desa.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Album Card 3 -->
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer group">
-                        <div class="relative aspect-[4/3] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop" 
-                                 alt="Panen Raya" 
-                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-xl font-bold text-slate-800 mb-1">Panen Raya</h3>
-                            <p class="text-slate-500 text-sm flex items-center gap-1 mb-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                </svg>
-                                Oktober 2024
-                            </p>
-                            <p class="text-slate-600 text-sm leading-relaxed line-clamp-2">
-                                Dokumentasi kegiatan panen raya hasil pertanian desa yang melibatkan seluruh petani dan warga desa.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Album Card 4 -->
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer group">
-                        <div class="relative aspect-[4/3] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?w=400&h=300&fit=crop" 
-                                 alt="Sosialisasi Kesehatan" 
-                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-xl font-bold text-slate-800 mb-1">Sosialisasi Kesehatan</h3>
-                            <p class="text-slate-500 text-sm flex items-center gap-1 mb-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                </svg>
-                                September 2024
-                            </p>
-                            <p class="text-slate-600 text-sm leading-relaxed line-clamp-2">
-                                Program sosialisasi kesehatan masyarakat tentang pentingnya pola hidup sehat dan pencegahan penyakit.
-                            </p>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
+                @else
+                <div class="text-center py-16">
+                    <svg class="w-16 h-16 text-slate-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <h3 class="text-lg font-semibold text-slate-600 mb-2">Belum ada konten galeri</h3>
+                    <p class="text-slate-500">Konten galeri akan ditampilkan di sini setelah diupload melalui admin.</p>
+                </div>
+                @endif
             </div>
         </div>
     </section>

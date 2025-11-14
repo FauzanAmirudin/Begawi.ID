@@ -227,8 +227,7 @@ class DesaController extends Controller
     {
         return $this->village()->galleryItems()
             ->where('is_published', true)
-            ->orderByDesc('taken_at')
-            ->orderByDesc('created_at')
+            ->orderByRaw('COALESCE(taken_at, created_at) DESC')
             ->take(12)
             ->get()
             ->map(function (VillageGalleryItem $item) {

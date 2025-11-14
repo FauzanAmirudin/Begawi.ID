@@ -38,7 +38,7 @@ class InformationPageController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(15);
 
-        return view('admin.content.pages.index', compact('pages'));
+        return view('admin.super-admin.content.pages.index', compact('pages'));
     }
 
     /**
@@ -50,7 +50,7 @@ class InformationPageController extends Controller
         
         $pageTypes = InformationPage::getPageTypes();
         
-        return view('admin.content.pages.create', compact('pageTypes'));
+        return view('admin.super-admin.content.pages.create', compact('pageTypes'));
     }
 
     /**
@@ -102,7 +102,7 @@ class InformationPageController extends Controller
         
         $page->load('creator');
         
-        return view('admin.content.pages.show', compact('page'));
+        return view('admin.super-admin.content.pages.show', compact('page'));
     }
 
     /**
@@ -114,7 +114,7 @@ class InformationPageController extends Controller
         
         $pageTypes = InformationPage::getPageTypes();
         
-        return view('admin.content.pages.edit', compact('page', 'pageTypes'));
+        return view('admin.super-admin.content.pages.edit', compact('page', 'pageTypes'));
     }
 
     /**

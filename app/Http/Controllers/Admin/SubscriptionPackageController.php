@@ -34,7 +34,7 @@ class SubscriptionPackageController extends Controller
         
         $packages = SubscriptionPackage::orderBy('sort_order')->orderBy('price')->get();
 
-        return view('admin.finance.packages.index', compact('packages'));
+        return view('admin.super-admin.finance.packages.index', compact('packages'));
     }
 
     /**
@@ -44,7 +44,7 @@ class SubscriptionPackageController extends Controller
     {
         $this->checkSuperAdmin();
         
-        return view('admin.finance.packages.create');
+        return view('admin.super-admin.finance.packages.create');
     }
 
     /**
@@ -83,7 +83,7 @@ class SubscriptionPackageController extends Controller
     {
         $this->checkSuperAdmin();
         
-        return view('admin.finance.packages.show', compact('package'));
+        return view('admin.super-admin.finance.packages.show', compact('package'));
     }
 
     /**
@@ -93,7 +93,7 @@ class SubscriptionPackageController extends Controller
     {
         $this->checkSuperAdmin();
         
-        return view('admin.finance.packages.edit', compact('package'));
+        return view('admin.super-admin.finance.packages.edit', compact('package'));
     }
 
     /**

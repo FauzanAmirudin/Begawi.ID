@@ -188,7 +188,7 @@ class DashboardController extends Controller
 
         $latestEvents = $this->latestPlatformEvents();
 
-        return view('admin.dashboard.index', [
+        return view('admin.super-admin.dashboard.index', [
             'overviewCards' => $overviewCards,
             'secondaryCards' => $secondaryCards,
             'operationalMetrics' => $operationalMetrics,
@@ -297,7 +297,7 @@ class DashboardController extends Controller
         $quickActions = $this->villageQuickActions();
         $sidebarHighlights = $this->villageSidebarHighlights($umkmProfiles);
 
-        return view('admin.dashboard.desa', [
+        return view('admin.admin-desa.dashboard.desa', [
             'overviewCards' => $overviewCards,
             'secondaryCards' => $secondaryCards,
             'charts' => $charts,
@@ -442,7 +442,7 @@ class DashboardController extends Controller
 
         $latestEvents = $this->placeholderEvents();
 
-        return view('admin.dashboard.index', [
+        return view('admin.super-admin.dashboard.index', [
             'overviewCards' => $overviewCards,
             'secondaryCards' => $secondaryCards,
             'operationalMetrics' => $operationalMetrics,

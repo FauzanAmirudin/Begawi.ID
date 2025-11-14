@@ -64,7 +64,7 @@ class PlatformDirectoryController extends Controller
         $activityTrend = $this->buildActivityTrend($allWebsites);
         $activityRanking = $this->buildActivityRanking($allWebsites);
 
-        return view('admin.platform-directory.index', compact(
+        return view('admin.super-admin.platform-directory.index', compact(
             'statsOverview',
             'desaDirectory',
             'umkmDirectory',

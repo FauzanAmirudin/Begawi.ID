@@ -33,7 +33,7 @@ class VillageAchievementController extends Controller
         VillageAchievement::create($validated);
 
         return redirect()
-            ->route('admin.desa-management.index')
+            ->route('admin.desa-management.achievements')
             ->with('success', 'Prestasi desa berhasil ditambahkan.');
     }
 
@@ -59,7 +59,7 @@ class VillageAchievementController extends Controller
         $achievement->update($validated);
 
         return redirect()
-            ->route('admin.desa-management.index')
+            ->route('admin.desa-management.achievements')
             ->with('success', 'Prestasi desa berhasil diperbarui.');
     }
 
@@ -72,7 +72,7 @@ class VillageAchievementController extends Controller
         $achievement->delete();
 
         return redirect()
-            ->route('admin.desa-management.index')
+            ->route('admin.desa-management.achievements')
             ->with('success', 'Prestasi desa berhasil dihapus.');
     }
 

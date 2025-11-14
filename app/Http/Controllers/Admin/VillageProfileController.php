@@ -59,7 +59,7 @@ class VillageProfileController extends Controller
         $village->save();
 
         return redirect()
-            ->route('admin.desa-management.index')
+            ->route('admin.desa-management.profile')
             ->with('success', 'Profil desa berhasil diperbarui.');
     }
 }

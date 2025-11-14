@@ -56,7 +56,7 @@ class UserManagementController extends Controller
 
         $users = $query->orderBy('created_at', 'desc')->paginate(15);
 
-        return view('admin.users.index', compact('users'));
+        return view('admin.super-admin.users.index', compact('users'));
     }
 
     /**
@@ -66,7 +66,7 @@ class UserManagementController extends Controller
     {
         $this->checkSuperAdmin();
         
-        return view('admin.users.create');
+        return view('admin.super-admin.users.create');
     }
 
     /**
@@ -97,7 +97,7 @@ class UserManagementController extends Controller
     {
         $this->checkSuperAdmin();
         
-        return view('admin.users.show', compact('user'));
+        return view('admin.super-admin.users.show', compact('user'));
     }
 
     /**
@@ -107,7 +107,7 @@ class UserManagementController extends Controller
     {
         $this->checkSuperAdmin();
         
-        return view('admin.users.edit', compact('user'));
+        return view('admin.super-admin.users.edit', compact('user'));
     }
 
     /**

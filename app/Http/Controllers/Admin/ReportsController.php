@@ -55,7 +55,7 @@ class ReportsController extends Controller
     {
         $villageData = $this->getUserVillageData();
         
-        return view('admin.reports.index', [
+        return view('admin.admin-desa.reports.index', [
             'village' => $villageData['village'],
             'website' => $villageData['website'],
         ]);
@@ -74,7 +74,7 @@ class ReportsController extends Controller
         // Generate visitor data based on period and village
         $visitorData = $this->generateVisitorData($period, $village);
 
-        return view('admin.reports.visitor-statistics', [
+        return view('admin.admin-desa.reports.visitor-statistics', [
             'period' => $period,
             'visitorData' => $visitorData,
             'summary' => $this->calculateVisitorSummary($visitorData),
@@ -105,7 +105,7 @@ class ReportsController extends Controller
         $activityStats = $this->calculateActivityStats($umkmBusinesses);
         $visitStats = $this->calculateVisitStats($umkmBusinesses);
 
-        return view('admin.reports.umkm-statistics', [
+        return view('admin.admin-desa.reports.umkm-statistics', [
             'productStats' => $productStats,
             'activityStats' => $activityStats,
             'visitStats' => $visitStats,
@@ -136,7 +136,7 @@ class ReportsController extends Controller
             return $this->exportExcel($reportData, $village);
         }
 
-        return view('admin.reports.digitalization-report', [
+        return view('admin.admin-desa.reports.digitalization-report', [
             'reportData' => $reportData,
             'village' => $village,
             'website' => $website,
@@ -164,7 +164,7 @@ class ReportsController extends Controller
         // Calculate ranking based on activity and traffic
         $rankings = $this->calculateUmkmRankings($umkmBusinesses);
 
-        return view('admin.reports.umkm-ranking', [
+        return view('admin.admin-desa.reports.umkm-ranking', [
             'rankings' => $rankings,
             'village' => $village,
             'website' => $website,

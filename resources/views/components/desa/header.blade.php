@@ -37,6 +37,17 @@
                 <a href="{{ route('desa.layanan.index') }}" class="text-slate-700 hover:text-primary-600 font-medium transition {{ request()->routeIs('desa.layanan.*') ? 'text-primary-600 font-semibold' : '' }}">Layanan</a>
                 <a href="{{ route('desa.galeri-wisata.index') }}" class="text-slate-700 hover:text-primary-600 font-medium transition {{ request()->routeIs('desa.galeri-wisata.*') ? 'text-primary-600 font-semibold' : '' }}">Galeri Wisata</a>
                 <a href="{{ route('desa.pusat-bantuan.index') }}" class="text-slate-700 hover:text-primary-600 font-medium transition {{ request()->routeIs('desa.pusat-bantuan.*') ? 'text-primary-600 font-semibold' : '' }}">Pusat Bantuan</a>
+
+                @auth
+                    @if(in_array(auth()->user()->role, [\App\Models\User::ROLE_ADMIN_DESA, \App\Models\User::ROLE_SUPER_ADMIN]))
+                    <a href="{{ route('admin.desa-management.index') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary-600 text-white text-sm font-semibold shadow-sm hover:bg-primary-500 transition">
+                        Dashboard Admin
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                    @endif
+                @endauth
             </nav>
             
             
@@ -56,6 +67,16 @@
                 <a href="{{ route('desa.layanan.index') }}" class="text-slate-700 hover:text-primary-600 font-medium transition py-2 {{ request()->routeIs('desa.layanan.*') ? 'text-primary-600 font-semibold' : '' }}">Layanan</a>
                 <a href="{{ route('desa.directory') }}" class="text-slate-700 hover:text-primary-600 font-medium transition py-2 {{ request()->routeIs('desa.directory') ? 'text-primary-600 font-semibold' : '' }}">Direktori</a>
                 <a href="{{ route('desa.contact') }}" class="text-slate-700 hover:text-primary-600 font-medium transition py-2 {{ request()->routeIs('desa.contact') ? 'text-primary-600 font-semibold' : '' }}">Kontak</a>
+                @auth
+                    @if(in_array(auth()->user()->role, [\App\Models\User::ROLE_ADMIN_DESA, \App\Models\User::ROLE_SUPER_ADMIN]))
+                    <a href="{{ route('admin.desa-management.index') }}" class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-primary-600 text-white text-sm font-semibold shadow-sm hover:bg-primary-500 transition">
+                        Dashboard Admin
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                    @endif
+                @endauth
             </nav>
         </div>
     </div>

@@ -50,7 +50,7 @@ class WebsiteManagementController extends Controller
 
         $websites = $query->orderBy('created_at', 'desc')->paginate(15);
 
-        return view('admin.websites.desa', compact('websites'));
+        return view('admin.super-admin.websites.desa', compact('websites'));
     }
 
     /**
@@ -86,7 +86,7 @@ class WebsiteManagementController extends Controller
 
         $websites = $query->orderBy('created_at', 'desc')->paginate(15);
 
-        return view('admin.websites.umkm', compact('websites'));
+        return view('admin.super-admin.websites.umkm', compact('websites'));
     }
 
     /**
@@ -98,7 +98,7 @@ class WebsiteManagementController extends Controller
         
         $website->load('user');
         
-        return view('admin.websites.show', compact('website'));
+        return view('admin.super-admin.websites.show', compact('website'));
     }
 
     /**
@@ -110,7 +110,7 @@ class WebsiteManagementController extends Controller
         
         $website->load('user');
         
-        return view('admin.websites.edit', compact('website'));
+        return view('admin.super-admin.websites.edit', compact('website'));
     }
 
     /**
@@ -204,7 +204,7 @@ class WebsiteManagementController extends Controller
 
         $websites = $query->orderBy('created_at', 'desc')->paginate(15);
 
-        return view('admin.websites.domain', compact('websites'));
+        return view('admin.super-admin.websites.domain', compact('websites'));
     }
 
     /**
@@ -243,7 +243,7 @@ class WebsiteManagementController extends Controller
         $defaultTemplateDesa = 'default';
         $defaultTemplateUmkm = 'default';
 
-        return view('admin.websites.template', compact('templates', 'defaultTemplateDesa', 'defaultTemplateUmkm'));
+        return view('admin.super-admin.websites.template', compact('templates', 'defaultTemplateDesa', 'defaultTemplateUmkm'));
     }
 
     /**

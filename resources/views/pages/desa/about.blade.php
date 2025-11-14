@@ -256,14 +256,14 @@
                 <!-- Kepala Desa -->
                 <div class="text-center mb-16">
                     <div class="inline-block bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-shadow">
-                        <img src="{{ $struktur_pemerintahan['kepala_desa']['foto'] }}" 
-                             alt="{{ $struktur_pemerintahan['kepala_desa']['nama'] }}" 
+                        <img src="{{ $struktur_pemerintahan['kepala_desa']['foto'] ?? 'https://via.placeholder.com/200x200?text=No+Photo' }}" 
+                             alt="{{ $struktur_pemerintahan['kepala_desa']['nama'] ?? 'Kepala Desa' }}" 
                              class="w-32 h-32 rounded-full object-cover shadow-md mx-auto mb-4 hover:-translate-y-2 transition-transform">
                         <h3 class="font-display font-semibold text-xl text-green-900">
-                            {{ $struktur_pemerintahan['kepala_desa']['nama'] }}
+                            {{ $struktur_pemerintahan['kepala_desa']['nama'] ?? 'Nama Tidak Tersedia' }}
                         </h3>
-                        <p class="text-green-700 font-medium">{{ $struktur_pemerintahan['kepala_desa']['jabatan'] }}</p>
-                        <p class="text-sm text-slate-600 mt-1">Periode: {{ $struktur_pemerintahan['kepala_desa']['periode'] }}</p>
+                        <p class="text-green-700 font-medium">{{ $struktur_pemerintahan['kepala_desa']['jabatan'] ?? 'Kepala Desa' }}</p>
+                        <p class="text-sm text-slate-600 mt-1">Periode: {{ $struktur_pemerintahan['kepala_desa']['periode'] ?? '-' }}</p>
                     </div>
                 </div>
                 
@@ -273,11 +273,11 @@
                     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-8">
                         @foreach($struktur_pemerintahan['perangkat_desa'] as $perangkat)
                         <div class="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition-all duration-300 text-center group">
-                            <img src="{{ $perangkat['foto'] }}" 
-                                 alt="{{ $perangkat['nama'] }}" 
+                            <img src="{{ $perangkat['foto'] ?? 'https://via.placeholder.com/200x200?text=No+Photo' }}" 
+                                 alt="{{ $perangkat['nama'] ?? 'Perangkat Desa' }}" 
                                  class="w-24 h-24 rounded-full object-cover shadow-md mx-auto mb-4 group-hover:-translate-y-2 transition-transform">
-                            <h4 class="font-display font-semibold text-green-900 mb-1">{{ $perangkat['nama'] }}</h4>
-                            <p class="text-sm text-slate-600">{{ $perangkat['jabatan'] }}</p>
+                            <h4 class="font-display font-semibold text-green-900 mb-1">{{ $perangkat['nama'] ?? 'Nama Tidak Tersedia' }}</h4>
+                            <p class="text-sm text-slate-600">{{ $perangkat['jabatan'] ?? 'Jabatan Tidak Tersedia' }}</p>
                         </div>
                         @endforeach
                     </div>
@@ -289,9 +289,9 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         @foreach($struktur_pemerintahan['lembaga'] as $lembaga)
                         <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow border-l-4 border-green-600">
-                            <h4 class="font-display font-semibold text-lg text-green-900 mb-2">{{ $lembaga['nama'] }}</h4>
-                            <p class="text-slate-700 mb-1">Ketua: <span class="font-medium">{{ $lembaga['ketua'] }}</span></p>
-                            <p class="text-sm text-slate-600">{{ $lembaga['anggota'] }}</p>
+                            <h4 class="font-display font-semibold text-lg text-green-900 mb-2">{{ $lembaga['nama'] ?? 'Nama Lembaga' }}</h4>
+                            <p class="text-slate-700 mb-1">Ketua: <span class="font-medium">{{ $lembaga['ketua'] ?? '-' }}</span></p>
+                            <p class="text-sm text-slate-600">{{ $lembaga['anggota'] ?? '-' }}</p>
                         </div>
                         @endforeach
                     </div>

@@ -73,7 +73,7 @@ class TransactionController extends Controller
             'total_revenue' => Transaction::where('status', 'success')->sum('amount'),
         ];
 
-        return view('admin.finance.transactions.index', compact('transactions', 'stats'));
+        return view('admin.super-admin.finance.transactions.index', compact('transactions', 'stats'));
     }
 
     /**
@@ -85,6 +85,6 @@ class TransactionController extends Controller
         
         $transaction->load(['user', 'subscriptionPackage']);
 
-        return view('admin.finance.transactions.show', compact('transaction'));
+        return view('admin.super-admin.finance.transactions.show', compact('transaction'));
     }
 }

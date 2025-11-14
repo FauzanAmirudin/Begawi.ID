@@ -37,7 +37,7 @@ class ArticleController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(15);
 
-        return view('admin.content.articles.index', compact('articles'));
+        return view('admin.super-admin.content.articles.index', compact('articles'));
     }
 
     /**
@@ -49,7 +49,7 @@ class ArticleController extends Controller
         
         $categories = Article::getCategories();
         
-        return view('admin.content.articles.create', compact('categories'));
+        return view('admin.super-admin.content.articles.create', compact('categories'));
     }
 
     /**
@@ -97,7 +97,7 @@ class ArticleController extends Controller
         
         $article->load('creator');
         
-        return view('admin.content.articles.show', compact('article'));
+        return view('admin.super-admin.content.articles.show', compact('article'));
     }
 
     /**
@@ -109,7 +109,7 @@ class ArticleController extends Controller
         
         $categories = Article::getCategories();
         
-        return view('admin.content.articles.edit', compact('article', 'categories'));
+        return view('admin.super-admin.content.articles.edit', compact('article', 'categories'));
     }
 
     /**

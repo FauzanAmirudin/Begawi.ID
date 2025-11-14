@@ -11,7 +11,7 @@ class ActivityLogController extends Controller
 {
     public function reportPage()
     {
-        return view('admin.logs.download-report');
+        return view('admin.super-admin.logs.download-report');
     }
 
     public function userActivity(Request $request)
@@ -95,7 +95,7 @@ class ActivityLogController extends Controller
             return true;
         })->values();
 
-        return view('admin.logs.user-activity', [
+        return view('admin.super-admin.logs.user-activity', [
             'activities' => $filtered,
             'filters' => $filters,
         ]);
@@ -186,7 +186,7 @@ class ActivityLogController extends Controller
             'files_count' => 1542,
         ];
 
-        return view('admin.logs.system-audit', [
+        return view('admin.super-admin.logs.system-audit', [
             'systemLogs' => $filtered,
             'filters' => $filters,
             'backupSummary' => $backupSummary,

@@ -113,6 +113,7 @@ Route::prefix('desa')->name('desa.')->group(function () {
         
     // Routes Galeri & Wisata (Combined Page)
     Route::get('/galeri-wisata', [App\Http\Controllers\Desa\GaleriWisataController::class, 'index'])->name('galeri-wisata.index');
+    Route::get('/galeri-wisata/foto', [App\Http\Controllers\Desa\GaleriWisataController::class, 'galeriFoto'])->name('galeri-wisata.galeri-foto');
     Route::post('/galeri-wisata/upload', [App\Http\Controllers\Desa\GaleriWisataController::class, 'uploadStore'])->name('galeri-wisata.upload');
 
     Route::get('/contact', [DesaController::class, 'contact'])->name('contact');
@@ -132,16 +133,34 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         ->middleware('admin:admin_desa,super_admin')
         ->name('desa-management.index');
     Route::prefix('desa-management')->name('desa-management.')->middleware('admin:admin_desa,super_admin')->group(function () {
-        Route::get('/umkm', [VillageManagementController::class, 'umkm'])->name('umkm');
+        Route::get('/profile', [VillageManagementController::class, 'profile'])->name('profile');
+        Route::get('/news', [VillageManagementController::class, 'news'])->name('news');
+        Route::get('/gallery', [VillageManagementController::class, 'gallery'])->name('gallery');
+        Route::get('/potentials', [VillageManagementController::class, 'potentials'])->name('potentials');
+        Route::get('/achievements', [VillageManagementController::class, 'achievements'])->name('achievements');
+        // Legacy route - redirect to new structure
+        Route::get('/umkm', function () {
+            return redirect()->route('admin.desa-management.umkm-management.index');
+        })->name('umkm');
         
-        // UMKM Management Routes
-        Route::post('/umkm', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'store'])->name('umkm.store');
-        Route::post('/umkm/{umkm}/status', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'updateStatus'])->name('umkm.update-status');
-        Route::post('/umkm/products', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'storeProduct'])->name('umkm.products.store');
-        Route::post('/umkm/content/{validation}/approve', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'approveContent'])->name('umkm.content.approve');
-        Route::post('/umkm/content/{validation}/reject', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'rejectContent'])->name('umkm.content.reject');
-        Route::post('/umkm/content/{validation}/revision', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'requestRevision'])->name('umkm.content.revision');
-        Route::post('/umkm/guides', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'storeGuide'])->name('umkm.guides.store');
+        // UMKM Management Routes - New Structure
+        Route::prefix('umkm-management')->name('umkm-management.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'index'])->name('index');
+            Route::get('/list', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'list'])->name('list');
+            Route::get('/create', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'create'])->name('create');
+            Route::get('/monitoring', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'monitoring'])->name('monitoring');
+            Route::get('/validation', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'validation'])->name('validation');
+            Route::get('/guides', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'guides'])->name('guides');
+            
+            // Actions
+            Route::post('/', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'store'])->name('store');
+            Route::post('/{umkm}/status', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'updateStatus'])->name('update-status');
+            Route::post('/products', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'storeProduct'])->name('products.store');
+            Route::post('/content/{validation}/approve', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'approveContent'])->name('content.approve');
+            Route::post('/content/{validation}/reject', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'rejectContent'])->name('content.reject');
+            Route::post('/content/{validation}/revision', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'requestRevision'])->name('content.revision');
+            Route::post('/guides', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'storeGuide'])->name('guides.store');
+        });
         
         Route::put('/profile', [VillageProfileController::class, 'update'])->name('profile.update');
         

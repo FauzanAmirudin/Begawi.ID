@@ -23,36 +23,18 @@ class VillageManagementController extends Controller
             ['name' => 'Desa Sejahtera']
         );
 
-        $profile = $this->buildVillageProfile($village);
-        $contacts = collect($village->contacts ?? [])->values();
-        $structures = collect($village->structures ?? [])->values();
-        $history = collect($village->history ?? [])->values();
-        $visionMission = $this->buildVillageVisionMission($village);
-
-        $news = $village->news()
-            ->latest('published_at')
-            ->latest('created_at')
-            ->get();
-
+        $news = $village->news()->get();
         $drafts = $village->news()
             ->whereNot('status', VillageNews::STATUS_PUBLISHED)
-            ->latest('updated_at')
             ->get();
-
-        $agendas = $this->villageAgendas(); // Placeholder until agenda module available
-
         $galleryCategories = $village->galleryCategories()
             ->with(['items' => function ($query) {
-                $query->where('is_published', true)
-                    ->orderByDesc('taken_at')
-                    ->orderByDesc('created_at');
+                $query->where('is_published', true);
             }])
-            ->orderBy('display_order')
             ->get();
-
-        $potentials = $village->potentials()->latest('updated_at')->get();
-        $achievements = $village->achievements()->orderByDesc('year')->orderByDesc('created_at')->get();
-        $programs = $village->programs()->orderByDesc('progress')->orderByDesc('created_at')->get();
+        $potentials = $village->potentials()->get();
+        $achievements = $village->achievements()->get();
+        $programs = $village->programs()->get();
 
         $stats = [
             'news_total' => $news->count(),
@@ -64,30 +46,113 @@ class VillageManagementController extends Controller
             'programs_total' => $programs->count(),
         ];
 
-        $tabs = [
-            'profile' => 'Profil Desa',
-            'news' => 'Berita & Agenda',
-            'gallery' => 'Galeri Desa',
-            'potency' => 'Potensi & Wisata',
-            'achievement' => 'Prestasi & Program',
-        ];
+        return view('admin.admin-desa.desa.index', [
+            'village' => $village,
+            'stats' => $stats,
+        ]);
+    }
 
-        return view('admin.desa.management', [
+    public function profile(): View
+    {
+        $village = Village::query()->firstOrCreate(
+            ['slug' => 'desa-sejahtera'],
+            ['name' => 'Desa Sejahtera']
+        );
+
+        $profile = $this->buildVillageProfile($village);
+        $contacts = collect($village->contacts ?? [])->values();
+        $structures = collect($village->structures ?? [])->values();
+        $history = collect($village->history ?? [])->values();
+        $visionMission = $this->buildVillageVisionMission($village);
+
+        return view('admin.admin-desa.desa.profile', [
             'village' => $village,
             'profile' => $profile,
             'contacts' => $contacts,
             'structures' => $structures,
             'history' => $history,
             'visionMission' => $visionMission,
+        ]);
+    }
+
+    public function news(): View
+    {
+        $village = Village::query()->firstOrCreate(
+            ['slug' => 'desa-sejahtera'],
+            ['name' => 'Desa Sejahtera']
+        );
+
+        $news = $village->news()
+            ->latest('published_at')
+            ->latest('created_at')
+            ->get();
+
+        $drafts = $village->news()
+            ->whereNot('status', VillageNews::STATUS_PUBLISHED)
+            ->latest('updated_at')
+            ->get();
+
+        $agendas = $this->villageAgendas();
+
+        return view('admin.admin-desa.desa.news', [
+            'village' => $village,
             'news' => $news,
-            'agendas' => $agendas,
             'drafts' => $drafts,
+            'agendas' => $agendas,
+        ]);
+    }
+
+    public function gallery(): View
+    {
+        $village = Village::query()->firstOrCreate(
+            ['slug' => 'desa-sejahtera'],
+            ['name' => 'Desa Sejahtera']
+        );
+
+        $galleryCategories = $village->galleryCategories()
+            ->with(['items' => function ($query) {
+                $query->where('is_published', true)
+                    ->orderByDesc('taken_at')
+                    ->orderByDesc('created_at');
+            }])
+            ->orderBy('display_order')
+            ->get();
+
+        return view('admin.admin-desa.desa.gallery', [
+            'village' => $village,
             'galleryCategories' => $galleryCategories,
+        ]);
+    }
+
+    public function potentials(): View
+    {
+        $village = Village::query()->firstOrCreate(
+            ['slug' => 'desa-sejahtera'],
+            ['name' => 'Desa Sejahtera']
+        );
+
+        $potentials = $village->potentials()->latest('updated_at')->get();
+
+        return view('admin.admin-desa.desa.potentials', [
+            'village' => $village,
             'potentials' => $potentials,
+        ]);
+    }
+
+    public function achievements(): View
+    {
+        $village = Village::query()->firstOrCreate(
+            ['slug' => 'desa-sejahtera'],
+            ['name' => 'Desa Sejahtera']
+        );
+
+        $achievements = $village->achievements()->orderByDesc('year')->orderByDesc('created_at')->get();
+        $programs = $village->programs()->orderByDesc('progress')->orderByDesc('created_at')->get();
+
+        return view('admin.admin-desa.desa.achievements', [
+            'village' => $village,
             'achievements' => $achievements,
             'programs' => $programs,
-            'stats' => $stats,
-            'tabs' => $tabs,
         ]);
     }
 
@@ -499,7 +564,7 @@ class VillageManagementController extends Controller
             ],
         ];
 
-        return view('admin.desa.umkm', [
+        return view('admin.admin-desa.desa.umkm', [
             'village' => $village,
             'overviewCards' => $overviewCards,
             'umkmList' => $umkmCollection,

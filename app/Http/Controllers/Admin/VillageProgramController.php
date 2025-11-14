@@ -30,7 +30,7 @@ class VillageProgramController extends Controller
         VillageProgram::create($validated);
 
         return redirect()
-            ->route('admin.desa-management.index')
+            ->route('admin.desa-management.achievements')
             ->with('success', 'Program desa berhasil ditambahkan.');
     }
 
@@ -50,7 +50,7 @@ class VillageProgramController extends Controller
         $program->update($validated);
 
         return redirect()
-            ->route('admin.desa-management.index')
+            ->route('admin.desa-management.achievements')
             ->with('success', 'Program desa berhasil diperbarui.');
     }
 
@@ -59,7 +59,7 @@ class VillageProgramController extends Controller
         $program->delete();
 
         return redirect()
-            ->route('admin.desa-management.index')
+            ->route('admin.desa-management.achievements')
             ->with('success', 'Program desa berhasil dihapus.');
     }
 

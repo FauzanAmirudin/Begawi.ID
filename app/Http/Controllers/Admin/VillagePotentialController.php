@@ -36,7 +36,7 @@ class VillagePotentialController extends Controller
         VillagePotential::create($validated);
 
         return redirect()
-            ->route('admin.desa-management.index')
+            ->route('admin.desa-management.potentials')
             ->with('success', 'Potensi desa berhasil ditambahkan.');
     }
 
@@ -66,7 +66,7 @@ class VillagePotentialController extends Controller
         $potential->update($validated);
 
         return redirect()
-            ->route('admin.desa-management.index')
+            ->route('admin.desa-management.potentials')
             ->with('success', 'Potensi desa berhasil diperbarui.');
     }
 
@@ -79,7 +79,7 @@ class VillagePotentialController extends Controller
         $potential->delete();
 
         return redirect()
-            ->route('admin.desa-management.index')
+            ->route('admin.desa-management.potentials')
             ->with('success', 'Potensi desa berhasil dihapus.');
     }
 

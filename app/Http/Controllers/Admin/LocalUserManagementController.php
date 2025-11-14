@@ -70,7 +70,7 @@ class LocalUserManagementController extends Controller
         
         // If still no village, show empty state instead of 404
         if (!$village) {
-            return view('admin.local-users.index', [
+            return view('admin.admin-desa.local-users.index', [
                 'users' => collect([])->paginate(15),
                 'village' => null,
                 'stats' => [
@@ -139,7 +139,7 @@ class LocalUserManagementController extends Controller
                 ->where('role', 'editor_desa')->count(),
         ];
 
-        return view('admin.local-users.index', [
+        return view('admin.admin-desa.local-users.index', [
             'users' => $users,
             'village' => $village,
             'stats' => $stats,
@@ -161,7 +161,7 @@ class LocalUserManagementController extends Controller
                 ->with('error', 'Village belum dikonfigurasi. Silakan hubungi administrator.');
         }
 
-        return view('admin.local-users.create', [
+        return view('admin.admin-desa.local-users.create', [
             'village' => $village,
         ]);
     }
@@ -249,7 +249,7 @@ class LocalUserManagementController extends Controller
             ],
         ];
 
-        return view('admin.local-users.roles', [
+        return view('admin.admin-desa.local-users.roles', [
             'village' => $village,
             'roleStats' => $roleStats,
         ]);

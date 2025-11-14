@@ -38,7 +38,7 @@ class VideoDocumentationController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(15);
 
-        return view('admin.content.videos.index', compact('videos'));
+        return view('admin.super-admin.content.videos.index', compact('videos'));
     }
 
     /**
@@ -48,7 +48,7 @@ class VideoDocumentationController extends Controller
     {
         $this->checkSuperAdmin();
         
-        return view('admin.content.videos.create');
+        return view('admin.super-admin.content.videos.create');
     }
 
     /**
@@ -104,7 +104,7 @@ class VideoDocumentationController extends Controller
         
         $video->load('creator');
         
-        return view('admin.content.videos.show', compact('video'));
+        return view('admin.super-admin.content.videos.show', compact('video'));
     }
 
     /**
@@ -114,7 +114,7 @@ class VideoDocumentationController extends Controller
     {
         $this->checkSuperAdmin();
         
-        return view('admin.content.videos.edit', compact('video'));
+        return view('admin.super-admin.content.videos.edit', compact('video'));
     }
 
     /**

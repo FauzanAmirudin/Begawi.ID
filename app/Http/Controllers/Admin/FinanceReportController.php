@@ -114,7 +114,7 @@ class FinanceReportController extends Controller
             ->orderByDesc('total')
             ->get();
 
-        return view('admin.finance.reports.index', compact(
+        return view('admin.super-admin.finance.reports.index', compact(
             'month',
             'year',
             'monthlyRevenue',
