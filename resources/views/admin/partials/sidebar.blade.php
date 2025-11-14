@@ -228,6 +228,129 @@
                 </a>
             </div>
         </div>
+        @elseif(auth()->user()->role === \App\Models\User::ROLE_ADMIN_DESA)
+        <!-- Manajemen Website Desa -->
+        <a href="{{ route('admin.desa-management.index') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl font-medium {{ request()->routeIs('admin.desa-management.index') ? 'ring-2 ring-emerald-300' : '' }} hover:opacity-95 transition">
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+                <span>Manajemen Desa</span>
+            </div>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </a>
+
+        <!-- Manajemen UMKM Desa -->
+        <a href="{{ route('admin.desa-management.umkm') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-purple-500 to-indigo-500 rounded-xl font-medium {{ request()->routeIs('admin.desa-management.umkm') ? 'ring-2 ring-purple-300' : '' }} hover:opacity-95 transition">
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 9l1 9a2 2 0 002 2h10a2 2 0 002-2l1-9M5 9h14l-1.5-4.5A1 1 0 0016.57 4H7.43a1 1 0 00-.93.6L5 9zm4 4h6"></path>
+                </svg>
+                <span>Manajemen UMKM</span>
+            </div>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </a>
+
+        <!-- Direktori UMKM -->
+
+        <!-- Konten Desa Dropdown -->
+        <div class="space-y-1">
+            <button onclick="toggleDropdown('village-content-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.desa-management.*') ? 'ring-2 ring-indigo-300' : '' }}">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                    <span>Konten Desa</span>
+                </div>
+                <svg id="village-content-dropdown-icon" class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div id="village-content-dropdown" class="ml-4 space-y-1 overflow-hidden transition-all duration-300 {{ request()->routeIs('admin.desa-management.*') ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0' }}">
+                <a href="{{ route('admin.desa-management.index') }}#profile" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-lg transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zm-4 5c-4.418 0-8 2.239-8 5v1a1 1 0 001 1h14a1 1 0 001-1v-1c0-2.761-3.582-5-8-5z"></path>
+                    </svg>
+                    <span>Profil Desa</span>
+                </a>
+                <a href="{{ route('admin.desa-management.index') }}#news" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-lg transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 5H9a2 2 0 00-2 2v12m12-14h2a1 1 0 011 1v12a1 1 0 01-1 1h-2m0-14v14M7 9h6m-6 4h6m-6 4h6"></path>
+                    </svg>
+                    <span>Berita Desa</span>
+                </a>
+                <a href="{{ route('admin.desa-management.index') }}#gallery" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-lg transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a2 2 0 012-2h12a2 2 0 012 2v6l-4-3-4 5-3-2-5 4V5z"></path>
+                    </svg>
+                    <span>Galeri Kegiatan</span>
+                </a>
+                <a href="{{ route('admin.desa-management.index') }}#potency" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-lg transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l2.09 6.26L20 9.27l-5 3.64 1.91 6.09L12 15.77l-4.91 3.23L9 12.91 4 9.27l5.91-.99L12 2z"></path>
+                    </svg>
+                    <span>Potensi & Wisata</span>
+                </a>
+                <a href="{{ route('admin.desa-management.index') }}#achievement" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-lg transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l7 7-7 7"></path>
+                    </svg>
+                    <span>Prestasi & Program</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Validasi Konten -->
+        <a href="{{ route('admin.desa-management.index') }}#news" class="flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:border-amber-400 hover:text-amber-600 transition">
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>Validasi Konten</span>
+            </div>
+            <span class="text-xs font-semibold text-amber-500">Prioritas</span>
+        </a>
+
+        <!-- Support -->
+        <a href="{{ route('admin.support.index') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl font-medium hover:opacity-95 transition">
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-1.414 1.414M6.05 17.95l-1.414 1.414M9 5H5a2 2 0 00-2 2v4m16 0v4a2 2 0 01-2 2h-4M15 9h.01M19 9h.01M9 15h.01M5 15h.01"></path>
+                </svg>
+                <span>Pusat Bantuan</span>
+            </div>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </a>
+
+        @elseif(auth()->user()->role === \App\Models\User::ROLE_ADMIN_UMKM)
+        <a href="{{ route('desa.umkm.index') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-purple-500 to-indigo-500 rounded-xl font-medium hover:opacity-95 transition">
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 9l1 9a2 2 0 002 2h10a2 2 0 002-2l1-9M5 9h14l-1.5-4.5A1 1 0 0016.57 4H7.43a1 1 0 00-.93.6L5 9zm4 4h6"></path>
+                </svg>
+                <span>Produk & Toko</span>
+            </div>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </a>
+        <a href="{{ route('admin.support.index') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl font-medium hover:opacity-95 transition">
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-1.414 1.414M6.05 17.95l-1.414 1.414M9 5H5a2 2 0 00-2 2v4m16 0v4a2 2 0 01-2 2h-4M15 9h.01M19 9h.01M9 15h.01M5 15h.01"></path>
+                </svg>
+                <span>Pusat Bantuan</span>
+            </div>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </a>
         @endif
     </nav>
 

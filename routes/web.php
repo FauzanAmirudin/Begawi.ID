@@ -16,6 +16,13 @@ use App\Http\Controllers\Admin\SupportArticleController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\PlatformDirectoryController;
+use App\Http\Controllers\Admin\VillageManagementController;
+use App\Http\Controllers\Admin\VillageProfileController;
+use App\Http\Controllers\Admin\VillageNewsController;
+use App\Http\Controllers\Admin\VillageGalleryController;
+use App\Http\Controllers\Admin\VillagePotentialController;
+use App\Http\Controllers\Admin\VillageAchievementController;
+use App\Http\Controllers\Admin\VillageProgramController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -77,6 +84,7 @@ Route::prefix('desa')->name('desa.')->group(function () {
         Route::get('/arsip', [BeritaController::class, 'arsip'])->name('arsip');
         Route::get('/agenda', [BeritaController::class, 'agenda'])->name('agenda');
         Route::get('/{slug}', [BeritaController::class, 'detail'])->name('detail');
+        Route::get('/agenda/detail/{id}', [BeritaController::class, 'agendaDetail'])->name('agenda-detail');
     });
 
     // Routes UMKM
@@ -120,6 +128,42 @@ Route::prefix('desa')->name('desa.')->group(function () {
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/platform-directory', [PlatformDirectoryController::class, 'index'])->name('platform-directory.index');
+    Route::get('/desa-management', [VillageManagementController::class, 'index'])
+        ->middleware('admin:admin_desa,super_admin')
+        ->name('desa-management.index');
+    Route::prefix('desa-management')->name('desa-management.')->middleware('admin:admin_desa,super_admin')->group(function () {
+        Route::get('/umkm', [VillageManagementController::class, 'umkm'])->name('umkm');
+        
+        // UMKM Management Routes
+        Route::post('/umkm', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'store'])->name('umkm.store');
+        Route::post('/umkm/{umkm}/status', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'updateStatus'])->name('umkm.update-status');
+        Route::post('/umkm/products', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'storeProduct'])->name('umkm.products.store');
+        Route::post('/umkm/content/{validation}/approve', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'approveContent'])->name('umkm.content.approve');
+        Route::post('/umkm/content/{validation}/reject', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'rejectContent'])->name('umkm.content.reject');
+        Route::post('/umkm/content/{validation}/revision', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'requestRevision'])->name('umkm.content.revision');
+        Route::post('/umkm/guides', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'storeGuide'])->name('umkm.guides.store');
+        
+        Route::put('/profile', [VillageProfileController::class, 'update'])->name('profile.update');
+
+        Route::post('/news', [VillageNewsController::class, 'store'])->name('news.store');
+        Route::put('/news/{news}', [VillageNewsController::class, 'update'])->name('news.update');
+        Route::delete('/news/{news}', [VillageNewsController::class, 'destroy'])->name('news.destroy');
+
+        Route::post('/gallery', [VillageGalleryController::class, 'store'])->name('gallery.store');
+        Route::delete('/gallery/{item}', [VillageGalleryController::class, 'destroy'])->name('gallery.destroy');
+
+        Route::post('/potentials', [VillagePotentialController::class, 'store'])->name('potentials.store');
+        Route::put('/potentials/{potential}', [VillagePotentialController::class, 'update'])->name('potentials.update');
+        Route::delete('/potentials/{potential}', [VillagePotentialController::class, 'destroy'])->name('potentials.destroy');
+
+        Route::post('/achievements', [VillageAchievementController::class, 'store'])->name('achievements.store');
+        Route::put('/achievements/{achievement}', [VillageAchievementController::class, 'update'])->name('achievements.update');
+        Route::delete('/achievements/{achievement}', [VillageAchievementController::class, 'destroy'])->name('achievements.destroy');
+
+        Route::post('/programs', [VillageProgramController::class, 'store'])->name('programs.store');
+        Route::put('/programs/{program}', [VillageProgramController::class, 'update'])->name('programs.update');
+        Route::delete('/programs/{program}', [VillageProgramController::class, 'destroy'])->name('programs.destroy');
+    });
     
     // User Management (Super Admin Only)
     Route::resource('users', \App\Http\Controllers\Admin\UserManagementController::class);

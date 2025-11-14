@@ -26,6 +26,10 @@ class DashboardController extends Controller
             return $this->renderSuperAdminDashboard();
         }
 
+        if ($user && $user->role === User::ROLE_ADMIN_DESA) {
+            return $this->renderVillageAdminDashboard();
+        }
+
         return $this->renderDefaultDashboard();
     }
 
@@ -191,6 +195,121 @@ class DashboardController extends Controller
             'charts' => $charts,
             'latestEvents' => $latestEvents,
             'dashboardRole' => 'super_admin',
+        ]);
+    }
+
+    /**
+     * Render dashboard for village (admin desa) role with localised insights.
+     */
+    protected function renderVillageAdminDashboard()
+    {
+        $umkmProfiles = $this->villageUmkmProfiles();
+        $activeUmkm = $umkmProfiles->where('status', 'active')->count();
+        $umkmPending = $umkmProfiles->sum('pending_validation');
+
+        $visitorStats = $this->villageVisitorStats();
+        $totalVisitors = array_sum($visitorStats['dataset']);
+
+        $news = $this->villageNewsDataset();
+        $gallery = $this->villageGalleryDataset();
+        $potencies = $this->villagePotencyDataset();
+
+        $overviewCards = [
+            [
+                'label' => 'UMKM Aktif',
+                'value' => number_format($activeUmkm),
+                'description' => "{$umkmProfiles->count()} total binaan desa",
+                'gradient' => 'from-emerald-500 to-teal-500',
+                'icon' => 'umkm',
+                'link' => route('desa.umkm.index'),
+                'link_label' => 'Lihat Direktori UMKM',
+                'badge' => [
+                    'label' => '+ ' . $umkmProfiles->sum('new_products'),
+                    'text' => 'Produk baru pekan ini',
+                ],
+            ],
+            [
+                'label' => 'Pengunjung Website',
+                'value' => number_format($totalVisitors),
+                'description' => '12 bulan terakhir',
+                'gradient' => 'from-purple-500 to-indigo-500',
+                'icon' => 'visitors',
+                'link' => route('desa.home'),
+                'link_label' => 'Lihat Website Desa',
+                'badge' => [
+                    'label' => '+'.$visitorStats['growth'].'%',
+                    'text' => 'Pertumbuhan bulan ini',
+                ],
+            ],
+            [
+                'label' => 'Konten Terbit',
+                'value' => number_format($news->count() + $gallery->count() + $potencies->count()),
+                'description' => "{$news->count()} berita · {$gallery->count()} galeri · {$potencies->count()} potensi",
+                'gradient' => 'from-orange-500 to-pink-500',
+                'icon' => 'content',
+                'link' => route('desa.berita.index'),
+                'link_label' => 'Kelola Konten Desa',
+                'badge' => [
+                    'label' => $umkmPending . ' Draft',
+                    'text' => 'Menunggu validasi',
+                ],
+            ],
+        ];
+
+        $secondaryCards = [
+            [
+                'label' => 'Berita Desa',
+                'value' => number_format($news->count()),
+                'description' => 'Update kegiatan & informasi desa',
+                'gradient' => 'from-blue-500 to-blue-600',
+                'icon' => 'news',
+                'link' => route('desa.berita.index'),
+                'link_label' => 'Kelola Berita',
+            ],
+            [
+                'label' => 'Galeri & Dokumentasi',
+                'value' => number_format($gallery->count()),
+                'description' => 'Momen terbaru di desa',
+                'gradient' => 'from-rose-500 to-amber-500',
+                'icon' => 'gallery',
+                'link' => route('desa.galeri-wisata.index'),
+                'link_label' => 'Kelola Galeri',
+            ],
+            [
+                'label' => 'Potensi Unggulan',
+                'value' => number_format($potencies->count()),
+                'description' => 'Destinasi & potensi desa',
+                'gradient' => 'from-cyan-500 to-teal-500',
+                'icon' => 'potency',
+                'link' => route('desa.galeri-wisata.index'),
+                'link_label' => 'Kelola Potensi',
+            ],
+        ];
+
+        $charts = [
+            'visitors' => $visitorStats,
+            'umkm_distribution' => $this->villageUmkmDistribution($umkmProfiles),
+            'content_trend' => $this->villageContentTrend($news, $gallery, $potencies),
+        ];
+
+        $activityFeed = $this->villageActivityFeed($umkmProfiles);
+        $pendingValidations = $this->villagePendingContent();
+        $quickActions = $this->villageQuickActions();
+        $sidebarHighlights = $this->villageSidebarHighlights($umkmProfiles);
+
+        return view('admin.dashboard.desa', [
+            'overviewCards' => $overviewCards,
+            'secondaryCards' => $secondaryCards,
+            'charts' => $charts,
+            'activityFeed' => $activityFeed,
+            'pendingValidations' => $pendingValidations,
+            'quickActions' => $quickActions,
+            'sidebarHighlights' => $sidebarHighlights,
+            'visitorSummary' => [
+                'total' => number_format($totalVisitors),
+                'average' => number_format($visitorStats['average']),
+                'growth' => $visitorStats['growth'],
+            ],
         ]);
     }
 
@@ -511,6 +630,244 @@ class DashboardController extends Controller
             ['time' => '11:18', 'type' => 'comment', 'title' => 'New Comment', 'user' => 'Erik Pittman', 'desc' => 'Category «Templates»'],
             ['time' => '11:16', 'type' => 'user', 'title' => 'New User', 'user' => 'Erik Pittman', 'desc' => 'New User Alberta Colon'],
             ['time' => '11:01', 'type' => 'post', 'title' => 'New Post', 'user' => 'Erik Pittman', 'desc' => 'Add New Post - Second Post-'],
+        ];
+    }
+
+    /**
+     * Village dataset helpers
+     */
+    protected function villageUmkmProfiles(): Collection
+    {
+        return collect([
+            [
+                'name' => 'UD Berkah Jaya',
+                'slug' => 'ud-berkah-jaya',
+                'category' => 'Makanan & Minuman',
+                'status' => 'active',
+                'products' => 8,
+                'new_products' => 2,
+                'sales_30d' => 156,
+                'pending_validation' => 1,
+                'last_activity' => Carbon::now()->subHours(3),
+                'last_activity_desc' => 'Mengunggah produk Keripik Singkong Renyah',
+            ],
+            [
+                'name' => 'Madu Sari Desa',
+                'slug' => 'madu-sari-desa',
+                'category' => 'Kesehatan & Herbal',
+                'status' => 'active',
+                'products' => 5,
+                'new_products' => 1,
+                'sales_30d' => 89,
+                'pending_validation' => 2,
+                'last_activity' => Carbon::now()->subHours(6),
+                'last_activity_desc' => 'Memperbarui stok Madu Hutan Asli',
+            ],
+            [
+                'name' => 'Batik Nusantara',
+                'slug' => 'batik-nusantara',
+                'category' => 'Kerajinan & Fashion',
+                'status' => 'active',
+                'products' => 12,
+                'new_products' => 0,
+                'sales_30d' => 34,
+                'pending_validation' => 0,
+                'last_activity' => Carbon::now()->subDay(),
+                'last_activity_desc' => 'Mengunggah katalog Batik Motif Daun Padi',
+            ],
+            [
+                'name' => 'Dodol Pak Haji',
+                'slug' => 'dodol-pak-haji',
+                'category' => 'Makanan & Minuman',
+                'status' => 'active',
+                'products' => 6,
+                'new_products' => 1,
+                'sales_30d' => 267,
+                'pending_validation' => 1,
+                'last_activity' => Carbon::now()->subHours(12),
+                'last_activity_desc' => 'Menandai pesanan pre-order festival panen',
+            ],
+            [
+                'name' => 'Kopi Gunung Sari',
+                'slug' => 'kopi-gunung-sari',
+                'category' => 'Makanan & Minuman',
+                'status' => 'active',
+                'products' => 4,
+                'new_products' => 1,
+                'sales_30d' => 198,
+                'pending_validation' => 0,
+                'last_activity' => Carbon::now()->subHours(2),
+                'last_activity_desc' => 'Konfirmasi pesanan Kopi Robusta Giling Halus',
+            ],
+        ]);
+    }
+
+    protected function villageVisitorStats(): array
+    {
+        $months = collect(range(5, 0))->map(function (int $offset) {
+            return Carbon::now()->subMonths($offset);
+        });
+
+        $dataset = [1280, 1420, 1510, 1680, 1850, 2100];
+        $growth = 12;
+        $average = (int) round(array_sum($dataset) / max(count($dataset), 1));
+
+        return [
+            'labels' => $months->map(fn (Carbon $month) => $month->translatedFormat('M'))->all(),
+            'dataset' => $dataset,
+            'growth' => $growth,
+            'average' => $average,
+        ];
+    }
+
+    protected function villageNewsDataset(): Collection
+    {
+        return collect([
+            ['title' => 'Pembangunan Jalan Desa Tahap 2 Dimulai', 'status' => 'published'],
+            ['title' => 'Pelatihan UMKM Digital Marketing', 'status' => 'published'],
+            ['title' => 'Festival Panen Raya 2024', 'status' => 'published'],
+        ]);
+    }
+
+    protected function villageGalleryDataset(): Collection
+    {
+        return collect([
+            ['title' => 'Gotong Royong Membersihkan Sungai'],
+            ['title' => 'Senam Sehat Bersama'],
+            ['title' => 'Pelatihan Hidroponik'],
+            ['title' => 'Lomba 17 Agustus'],
+        ]);
+    }
+
+    protected function villagePotencyDataset(): Collection
+    {
+        return collect([
+            ['title' => 'Air Terjun Sumber Rejeki'],
+            ['title' => 'Kebun Teh Lereng Indah'],
+            ['title' => 'Desa Wisata Kampung Bambu'],
+        ]);
+    }
+
+    protected function villageUmkmDistribution(Collection $umkmProfiles): array
+    {
+        $grouped = $umkmProfiles
+            ->groupBy('category')
+            ->map(function (Collection $items) {
+                return $items->count();
+            });
+
+        return [
+            'labels' => $grouped->keys()->all(),
+            'dataset' => $grouped->values()->map(fn ($count) => (int) $count)->all(),
+        ];
+    }
+
+    protected function villageContentTrend(Collection $news, Collection $gallery, Collection $potencies): array
+    {
+        $weeks = ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'];
+
+        return [
+            'labels' => $weeks,
+            'dataset' => [
+                'berita' => [2, 1, 1, 1],
+                'galeri' => [1, 1, 1, 1],
+                'potensi' => [1, 0, 1, 1],
+            ],
+        ];
+    }
+
+    protected function villageActivityFeed(Collection $umkmProfiles): array
+    {
+        return $umkmProfiles
+            ->sortByDesc('last_activity')
+            ->take(6)
+            ->map(function (array $umkm) {
+                return [
+                    'time' => optional($umkm['last_activity'])->format('H:i') ?? '-',
+                    'type' => 'umkm_activity',
+                    'title' => $umkm['name'],
+                    'user' => $umkm['category'],
+                    'desc' => $umkm['last_activity_desc'] ?? '-',
+                ];
+            })
+            ->values()
+            ->all();
+    }
+
+    protected function villagePendingContent(): array
+    {
+        return [
+            [
+                'type' => 'Berita',
+                'title' => 'Laporan Realisasi Dana Desa Q1',
+                'submitted_by' => 'Sekretariat Desa',
+                'submitted_at' => Carbon::now()->subHours(8)->format('d M · H:i'),
+                'status' => 'review',
+            ],
+            [
+                'type' => 'Produk UMKM',
+                'title' => 'Sirup Jahe Merah 250ml',
+                'submitted_by' => 'Madu Sari Desa',
+                'submitted_at' => Carbon::now()->subDay()->format('d M · H:i'),
+                'status' => 'verification',
+            ],
+            [
+                'type' => 'Galeri',
+                'title' => 'Dokumentasi Posyandu Sejahtera',
+                'submitted_by' => 'Tim Kader PKK',
+                'submitted_at' => Carbon::now()->subDays(2)->format('d M · H:i'),
+                'status' => 'draft',
+            ],
+        ];
+    }
+
+    protected function villageQuickActions(): array
+    {
+        return [
+            [
+                'label' => 'Tambah UMKM',
+                'description' => 'Daftarkan pelaku usaha baru desa',
+                'link' => route('desa.umkm.index'),
+                'icon' => 'plus',
+                'color' => 'from-emerald-500 to-teal-500',
+            ],
+            [
+                'label' => 'Tambah Berita',
+                'description' => 'Publikasikan kabar terbaru desa',
+                'link' => route('desa.berita.index'),
+                'icon' => 'news',
+                'color' => 'from-blue-500 to-indigo-500',
+            ],
+            [
+                'label' => 'Tambah Galeri',
+                'description' => 'Unggah dokumentasi kegiatan',
+                'link' => route('desa.galeri-wisata.index'),
+                'icon' => 'gallery',
+                'color' => 'from-rose-500 to-orange-500',
+            ],
+        ];
+    }
+
+    protected function villageSidebarHighlights(Collection $umkmProfiles): array
+    {
+        return [
+            'topUmkm' => $umkmProfiles
+                ->sortByDesc('sales_30d')
+                ->take(3)
+                ->map(function (array $umkm) {
+                    return [
+                        'name' => $umkm['name'],
+                        'category' => $umkm['category'],
+                        'sales' => number_format($umkm['sales_30d']),
+                        'status' => ucfirst($umkm['status']),
+                    ];
+                })
+                ->values()
+                ->all(),
+            'stats' => [
+                'produkBaru' => $umkmProfiles->sum('new_products'),
+                'drafKonten' => $umkmProfiles->sum('pending_validation'),
+            ],
         ];
     }
 }

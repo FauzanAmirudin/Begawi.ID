@@ -124,6 +124,57 @@
         </div>
     </div> --}}
 
+    @php
+        $user = auth()->user();
+        $roleLabel = ucfirst(str_replace('_', ' ', $user->role));
+        $roleBadgeClass = match ($user->role) {
+            \App\Models\User::ROLE_SUPER_ADMIN => 'bg-purple-100 text-purple-600',
+            \App\Models\User::ROLE_ADMIN_DESA => 'bg-emerald-100 text-emerald-600',
+            default => 'bg-blue-100 text-blue-600',
+        };
+    @endphp
+
+    <!-- Role Context & Quick Actions -->
+    <div class="flex items-center gap-4">
+        <div class="hidden lg:flex items-center gap-2">
+            <span class="px-3 py-1 text-xs font-semibold rounded-full {{ $roleBadgeClass }}">
+                {{ $roleLabel }}
+            </span>
+            @if($user->role === \App\Models\User::ROLE_ADMIN_DESA)
+            <span class="text-sm text-gray-500">Panel Desa Sejahtera</span>
+            @endif
+        </div>
+
+        @if($user->role === \App\Models\User::ROLE_ADMIN_DESA)
+        <div class="hidden md:flex items-center gap-2">
+            <a href="{{ route('admin.desa-management.index') }}" class="inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg bg-gradient-to-r from-gray-900 to-gray-700 text-white shadow-sm hover:opacity-95 transition">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h12m-7 5h7"></path>
+                </svg>
+                Kelola Website
+            </a>
+            <a href="{{ route('admin.desa-management.umkm') }}" class="inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-sm hover:opacity-95 transition">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 9l1 9a2 2 0 002 2h10a2 2 0 002-2l1-9M5 9h14l-1.5-4.5A1 1 0 0016.57 4H7.43a1 1 0 00-.93.6L5 9zm4 4h6"></path>
+                </svg>
+                Panel UMKM
+            </a>
+            <a href="{{ route('desa.umkm.index') }}" class="inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-sm hover:opacity-95 transition">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Tambah UMKM
+            </a>
+            <a href="{{ route('desa.berita.index') }}" class="inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-sm hover:opacity-95 transition">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"></path>
+                </svg>
+                Tambah Berita
+            </a>
+        </div>
+        @endif
+    </div>
+
     <!-- Center - Search -->
     <div class="flex-1 max-w-md mx-8">
         <div class="relative">
@@ -151,11 +202,11 @@
         <!-- Profile -->
         <div class="flex items-center gap-2">
             <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-xs font-semibold">
-                {{ substr(auth()->user()->name, 0, 2) }}
+                {{ substr($user->name, 0, 2) }}
             </div>
             <div class="text-sm">
-                <div class="font-medium text-gray-900">{{ auth()->user()->name }}</div>
-                <div class="text-xs text-gray-500">{{ ucfirst(str_replace('_', ' ', auth()->user()->role)) }}</div>
+                <div class="font-medium text-gray-900">{{ $user->name }}</div>
+                <div class="text-xs text-gray-500">{{ $roleLabel }}</div>
             </div>
         </div>
 

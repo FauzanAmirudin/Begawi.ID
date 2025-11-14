@@ -3,321 +3,346 @@
 namespace App\Http\Controllers\Desa;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Village;
+use App\Models\VillageNews;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class BeritaController extends Controller
 {
+    protected ?Village $villageModel = null;
+
     public function index()
     {
-        $data = [
-            'berita' => $this->getAllBerita(),
-            'kategori' => $this->getKategoriBerita(),
-            'berita_populer' => $this->getBeritaPopuler()
-        ];
-        
-        return view('pages.desa.berita.index', $data);
+        $newsItems = $this->newsQuery()
+            ->latest('published_at')
+            ->latest('created_at')
+            ->get();
+
+        $berita = $newsItems
+            ->map(fn (VillageNews $news) => $this->mapNewsCard($news))
+            ->values();
+
+        $kategori = $newsItems->pluck('category')
+            ->filter()
+            ->unique()
+            ->values()
+            ->prepend('Semua')
+            ->values()
+            ->toArray();
+
+        $berita_populer = $newsItems
+            ->sortByDesc('views')
+            ->take(3)
+            ->map(fn (VillageNews $news) => $this->mapNewsCard($news))
+            ->values();
+
+        return view('pages.desa.berita.index', [
+            'berita' => $berita,
+            'kategori' => $kategori,
+            'berita_populer' => $berita_populer,
+        ]);
     }
 
     public function tambah()
     {
-        $data = [
-            'kategori' => $this->getKategoriBerita()
-        ];
-        
-        return view('pages.desa.berita.tambah', $data);
+        $categories = $this->newsQuery()
+            ->pluck('category')
+            ->filter()
+            ->unique()
+            ->values();
+
+        return view('pages.desa.berita.tambah', [
+            'kategori' => $categories,
+        ]);
     }
 
     public function edit($id)
     {
-        $data = [
-            'berita' => $this->getBeritaById($id),
-            'kategori' => $this->getKategoriBerita()
-        ];
-        
-        return view('pages.desa.berita.edit', $data);
+        $news = $this->newsQuery()->findOrFail($id);
+        $categories = $this->newsQuery()
+            ->pluck('category')
+            ->filter()
+            ->unique()
+            ->values();
+
+        return view('pages.desa.berita.edit', [
+            'berita' => $this->mapNewsDetail($news),
+            'kategori' => $categories,
+        ]);
     }
 
     public function arsip()
     {
-        $data = [
-            'arsip_tahun' => $this->getArsipTahun(),
-            'arsip_kategori' => $this->getArsipKategori()
-        ];
-        
-        return view('pages.desa.berita.arsip', $data);
+        $news = $this->newsQuery()
+            ->orderByDesc('published_at')
+            ->get();
+
+        $grouped = $news->groupBy(fn (VillageNews $item) => optional($item->published_at)->format('Y') ?? $item->created_at->format('Y'));
+
+        $arsip_tahun = $grouped->map(function ($items) {
+            return [
+                'total' => $items->count(),
+                'berita' => $items->map(fn (VillageNews $news) => $this->mapNewsCard($news))->values(),
+            ];
+        });
+
+        $arsip_kategori = $news->groupBy('category')->map->count();
+
+        return view('pages.desa.berita.arsip', [
+            'arsip_tahun' => $arsip_tahun,
+            'arsip_kategori' => $arsip_kategori,
+        ]);
     }
 
     public function agenda()
     {
         $data = [
             'kegiatan' => $this->getKegiatanMendatang(),
-            'kalender_events' => $this->getKalenderEvents()
+            'kalender_events' => $this->getKalenderEvents(),
         ];
-        
+
         return view('pages.desa.berita.agenda', $data);
     }
 
     public function detail($slug)
     {
-        $data = [
-            'berita' => $this->getBeritaBySlug($slug),
-            'berita_terkait' => $this->getBeritaTerkait()
+        $article = $this->newsQuery()->where('slug', $slug)->first();
+
+        if (! $article) {
+            abort(404);
+        }
+
+        $related = $this->newsQuery()
+            ->where('category', $article->category)
+            ->whereKeyNot($article->getKey())
+            ->latest('published_at')
+            ->take(3)
+            ->get()
+            ->map(fn (VillageNews $news) => $this->mapNewsCard($news));
+
+        $latest = $this->newsQuery()
+            ->whereKeyNot($article->getKey())
+            ->latest('published_at')
+            ->take(4)
+            ->get()
+            ->map(fn (VillageNews $news) => $this->mapNewsCard($news));
+
+        $contentBlocks = $this->buildContentBlocks($article);
+
+        $projectStats = [
+            ['label' => 'Total Pembaca', 'value' => number_format($article->views ?? 0), 'icon' => 'users'],
+            ['label' => 'Status', 'value' => ucfirst($article->status), 'icon' => 'progress'],
+            ['label' => 'Kategori', 'value' => $article->category ?? 'Umum', 'icon' => 'folder'],
         ];
-        
-        return view('pages.desa.berita.detail', $data);
+
+        return view('pages.desa.berita.detail', [
+            'berita' => $this->mapNewsDetail($article),
+            'content' => $contentBlocks,
+            'related' => $related,
+            'latest' => $latest,
+            'projectStats' => $projectStats,
+        ]);
     }
 
-    // Helper methods untuk data Berita
-    private function getAllBerita()
+    public function agendaDetail($id)
     {
+        $agenda = collect($this->getKegiatanMendatang())->firstWhere('id', (int) $id);
+
+        if (! $agenda) {
+            abort(404);
+        }
+
+        $related = collect($this->getKegiatanMendatang())
+            ->reject(fn ($item) => $item['id'] === $agenda['id'])
+            ->take(4)
+            ->values();
+
+        $timeline = [
+            ['time' => '08.00', 'title' => 'Registrasi Peserta', 'desc' => 'Penerimaan peserta, distribusi kit acara, dan briefing awal.'],
+            ['time' => '09.00', 'title' => 'Sesi Pembukaan', 'desc' => 'Sambutan dari Kepala Desa serta penjelasan tujuan kegiatan.'],
+            ['time' => '10.00', 'title' => 'Sesi Inti', 'desc' => 'Pelaksanaan kegiatan utama sesuai agenda.'],
+            ['time' => '12.00', 'title' => 'Diskusi & Evaluasi', 'desc' => 'Forum diskusi, tanya jawab, dan perumusan tindak lanjut.'],
+            ['time' => '13.00', 'title' => 'Penutupan', 'desc' => 'Kesimpulan, dokumentasi, dan pengumuman jadwal berikutnya.'],
+        ];
+
+        $checklist = [
+            'Membawa undangan/reservasi (jika diperlukan).',
+            'Menggunakan pakaian sesuai tema kegiatan.',
+            'Mengisi daftar hadir dan mendapatkan kit acara.',
+            'Mematuhi protokol kesehatan yang berlaku.',
+        ];
+
+        $organizers = [
+            [
+                'name' => 'Sekretariat Desa Sejahtera',
+                'contact' => 'sekretariat@desasejahtera.id',
+                'phone' => '0812-3456-7890',
+            ],
+            [
+                'name' => 'Forum RT/RW',
+                'contact' => 'forum.rtrw@desasejahtera.id',
+                'phone' => '0813-2222-8899',
+            ],
+        ];
+
+        return view('pages.desa.berita.agenda-detail', [
+            'agenda' => $agenda,
+            'related' => $related,
+            'timeline' => $timeline,
+            'checklist' => $checklist,
+            'organizers' => $organizers,
+        ]);
+    }
+
+    protected function newsQuery(): HasMany
+    {
+        return $this->village()->news()->where('status', VillageNews::STATUS_PUBLISHED);
+    }
+
+    protected function mapNewsCard(VillageNews $news): array
+    {
+        $publishedAt = $news->published_at ?? $news->created_at;
+
+        return [
+            'id' => $news->id,
+            'judul' => $news->title,
+            'slug' => $news->slug,
+            'kategori' => $news->category ?? 'Umum',
+            'ringkasan' => $news->summary ?? str($news->content)->limit(160),
+            'konten' => $news->content,
+            'thumbnail' => $this->mediaUrl($news->featured_image, 'https://via.placeholder.com/600x400'),
+            'penulis' => $news->writer ?? 'Admin Desa',
+            'tanggal' => $publishedAt->toDateString(),
+            'views' => $news->views ?? 0,
+        ];
+    }
+
+    protected function mapNewsDetail(VillageNews $news): array
+    {
+        $publishedAt = $news->published_at ?? $news->created_at;
+
+        return [
+            'judul' => $news->title,
+            'ringkasan' => $news->summary,
+            'konten' => $news->content,
+            'kategori' => $news->category ?? 'Umum',
+            'penulis' => $news->writer ?? 'Admin Desa',
+            'tanggal' => $publishedAt->toDateString(),
+            'thumbnail' => $this->mediaUrl($news->featured_image, 'https://via.placeholder.com/960x540'),
+            'views' => $news->views ?? 0,
+        ];
+    }
+
+    protected function buildContentBlocks(VillageNews $news): array
+    {
+        if ($news->content) {
+            return collect(preg_split("/\r\n|\n|\r/", $news->content))
+                ->filter()
+                ->map(fn ($paragraph) => [
+                    'type' => 'paragraph',
+                    'text' => trim($paragraph),
+                ])
+                ->values()
+                ->toArray();
+        }
+
         return [
             [
-                'id' => 1,
-                'judul' => 'Pembangunan Jalan Desa Tahap 2 Dimulai',
-                'slug' => 'pembangunan-jalan-desa-tahap-2-dimulai',
-                'kategori' => 'Pembangunan',
-                'ringkasan' => 'Pembangunan infrastruktur jalan desa memasuki tahap kedua dengan target selesai akhir tahun ini.',
-                'konten' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-                'thumbnail' => 'https://via.placeholder.com/600x400',
-                'penulis' => 'Admin Desa',
-                'tanggal' => '2024-01-15',
-                'views' => 156,
-                'featured' => true
+                'type' => 'paragraph',
+                'text' => 'Konten berita akan segera diperbarui oleh admin desa.',
             ],
-            [
-                'id' => 2,
-                'judul' => 'Pelatihan UMKM Digital Marketing',
-                'slug' => 'pelatihan-umkm-digital-marketing',
-                'kategori' => 'Pelatihan',
-                'ringkasan' => 'Desa mengadakan pelatihan digital marketing untuk meningkatkan penjualan UMKM lokal.',
-                'konten' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-                'thumbnail' => 'https://via.placeholder.com/600x400',
-                'penulis' => 'Admin Desa',
-                'tanggal' => '2024-01-12',
-                'views' => 89,
-                'featured' => false
-            ],
-            [
-                'id' => 3,
-                'judul' => 'Festival Panen Raya 2024',
-                'slug' => 'festival-panen-raya-2024',
-                'kategori' => 'Acara',
-                'ringkasan' => 'Perayaan panen raya akan diselenggarakan dengan berbagai lomba dan pameran produk desa.',
-                'konten' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-                'thumbnail' => 'https://via.placeholder.com/600x400',
-                'penulis' => 'Admin Desa',
-                'tanggal' => '2024-01-10',
-                'views' => 234,
-                'featured' => true
-            ],
-            [
-                'id' => 4,
-                'judul' => 'Bantuan Sosial untuk Warga Terdampak',
-                'slug' => 'bantuan-sosial-untuk-warga-terdampak',
-                'kategori' => 'Sosial',
-                'ringkasan' => 'Pemerintah desa menyalurkan bantuan sosial kepada warga yang terdampak bencana alam.',
-                'konten' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-                'thumbnail' => 'https://via.placeholder.com/600x400',
-                'penulis' => 'Admin Desa',
-                'tanggal' => '2024-01-08',
-                'views' => 67,
-                'featured' => false
-            ],
-            [
-                'id' => 5,
-                'judul' => 'Gotong Royong Bersihkan Sungai Desa',
-                'slug' => 'gotong-royong-bersihkan-sungai-desa',
-                'kategori' => 'Lingkungan',
-                'ringkasan' => 'Warga desa bergotong royong membersihkan sungai untuk menjaga kelestarian lingkungan.',
-                'konten' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-                'thumbnail' => 'https://via.placeholder.com/600x400',
-                'penulis' => 'Admin Desa',
-                'tanggal' => '2024-01-05',
-                'views' => 123,
-                'featured' => false
-            ],
-            [
-                'id' => 6,
-                'judul' => 'Peluncuran Program Desa Digital',
-                'slug' => 'peluncuran-program-desa-digital',
-                'kategori' => 'Teknologi',
-                'ringkasan' => 'Desa meluncurkan program digitalisasi pelayanan untuk memudahkan warga dalam mengakses layanan.',
-                'konten' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-                'thumbnail' => 'https://via.placeholder.com/600x400',
-                'penulis' => 'Admin Desa',
-                'tanggal' => '2024-01-03',
-                'views' => 189,
-                'featured' => true
-            ]
         ];
     }
 
-    private function getKategoriBerita()
-    {
-        return [
-            'Semua',
-            'Pembangunan',
-            'Pelatihan', 
-            'Acara',
-            'Sosial',
-            'Lingkungan',
-            'Teknologi',
-            'Kesehatan',
-            'Pendidikan'
-        ];
-    }
-
-    private function getBeritaPopuler()
-    {
-        return array_slice($this->getAllBerita(), 0, 3);
-    }
-
-    private function getBeritaById($id)
-    {
-        $berita = $this->getAllBerita();
-        return collect($berita)->firstWhere('id', $id);
-    }
-
-    private function getBeritaBySlug($slug)
-    {
-        $berita = $this->getAllBerita();
-        return collect($berita)->firstWhere('slug', $slug);
-    }
-
-    private function getBeritaTerkait()
-    {
-        return array_slice($this->getAllBerita(), 0, 4);
-    }
-
-    private function getArsipTahun()
-    {
-        return [
-            '2024' => [
-                'total' => 15,
-                'berita' => array_slice($this->getAllBerita(), 0, 3)
-            ],
-            '2023' => [
-                'total' => 28,
-                'berita' => array_slice($this->getAllBerita(), 3, 3)
-            ]
-        ];
-    }
-
-    private function getArsipKategori()
-    {
-        return [
-            'Pembangunan' => 8,
-            'Pelatihan' => 12,
-            'Acara' => 15,
-            'Sosial' => 6,
-            'Lingkungan' => 9,
-            'Teknologi' => 4
-        ];
-    }
-
-    private function getKegiatanMendatang()
+    private function getKegiatanMendatang(): array
     {
         return [
             [
                 'id' => 1,
                 'judul' => 'Rapat Koordinasi RT/RW',
-                'tanggal' => '2024-01-25',
+                'tanggal' => now()->addDays(5)->toDateString(),
                 'waktu' => '19:00',
                 'tempat' => 'Balai Desa',
                 'kategori' => 'Rapat',
-                'deskripsi' => 'Rapat koordinasi bulanan dengan seluruh RT/RW se-desa'
+                'deskripsi' => 'Rapat koordinasi bulanan dengan seluruh RT/RW se-desa',
             ],
             [
                 'id' => 2,
                 'judul' => 'Pelatihan Hidroponik untuk Ibu-Ibu',
-                'tanggal' => '2024-01-28',
+                'tanggal' => now()->addDays(7)->toDateString(),
                 'waktu' => '09:00',
                 'tempat' => 'Ruang Serbaguna',
                 'kategori' => 'Pelatihan',
-                'deskripsi' => 'Pelatihan budidaya tanaman hidroponik untuk meningkatkan ekonomi keluarga'
+                'deskripsi' => 'Pelatihan budidaya tanaman hidroponik untuk meningkatkan ekonomi keluarga',
             ],
             [
                 'id' => 3,
                 'judul' => 'Pasar Minggu Desa',
-                'tanggal' => '2024-01-30',
+                'tanggal' => now()->addDays(10)->toDateString(),
                 'waktu' => '06:00',
                 'tempat' => 'Lapangan Desa',
                 'kategori' => 'Acara',
-                'deskripsi' => 'Pasar minggu dengan produk-produk UMKM lokal'
+                'deskripsi' => 'Pasar minggu dengan produk-produk UMKM lokal',
             ],
             [
                 'id' => 4,
                 'judul' => 'Posyandu Balita',
-                'tanggal' => '2024-02-02',
+                'tanggal' => now()->addDays(15)->toDateString(),
                 'waktu' => '08:00',
                 'tempat' => 'Puskesmas Pembantu',
                 'kategori' => 'Kesehatan',
-                'deskripsi' => 'Pemeriksaan kesehatan rutin untuk balita'
+                'deskripsi' => 'Pemeriksaan kesehatan rutin untuk balita',
             ],
-            [
-                'id' => 5,
-                'judul' => 'Senam Sehat Lansia',
-                'tanggal' => '2024-02-05',
-                'waktu' => '07:00',
-                'tempat' => 'Lapangan Desa',
-                'kategori' => 'Kesehatan',
-                'deskripsi' => 'Senam sehat untuk warga lanjut usia'
-            ]
         ];
     }
 
-    private function getKalenderEvents()
+    private function getKalenderEvents(): array
     {
-        return [
-            [
-                'title' => 'Rapat RT/RW',
-                'start' => '2024-01-25',
-                'color' => '#166534',
-                'category' => 'rapat'
-            ],
-            [
-                'title' => 'Pelatihan Hidroponik',
-                'start' => '2024-01-28',
-                'color' => '#3B82F6',
-                'category' => 'pelatihan'
-            ],
-            [
-                'title' => 'Pasar Minggu',
-                'start' => '2024-01-30',
-                'color' => '#F59E0B',
-                'category' => 'acara'
-            ],
-            [
-                'title' => 'Posyandu Balita',
-                'start' => '2024-02-02',
-                'color' => '#EC4899',
-                'category' => 'kesehatan'
-            ],
-            [
-                'title' => 'Senam Lansia',
-                'start' => '2024-02-05',
-                'color' => '#EC4899',
-                'category' => 'kesehatan'
-            ],
-            [
-                'title' => 'Rapat Koordinasi',
-                'start' => '2024-02-08',
-                'color' => '#166534',
-                'category' => 'rapat'
-            ],
-            [
-                'title' => 'Pelatihan UMKM',
-                'start' => '2024-02-12',
-                'color' => '#3B82F6',
-                'category' => 'pelatihan'
-            ],
-            [
-                'title' => 'Festival Desa',
-                'start' => '2024-02-15',
-                'color' => '#F59E0B',
-                'category' => 'acara'
-            ]
-        ];
+        return collect($this->getKegiatanMendatang())->map(function ($agenda) {
+            return [
+                'title' => $agenda['judul'],
+                'start' => $agenda['tanggal'],
+                'color' => match ($agenda['kategori']) {
+                    'Rapat' => '#166534',
+                    'Pelatihan' => '#3B82F6',
+                    'Acara' => '#F59E0B',
+                    'Kesehatan' => '#EC4899',
+                    default => '#166534',
+                },
+                'category' => strtolower($agenda['kategori']),
+            ];
+        })->toArray();
+    }
+
+    protected function village(): Village
+    {
+        if ($this->villageModel) {
+            return $this->villageModel;
+        }
+
+        return $this->villageModel = Village::query()->firstOrCreate(
+            ['slug' => 'desa-sejahtera'],
+            ['name' => 'Desa Sejahtera']
+        );
+    }
+
+    protected function mediaUrl(?string $path, string $fallback): string
+    {
+        if (blank($path)) {
+            return filter_var($fallback, FILTER_VALIDATE_URL) ? $fallback : asset($fallback);
+        }
+
+        if (filter_var($path, FILTER_VALIDATE_URL)) {
+            return $path;
+        }
+
+        if (Storage::disk('public')->exists($path)) {
+            return Storage::url($path);
+        }
+
+        return filter_var($fallback, FILTER_VALIDATE_URL) ? $fallback : asset($fallback);
     }
 }
 

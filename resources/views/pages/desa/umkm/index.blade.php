@@ -247,15 +247,75 @@
     </section>
     @endif
 
+    <!-- UMKM Terdaftar Section -->
+    @if(count($umkm_terdaftar) > 0)
+    <section class="mb-16 fade-in-up">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-3xl font-display font-bold text-green-900 border-b-4 border-yellow-400 inline-block pb-2">
+                🏢 UMKM Terdaftar
+            </h2>
+            <a href="#" class="text-green-700 hover:text-green-800 font-medium">Lihat Semua →</a>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            @foreach($umkm_terdaftar as $umkm)
+            <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                <div class="p-6">
+                    <!-- Logo UMKM -->
+                    <div class="flex justify-center mb-4">
+                        <div class="w-24 h-24 rounded-full overflow-hidden bg-green-50 border-4 border-green-100 group-hover:border-green-300 transition-colors">
+                            <img src="{{ $umkm['logo'] }}" alt="{{ $umkm['nama'] }}" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    
+                    <!-- Info UMKM -->
+                    <div class="text-center">
+                        <h3 class="text-lg font-display font-semibold text-green-900 mb-2 group-hover:text-green-700 transition-colors line-clamp-2">
+                            {{ $umkm['nama'] }}
+                        </h3>
+                        
+                        <div class="mb-3">
+                            <span class="text-xs text-green-600 bg-green-50 px-3 py-1 rounded-full font-medium">
+                                {{ $umkm['kategori'] }}
+                            </span>
+                        </div>
+                        
+                        <!-- Rating & Produk Count -->
+                        <div class="flex items-center justify-center space-x-4 mb-4">
+                            <div class="flex items-center space-x-1">
+                                <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                                <span class="text-sm text-slate-600 font-medium">{{ $umkm['rating'] }}</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                                <span class="text-sm text-slate-500">{{ $umkm['produk_count'] }} produk</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Button -->
+                        <a href="{{ route('desa.umkm.toko', $umkm['slug']) }}" 
+                           class="block w-full bg-green-100 hover:bg-green-200 text-green-800 font-semibold text-center py-2.5 rounded-xl transition-colors">
+                            Kunjungi Toko
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </section>
+    @endif
+
     <!-- All Products -->
     <section class="fade-in-up">
         <div class="flex items-center justify-between mb-8">
             <h2 class="text-3xl font-display font-bold text-green-900 border-b-4 border-yellow-400 inline-block pb-2">
                 🛍️ Semua Produk
             </h2>
-            <div class="text-sm text-slate-600">
-                Menampilkan <span id="productCount">{{ count($produk) }}</span> produk
-            </div>
         </div>
         
         <!-- Grid View -->

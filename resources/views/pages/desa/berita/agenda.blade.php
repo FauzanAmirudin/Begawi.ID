@@ -309,6 +309,15 @@
                                 </div>
                                 
                                 <p class="text-sm text-slate-600 mt-2 line-clamp-2">{{ $item['deskripsi'] }}</p>
+
+                                <div class="mt-3 flex items-center gap-3">
+                                    <button class="text-xs font-semibold text-green-700 hover:text-green-800 transition" onclick="openEventModal({{ json_encode($item) }}); event.stopPropagation();">
+                                        Lihat Ringkas →
+                                    </button>
+                                    <a href="{{ route('desa.berita.agenda-detail', $item['id']) }}" onclick="event.stopPropagation();" class="text-xs font-semibold text-sky-600 hover:text-sky-700 transition">
+                                        Detail Agenda
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>

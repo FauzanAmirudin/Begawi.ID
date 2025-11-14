@@ -52,5 +52,6 @@ class DatabaseSeeder extends Seeder
 
         // Seed Finance Dummy Data
         $this->call(FinanceDummyDataSeeder::class);
+        $this->call(VillageSeeder::class);
     }
 }

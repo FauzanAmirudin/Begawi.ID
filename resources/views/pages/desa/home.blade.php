@@ -98,7 +98,7 @@
                 <h2 class="text-3xl lg:text-4xl font-display font-bold text-primary-700">Produk UMKM Terbaru</h2>
                 <p class="text-slate-600 mt-2 text-lg">Produk-produk inovatif dari UMKM lokal</p>
             </div>
-            <a href="#" class="hidden md:inline-flex bg-gradient-accent hover:bg-primary-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors">
+            <a href="{{ route('desa.umkm.index') }}" class="hidden md:inline-flex bg-gradient-accent hover:bg-primary-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors">
                 Lihat Semua Produk
             </a>
         </div>
@@ -115,9 +115,9 @@
                     <p class="text-xs text-slate-500 mb-3">{{ $produk['umkm'] }}</p>
                     <div class="flex justify-between items-center">
                         <span class="text-primary-600 font-bold text-lg">{{ $produk['harga'] }}</span>
-                        <button class="bg-gradient-accent hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        <a href="{{ route('desa.umkm.detail', $produk['slug'] ?? '#') }}" class="bg-gradient-accent hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                             Lihat Detail
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -125,7 +125,7 @@
         </div>
         
         <div class="text-center mt-8 md:hidden">
-            <a href="#" class="bg-gradient-accent hover:bg-primary-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
+            <a href="{{ route('desa.umkm.index') }}" class="bg-gradient-accent hover:bg-primary-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
                 Lihat Semua Produk
             </a>
         </div>
@@ -175,9 +175,9 @@
                     
                     <div class="flex justify-between items-center">
                         <span class="text-primary-600 font-bold text-lg">{{ $produk['harga'] }}</span>
-                        <button class="bg-gradient-accent hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        <a href="{{ route('desa.umkm.detail', $produk['slug'] ?? '#') }}" class="bg-gradient-accent hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                             Beli Sekarang
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>

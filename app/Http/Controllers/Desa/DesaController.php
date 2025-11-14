@@ -3,25 +3,34 @@
 namespace App\Http\Controllers\Desa;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\UmkmBusiness;
+use App\Models\UmkmContentValidation;
+use App\Models\Village;
+use App\Models\VillageGalleryItem;
+use App\Models\VillageNews;
+use App\Models\VillagePotential;
+use App\Models\VillageProgram;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class DesaController extends Controller
 {
+    protected ?Village $villageModel = null;
+
     public function home()
     {
-        // Data untuk homepage
         $data = [
             'berita' => $this->getBeritaTerbaru(),
             'umkm_terbaru' => $this->getUmkmTerbaru(),
             'umkm_populer' => $this->getUmkmPopuler(),
             'galeri' => $this->getGaleriTerbaru(),
             'wisata' => $this->getWisataPopuler(),
-            'kegiatan' => $this->getKegiatanDesa()
+            'kegiatan' => $this->getKegiatanDesa(),
         ];
-        
+
         return view('pages.desa.home', $data);
     }
-    
+
     public function about()
     {
         $data = [
@@ -29,315 +38,361 @@ class DesaController extends Controller
             'visi_misi' => $this->getVisiMisi(),
             'struktur_pemerintahan' => $this->getStrukturPemerintahan(),
             'sejarah_geografi' => $this->getSejarahGeografi(),
-            'sosial_media' => $this->getSosialMedia()
+            'sosial_media' => $this->getSosialMedia(),
         ];
+
         return view('pages.desa.about', $data);
     }
-    
+
     public function contact()
     {
         return view('pages.desa.contact');
     }
-    
+
     public function directory()
     {
         return view('pages.desa.directory');
     }
-    
+
     public function education()
     {
         return view('pages.desa.education');
     }
-    
+
     public function privacy()
     {
         return view('pages.desa.privacy');
     }
-    
+
     public function sitemap()
     {
         return view('pages.desa.sitemap');
     }
-    
+
     public function terms()
     {
         return view('pages.desa.terms');
     }
-    
+
     public function templates()
     {
         return view('pages.desa.templates');
     }
-    
-    // Helper methods untuk data Home dan About
-    private function getBeritaTerbaru()
+
+    private function getBeritaTerbaru(): array
     {
-        return [
-            [
-                'id' => 1,
-                'judul' => 'Pembangunan Jalan Desa Tahap 2 Dimulai',
-                'ringkasan' => 'Pembangunan infrastruktur jalan desa memasuki tahap kedua dengan target selesai akhir tahun.',
-                'thumbnail' => 'https://via.placeholder.com/400x300',
-                'tanggal' => '2024-01-15'
-            ],
-            [
-                'id' => 2,
-                'judul' => 'Pelatihan UMKM Digital Marketing',
-                'ringkasan' => 'Desa mengadakan pelatihan digital marketing untuk meningkatkan penjualan UMKM lokal.',
-                'thumbnail' => 'https://via.placeholder.com/400x300',
-                'tanggal' => '2024-01-12'
-            ],
-            [
-                'id' => 3,
-                'judul' => 'Festival Panen Raya 2024',
-                'ringkasan' => 'Perayaan panen raya akan diselenggarakan dengan berbagai lomba dan pameran produk desa.',
-                'thumbnail' => 'https://via.placeholder.com/400x300',
-                'tanggal' => '2024-01-10'
-            ]
-        ];
-    }
-    
-    private function getUmkmTerbaru()
-    {
-        return [
-            [
-                'nama' => 'Keripik Singkong Renyah',
-                'umkm' => 'UD Berkah Jaya',
-                'harga' => 'Rp 15.000',
-                'gambar' => 'https://via.placeholder.com/280x280'
-            ],
-            [
-                'nama' => 'Madu Hutan Asli',
-                'umkm' => 'Madu Sari Desa',
-                'harga' => 'Rp 45.000',
-                'gambar' => 'https://via.placeholder.com/280x280'
-            ],
-            [
-                'nama' => 'Batik Tulis Motif Desa',
-                'umkm' => 'Batik Nusantara',
-                'harga' => 'Rp 125.000',
-                'gambar' => 'https://via.placeholder.com/280x280'
-            ]
-        ];
-    }
-    
-    private function getUmkmPopuler()
-    {
-        return [
-            [
-                'nama' => 'Dodol Durian Premium',
-                'umkm' => 'Dodol Pak Haji',
-                'harga' => 'Rp 25.000',
-                'rating' => 4.8,
-                'gambar' => 'https://via.placeholder.com/280x280'
-            ],
-            [
-                'nama' => 'Kopi Robusta Giling',
-                'umkm' => 'Kopi Gunung Sari',
-                'harga' => 'Rp 35.000',
-                'rating' => 4.9,
-                'gambar' => 'https://via.placeholder.com/280x280'
-            ],
-            [
-                'nama' => 'Tas Anyaman Pandan',
-                'umkm' => 'Kerajinan Ibu-Ibu',
-                'harga' => 'Rp 75.000',
-                'rating' => 4.7,
-                'gambar' => 'https://via.placeholder.com/280x280'
-            ],
-            [
-                'nama' => 'Emping Melinjo Gurih',
-                'umkm' => 'Emping Sari Rasa',
-                'harga' => 'Rp 20.000',
-                'rating' => 4.6,
-                'gambar' => 'https://via.placeholder.com/280x280'
-            ]
-        ];
-    }
-    
-    private function getGaleriTerbaru()
-    {
-        return [
-            [
-                'judul' => 'Gotong Royong Membersihkan Sungai',
-                'gambar' => 'https://via.placeholder.com/400x600'
-            ],
-            [
-                'judul' => 'Senam Sehat Bersama',
-                'gambar' => 'https://via.placeholder.com/400x300'
-            ],
-            [
-                'judul' => 'Pelatihan Hidroponik',
-                'gambar' => 'https://via.placeholder.com/400x500'
-            ],
-            [
-                'judul' => 'Lomba 17 Agustus',
-                'gambar' => 'https://via.placeholder.com/400x400'
-            ]
-        ];
-    }
-    
-    private function getWisataPopuler()
-    {
-        return [
-            [
-                'nama' => 'Air Terjun Sumber Rejeki',
-                'deskripsi' => 'Air terjun alami dengan ketinggian 25 meter, dikelilingi hutan hijau yang asri.',
-                'gambar' => 'https://via.placeholder.com/400x225'
-            ],
-            [
-                'nama' => 'Kebun Teh Lereng Indah',
-                'deskripsi' => 'Hamparan kebun teh dengan pemandangan pegunungan yang menakjubkan.',
-                'gambar' => 'https://via.placeholder.com/400x225'
-            ],
-            [
-                'nama' => 'Desa Wisata Kampung Bambu',
-                'deskripsi' => 'Wisata edukasi kerajinan bambu dengan pengalaman membuat produk langsung.',
-                'gambar' => 'https://via.placeholder.com/400x225'
-            ]
-        ];
-    }
-    
-    private function getKegiatanDesa()
-    {
-        return [
-            [
-                'judul' => 'Rapat RT/RW',
-                'tanggal' => '2024-01-20',
-                'waktu' => '19:00',
-                'tempat' => 'Balai Desa',
-                'jenis' => 'rapat'
-            ],
-            [
-                'judul' => 'Pelatihan Komputer',
-                'tanggal' => '2024-01-22',
-                'waktu' => '09:00',
-                'tempat' => 'Ruang Serbaguna',
-                'jenis' => 'pelatihan'
-            ],
-            [
-                'judul' => 'Pasar Minggu Desa',
-                'tanggal' => '2024-01-28',
-                'waktu' => '06:00',
-                'tempat' => 'Lapangan Desa',
-                'jenis' => 'acara'
-            ]
-        ];
+        return $this->village()->news()
+            ->published()
+            ->latest('published_at')
+            ->latest('created_at')
+            ->take(6)
+            ->get()
+            ->map(function (VillageNews $news) {
+                return [
+                    'id' => $news->id,
+                    'judul' => $news->title,
+                    'slug' => $news->slug,
+                    'ringkasan' => $news->summary,
+                    'thumbnail' => $this->mediaUrl($news->featured_image, 'https://via.placeholder.com/400x300'),
+                    'tanggal' => optional($news->published_at)->toDateString() ?? $news->created_at->toDateString(),
+                ];
+            })
+            ->toArray();
     }
 
-    private function getIdentitasDesa()
+    private function getUmkmTerbaru(): array
     {
+        $village = $this->village();
+        
+        // Ambil produk terbaru dari UMKM yang aktif di desa ini
+        $validations = UmkmContentValidation::query()
+            ->where('content_type', 'product')
+            ->where('status', 'approved')
+            ->with(['umkmBusiness' => function ($query) use ($village) {
+                $query->where('village_id', $village->id)
+                    ->where('status', 'active');
+            }])
+            ->whereHas('umkmBusiness', function ($query) use ($village) {
+                $query->where('village_id', $village->id)
+                    ->where('status', 'active');
+            })
+            ->orderByDesc('created_at')
+            ->take(3)
+            ->get();
+
+        $produk = [];
+
+        foreach ($validations as $validation) {
+            $umkm = $validation->umkmBusiness;
+            if (!$umkm) {
+                continue;
+            }
+
+            $contentData = $validation->content_data ?? [];
+            $gambar = $contentData['image'] ?? $contentData['gambar'] ?? null;
+            
+            if ($gambar && !filter_var($gambar, FILTER_VALIDATE_URL)) {
+                $gambar = Storage::url($gambar);
+            }
+            
+            if (empty($gambar)) {
+                $gambar = 'https://via.placeholder.com/280x280?text=' . urlencode(substr($validation->title, 0, 10));
+            }
+
+            $harga = $contentData['price'] ?? $contentData['harga'] ?? 0;
+
+            $produk[] = [
+                'nama' => $validation->title,
+                'umkm' => $umkm->name,
+                'harga' => 'Rp ' . number_format($harga, 0, ',', '.'),
+                'gambar' => $gambar,
+                'slug' => Str::slug($validation->title) . '-' . $validation->id,
+            ];
+        }
+
+        // Jika tidak ada produk, return empty array
+        return $produk;
+    }
+
+    private function getUmkmPopuler(): array
+    {
+        $village = $this->village();
+        
+        // Ambil produk populer berdasarkan rating dan jumlah terjual
+        $validations = UmkmContentValidation::query()
+            ->where('content_type', 'product')
+            ->where('status', 'approved')
+            ->with(['umkmBusiness' => function ($query) use ($village) {
+                $query->where('village_id', $village->id)
+                    ->where('status', 'active');
+            }])
+            ->whereHas('umkmBusiness', function ($query) use ($village) {
+                $query->where('village_id', $village->id)
+                    ->where('status', 'active');
+            })
+            ->get()
+            ->map(function ($validation) {
+                $contentData = $validation->content_data ?? [];
+                $rating = $contentData['rating'] ?? 0;
+                $terjual = $contentData['sold'] ?? $contentData['terjual'] ?? 0;
+                
+                return [
+                    'validation' => $validation,
+                    'score' => ($rating * 10) + $terjual, // Score berdasarkan rating dan penjualan
+                ];
+            })
+            ->sortByDesc('score')
+            ->take(4)
+            ->pluck('validation')
+            ->values();
+
+        $produk = [];
+
+        foreach ($validations as $validation) {
+            /** @var UmkmContentValidation $validation */
+            $umkm = $validation->umkmBusiness;
+            if (!$umkm) {
+                continue;
+            }
+
+            $contentData = $validation->content_data ?? [];
+            $gambar = $contentData['image'] ?? $contentData['gambar'] ?? null;
+            
+            if ($gambar && !filter_var($gambar, FILTER_VALIDATE_URL)) {
+                $gambar = Storage::url($gambar);
+            }
+            
+            if (empty($gambar)) {
+                $gambar = 'https://via.placeholder.com/280x280?text=' . urlencode(substr($validation->title, 0, 10));
+            }
+
+            $harga = $contentData['price'] ?? $contentData['harga'] ?? 0;
+            $rating = $contentData['rating'] ?? 4.5;
+
+            $produk[] = [
+                'nama' => $validation->title,
+                'umkm' => $umkm->name,
+                'harga' => 'Rp ' . number_format($harga, 0, ',', '.'),
+                'rating' => (float) $rating,
+                'gambar' => $gambar,
+                'slug' => Str::slug($validation->title) . '-' . $validation->id,
+            ];
+        }
+
+        // Jika tidak ada produk, return empty array
+        return $produk;
+    }
+
+    private function getGaleriTerbaru(): array
+    {
+        return $this->village()->galleryItems()
+            ->where('is_published', true)
+            ->orderByDesc('taken_at')
+            ->orderByDesc('created_at')
+            ->take(12)
+            ->get()
+            ->map(function (VillageGalleryItem $item) {
+                return [
+                    'judul' => $item->title,
+                    'gambar' => $this->mediaUrl($item->thumbnail_path ?? $item->media_path, 'https://via.placeholder.com/400x400'),
+                ];
+            })
+            ->toArray();
+    }
+
+    private function getWisataPopuler(): array
+    {
+        return $this->village()->potentials()
+            ->where('status', VillagePotential::STATUS_ACTIVE)
+            ->latest('updated_at')
+            ->take(3)
+            ->get()
+            ->map(function (VillagePotential $potential) {
+                return [
+                    'nama' => $potential->title,
+                    'deskripsi' => $potential->summary ?? $potential->description,
+                    'gambar' => $this->mediaUrl($potential->featured_image, 'https://via.placeholder.com/400x225'),
+                ];
+            })
+            ->toArray();
+    }
+
+    private function getKegiatanDesa(): array
+    {
+        return $this->village()->programs()
+            ->orderByDesc('start_date')
+            ->take(5)
+            ->get()
+            ->map(function (VillageProgram $program) {
+                return [
+                    'judul' => $program->title,
+                    'tanggal' => optional($program->start_date)->toDateString() ?? now()->toDateString(),
+                    'waktu' => '09:00',
+                    'tempat' => 'Balai Desa',
+                    'jenis' => $program->status === VillageProgram::STATUS_ACTIVE ? 'acara' : 'rapat',
+                ];
+            })
+            ->whenEmpty(function () {
+                return collect([
+                    [
+                        'judul' => 'Rapat RT/RW',
+                        'tanggal' => now()->addDays(5)->toDateString(),
+                        'waktu' => '19:00',
+                        'tempat' => 'Balai Desa',
+                        'jenis' => 'rapat',
+                    ],
+                    [
+                        'judul' => 'Pelatihan Komputer',
+                        'tanggal' => now()->addDays(7)->toDateString(),
+                        'waktu' => '09:00',
+                        'tempat' => 'Ruang Serbaguna',
+                        'jenis' => 'pelatihan',
+                    ],
+                    [
+                        'judul' => 'Pasar Minggu Desa',
+                        'tanggal' => now()->addDays(14)->toDateString(),
+                        'waktu' => '06:00',
+                        'tempat' => 'Lapangan Desa',
+                        'jenis' => 'acara',
+                    ],
+                ]);
+            })
+            ->toArray();
+    }
+
+    private function getIdentitasDesa(): array
+    {
+        $village = $this->village();
+
         return [
-            'nama' => 'Desa Sejahtera',
-            'kode_desa' => '3201012001',
-            'alamat' => 'Jl. Desa Sejahtera No. 123',
+            'nama' => $village->name,
+            'kode_desa' => $village->code,
+            'alamat' => $village->location,
             'kecamatan' => 'Kecamatan Makmur',
             'kabupaten' => 'Kabupaten Berkah',
             'provinsi' => 'Jawa Barat',
             'kode_pos' => '12345',
-            'luas_wilayah' => '15.25 km²',
-            'jumlah_penduduk' => '8.543 jiwa',
-            'kepadatan' => '560 jiwa/km²',
-            'logo' => 'https://via.placeholder.com/200x200'
+            'luas_wilayah' => $village->area,
+            'jumlah_penduduk' => $village->population,
+            'kepadatan' => $village->density,
+            'logo' => $this->mediaUrl($village->logo_path, 'images/Logo-Begawi.png'),
         ];
     }
 
-    private function getVisiMisi()
+    private function getVisiMisi(): array
     {
+        $village = $this->village();
+
         return [
-            'visi' => 'Mewujudkan Desa Sejahtera yang Maju, Mandiri, dan Berkelanjutan Berbasis Kearifan Lokal',
-            'visi_subtitle' => 'Visi 2024-2030',
-            'misi' => [
+            'visi' => $village->vision ?: 'Mewujudkan Desa Sejahtera yang Maju, Mandiri, dan Berkelanjutan Berbasis Kearifan Lokal',
+            'visi_subtitle' => $village->vision_period ?: 'Visi 2024-2030',
+            'misi' => $village->missions ?: [
                 'Meningkatkan kualitas pelayanan publik yang transparan dan akuntabel',
                 'Mengembangkan ekonomi kreatif dan UMKM berbasis potensi lokal',
                 'Melestarikan budaya dan kearifan lokal sebagai identitas desa',
                 'Membangun infrastruktur yang mendukung kesejahteraan masyarakat',
                 'Menciptakan lingkungan yang bersih, sehat, dan berkelanjutan',
-                'Meningkatkan kualitas pendidikan dan kesehatan masyarakat'
-            ]
+                'Meningkatkan kualitas pendidikan dan kesehatan masyarakat',
+            ],
         ];
     }
 
-    private function getStrukturPemerintahan()
+    private function getStrukturPemerintahan(): array
     {
+        $village = $this->village();
+        $structures = $village->structures ?? [];
+
         return [
             'kepala_desa' => [
-                'nama' => 'H. Ahmad Maulana, S.Sos',
-                'jabatan' => 'Kepala Desa',
-                'foto' => 'https://via.placeholder.com/200x200',
-                'periode' => '2019-2025'
+                'nama' => $village->head,
+                'jabatan' => $village->head_title ?: 'Kepala Desa',
+                'foto' => $this->mediaUrl($village->logo_path, 'https://via.placeholder.com/200x200'),
+                'periode' => '2019-2025',
             ],
-            'perangkat_desa' => [
-                [
-                    'nama' => 'Siti Nurhaliza, S.AP',
-                    'jabatan' => 'Sekretaris Desa',
-                    'foto' => 'https://via.placeholder.com/200x200'
-                ],
-                [
-                    'nama' => 'Bambang Suryanto',
-                    'jabatan' => 'Kaur Keuangan',
-                    'foto' => 'https://via.placeholder.com/200x200'
-                ],
-                [
-                    'nama' => 'Dewi Sartika, S.Pd',
-                    'jabatan' => 'Kaur Umum',
-                    'foto' => 'https://via.placeholder.com/200x200'
-                ],
-                [
-                    'nama' => 'Joko Widodo',
-                    'jabatan' => 'Kaur Perencanaan',
-                    'foto' => 'https://via.placeholder.com/200x200'
-                ],
-                [
-                    'nama' => 'Rina Melati',
-                    'jabatan' => 'Kasi Pemerintahan',
-                    'foto' => 'https://via.placeholder.com/200x200'
-                ],
-                [
-                    'nama' => 'Agus Salim',
-                    'jabatan' => 'Kasi Kesejahteraan',
-                    'foto' => 'https://via.placeholder.com/200x200'
-                ]
-            ],
+            'perangkat_desa' => $structures,
             'lembaga' => [
                 [
                     'nama' => 'Badan Permusyawaratan Desa',
                     'ketua' => 'H. Suparman',
-                    'anggota' => '9 orang'
+                    'anggota' => '9 orang',
                 ],
                 [
                     'nama' => 'Karang Taruna',
                     'ketua' => 'Andi Pratama',
-                    'anggota' => '25 orang'
+                    'anggota' => '25 orang',
                 ],
                 [
                     'nama' => 'PKK Desa',
                     'ketua' => 'Hj. Fatimah',
-                    'anggota' => '45 orang'
+                    'anggota' => '45 orang',
                 ],
                 [
                     'nama' => 'RT/RW',
                     'ketua' => '12 RT, 4 RW',
-                    'anggota' => '16 pengurus'
-                ]
-            ]
+                    'anggota' => '16 pengurus',
+                ],
+            ],
         ];
     }
 
-    private function getSejarahGeografi()
+    private function getSejarahGeografi(): array
     {
+        $history = collect($this->village()->history ?? [])
+            ->mapWithKeys(fn ($item) => [$item['year'] ?? now()->year => $item['event'] ?? ''])
+            ->toArray();
+
         return [
             'sejarah' => [
-                'pembentukan' => '1952',
+                'pembentukan' => array_key_first($history) ?? '1952',
                 'asal_nama' => 'Nama "Sejahtera" berasal dari harapan para pendiri desa agar wilayah ini menjadi tempat yang memberikan kesejahteraan bagi seluruh warganya.',
-                'tonggak_sejarah' => [
+                'tonggak_sejarah' => $history ?: [
                     '1952' => 'Pembentukan Desa Sejahtera',
                     '1975' => 'Pembangunan Balai Desa pertama',
                     '1990' => 'Program transmigrasi dan pengembangan pertanian',
                     '2010' => 'Pembangunan infrastruktur jalan utama',
-                    '2020' => 'Digitalisasi pelayanan desa'
+                    '2020' => 'Digitalisasi pelayanan desa',
                 ],
-                'cerita_singkat' => 'Desa Sejahtera didirikan pada tahun 1952 oleh sekelompok keluarga yang bermigrasi dari daerah pegunungan untuk mencari kehidupan yang lebih baik. Mereka memilih lokasi ini karena tanahnya yang subur dan sumber air yang melimpah. Seiring berjalannya waktu, desa ini berkembang menjadi pusat pertanian dan perdagangan di wilayah kecamatan.'
+                'cerita_singkat' => 'Desa Sejahtera didirikan pada tahun 1952 oleh sekelompok keluarga yang bermigrasi dari daerah pegunungan untuk mencari kehidupan yang lebih baik.',
             ],
             'geografi' => [
                 'ketinggian' => '450 mdpl',
@@ -347,32 +402,61 @@ class DesaController extends Controller
                     'utara' => 'Desa Makmur Jaya',
                     'selatan' => 'Desa Sumber Rezeki',
                     'timur' => 'Hutan Lindung Gunung Sari',
-                    'barat' => 'Sungai Jernih'
+                    'barat' => 'Sungai Jernih',
                 ],
                 'potensi_alam' => [
                     'Pertanian padi dan palawija',
                     'Perkebunan kopi dan teh',
                     'Hutan bambu',
                     'Sumber mata air alami',
-                    'Wisata alam air terjun'
-                ]
+                    'Wisata alam air terjun',
+                ],
             ],
             'foto_wilayah' => [
                 'https://via.placeholder.com/600x400',
                 'https://via.placeholder.com/600x400',
-                'https://via.placeholder.com/600x400'
-            ]
+                'https://via.placeholder.com/600x400',
+            ],
         ];
     }
 
-    private function getSosialMedia()
+    private function getSosialMedia(): array
     {
         return [
             'facebook' => 'https://facebook.com/desasejahtera',
             'instagram' => 'https://instagram.com/desasejahtera_official',
             'youtube' => 'https://youtube.com/@desasejahtera',
             'whatsapp' => 'https://wa.me/6281234567890',
-            'email' => 'info@desasejahtera.id'
+            'email' => 'info@desasejahtera.id',
         ];
+    }
+
+    protected function village(): Village
+    {
+        if ($this->villageModel) {
+            return $this->villageModel;
+        }
+
+        return $this->villageModel = Village::query()->firstOrCreate(
+            ['slug' => 'desa-sejahtera'],
+            ['name' => 'Desa Sejahtera']
+        );
+    }
+
+    protected function mediaUrl(?string $path, string $fallback): string
+    {
+        if (blank($path)) {
+            return filter_var($fallback, FILTER_VALIDATE_URL) ? $fallback : asset($fallback);
+        }
+
+        if (filter_var($path, FILTER_VALIDATE_URL)) {
+            return $path;
+        }
+
+        if (Storage::disk('public')->exists($path)) {
+            return Storage::url($path);
+        }
+
+        return filter_var($fallback, FILTER_VALIDATE_URL) ? $fallback : asset($fallback);
     }
 }
