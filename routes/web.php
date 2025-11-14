@@ -144,6 +144,26 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::post('/umkm/guides', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'storeGuide'])->name('umkm.guides.store');
         
         Route::put('/profile', [VillageProfileController::class, 'update'])->name('profile.update');
+        
+        // Reports & Statistics
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\ReportsController::class, 'index'])->name('index');
+            Route::get('/visitor-statistics', [\App\Http\Controllers\Admin\ReportsController::class, 'visitorStatistics'])->name('visitor-statistics');
+            Route::get('/umkm-statistics', [\App\Http\Controllers\Admin\ReportsController::class, 'umkmStatistics'])->name('umkm-statistics');
+            Route::get('/digitalization-report', [\App\Http\Controllers\Admin\ReportsController::class, 'digitalizationReport'])->name('digitalization-report');
+            Route::get('/umkm-ranking', [\App\Http\Controllers\Admin\ReportsController::class, 'umkmRanking'])->name('umkm-ranking');
+        });
+
+        // Local User Management
+        Route::prefix('local-users')->name('local-users.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\LocalUserManagementController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Admin\LocalUserManagementController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\LocalUserManagementController::class, 'store'])->name('store');
+            Route::get('/roles', [\App\Http\Controllers\Admin\LocalUserManagementController::class, 'roles'])->name('roles');
+            Route::post('/{user}/reset-password', [\App\Http\Controllers\Admin\LocalUserManagementController::class, 'resetPassword'])->name('reset-password');
+            Route::post('/{user}/toggle-status', [\App\Http\Controllers\Admin\LocalUserManagementController::class, 'toggleStatus'])->name('toggle-status');
+            Route::post('/{user}/update-role', [\App\Http\Controllers\Admin\LocalUserManagementController::class, 'updateRole'])->name('update-role');
+        });
 
         Route::post('/news', [VillageNewsController::class, 'store'])->name('news.store');
         Route::put('/news/{news}', [VillageNewsController::class, 'update'])->name('news.update');

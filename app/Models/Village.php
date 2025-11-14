@@ -84,4 +84,12 @@ class Village extends Model
     {
         return $this->hasMany(VillageProgram::class);
     }
+
+    /**
+     * Get users that belong to this village (editors)
+     */
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class);
+    }
 }

@@ -24,6 +24,7 @@ class User extends Authenticatable
         'role',
         'status',
         'last_login_at',
+        'village_id',
     ];
 
     /**
@@ -53,4 +54,20 @@ class User extends Authenticatable
     public const ROLE_SUPER_ADMIN = 'super_admin';
     public const ROLE_ADMIN_DESA = 'admin_desa';
     public const ROLE_ADMIN_UMKM = 'admin_umkm';
+
+    /**
+     * Get the village that the user belongs to (for editors)
+     */
+    public function village()
+    {
+        return $this->belongsTo(Village::class);
+    }
+
+    /**
+     * Get the UMKM businesses owned by this user
+     */
+    public function umkmBusinesses()
+    {
+        return $this->hasMany(UmkmBusiness::class);
+    }
 }
