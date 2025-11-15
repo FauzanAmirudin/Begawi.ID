@@ -9,7 +9,7 @@
 @endpush
 
 @section('content')
-<div class="p-6 space-y-6" x-cloak>
+<div class="p-6 space-y-6">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
             <p class="text-xs uppercase tracking-[0.3em] text-purple-500 font-semibold">Monitoring Aktivitas</p>
@@ -134,13 +134,23 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // Wait for Chart.js to be available
+    if (typeof Chart === 'undefined') {
+        console.error('Chart.js is not loaded');
+        return;
+    }
+
     const chartElement = document.getElementById('umkmVisitChart');
-    if (!chartElement) return;
+    if (!chartElement) {
+        console.error('Chart element not found');
+        return;
+    }
 
-    const visits = @json($chart['visits']);
-    const conversion = @json($chart['conversion']);
+    const visits = @json($chart['visits'] ?? ['labels' => [], 'dataset' => []]);
+    const conversion = @json($chart['conversion'] ?? ['labels' => [], 'dataset' => []]);
 
-    new Chart(chartElement.getContext('2d'), {
+    try {
+        new Chart(chartElement.getContext('2d'), {
         type: 'line',
         data: {
             labels: visits.labels,
@@ -208,6 +218,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+    } catch (error) {
+        console.error('Error creating chart:', error);
+    }
 });
 </script>
 @endpush

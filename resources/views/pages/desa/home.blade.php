@@ -96,48 +96,6 @@
     </div>
 </section>
 
-<!-- 3. Produk UMKM Terbaru -->
-<section class="py-20 bg-gradient-light">
-    <div class="max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-12">
-        <div class="flex justify-between items-center mb-12">
-            <div>
-                <h2 class="text-3xl lg:text-4xl font-display font-bold text-primary-700">Produk UMKM Terbaru</h2>
-                <p class="text-slate-600 mt-2 text-lg">Produk-produk inovatif dari UMKM lokal</p>
-            </div>
-            <a href="{{ route('desa.umkm.index') }}" class="hidden md:inline-flex bg-gradient-accent hover:bg-primary-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors">
-                Lihat Semua Produk
-            </a>
-        </div>
-        
-        <div class="flex space-x-6 overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
-            @foreach($umkm_terbaru as $produk)
-            <div class="min-w-[280px] snap-center bg-white shadow-md hover:shadow-lg rounded-xl overflow-hidden transition-shadow group">
-                <div class="aspect-square overflow-hidden">
-                    <img src="{{ $produk['gambar'] }}" alt="{{ $produk['nama'] }}" 
-                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                </div>
-                <div class="p-5">
-                    <h3 class="font-display font-semibold text-lg text-slate-800 mb-1">{{ $produk['nama'] }}</h3>
-                    <p class="text-xs text-slate-500 mb-3">{{ $produk['umkm'] }}</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-primary-600 font-bold text-lg">{{ $produk['harga'] }}</span>
-                        <a href="{{ route('desa.umkm.detail', $produk['slug'] ?? '#') }}" class="bg-gradient-accent hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                            Lihat Detail
-                        </a>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
-        
-        <div class="text-center mt-8 md:hidden">
-            <a href="{{ route('desa.umkm.index') }}" class="bg-gradient-accent hover:bg-primary-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
-                Lihat Semua Produk
-            </a>
-        </div>
-    </div>
-</section>
-
 <!-- 4. Produk UMKM Populer -->
 <section class="py-20 bg-white">
     <div class="max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-12">

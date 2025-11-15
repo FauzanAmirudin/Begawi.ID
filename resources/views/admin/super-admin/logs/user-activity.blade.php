@@ -73,8 +73,14 @@
                         </div>
                     </div>
                     <div class="md:col-span-4 flex items-center justify-end gap-3">
-                        <a href="{{ route('admin.logs.download', ['type' => 'user', 'format' => 'xls']) }}" class="px-3 py-2 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600">Download Excel</a>
-                        <a href="{{ route('admin.logs.download', ['type' => 'user', 'format' => 'pdf']) }}" class="px-3 py-2 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600">Download PDF</a>
+                        @php
+                            $downloadParams = array_merge(['type' => 'user', 'format' => 'xls'], array_filter($filters, fn($value) => !empty($value)));
+                        @endphp
+                        <a href="{{ route('admin.logs.download', $downloadParams) }}" class="px-3 py-2 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600">Download Excel</a>
+                        @php
+                            $downloadParamsPdf = array_merge(['type' => 'user', 'format' => 'pdf'], array_filter($filters, fn($value) => !empty($value)));
+                        @endphp
+                        <a href="{{ route('admin.logs.download', $downloadParamsPdf) }}" class="px-3 py-2 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600">Download PDF</a>
                         <button class="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700">Terapkan</button>
                     </div>
                 </form>

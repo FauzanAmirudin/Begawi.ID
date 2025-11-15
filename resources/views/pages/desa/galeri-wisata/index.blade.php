@@ -18,170 +18,6 @@
                 </p>
             </div>
 
-            <!-- Sub-section: Upload Foto & Video -->
-            <div class="mb-16">
-                <div class="bg-white rounded-2xl shadow-md p-8 mb-8">
-                    <h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
-                        <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                        </svg>
-                        Upload Foto & Video
-                    </h2>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <!-- Form Upload -->
-                        <div>
-                                    @if (session('success'))
-                                    <div class="mb-6 bg-emerald-50 border border-emerald-200 rounded-2xl px-4 py-3 text-emerald-700 flex items-center gap-3">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                        <span class="text-sm font-semibold">{{ session('success') }}</span>
-                                    </div>
-                                    @endif
-
-                                    @if (session('error'))
-                                    <div class="mb-6 bg-rose-50 border border-rose-200 rounded-2xl px-4 py-3 text-rose-600 flex items-center gap-3">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                        </svg>
-                                        <span class="text-sm font-semibold">{{ session('error') }}</span>
-                                    </div>
-                                    @endif
-
-                                    @if ($errors->any())
-                                    <div class="mb-6 bg-rose-50 border border-rose-200 rounded-2xl px-4 py-3 text-rose-600">
-                                        <p class="text-sm font-semibold mb-2">Periksa kembali formulir:</p>
-                                        <ul class="list-disc list-inside text-sm space-y-1">
-                                            @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                    @endif
-
-                            <form action="{{ route('desa.galeri-wisata.upload') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-                                @csrf
-                                
-                                <!-- Judul -->
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-2">Judul Kegiatan</label>
-                                            <input type="text" name="title" value="{{ old('title') }}" required
-                                           class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                                           placeholder="Contoh: Gotong Royong Januari 2025">
-                                            @error('title')
-                                            <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
-                                            @enderror
-                                </div>
-
-                                <!-- Upload Area -->
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-2">Upload File</label>
-                                    <div class="border-2 border-dashed border-primary-400 rounded-2xl p-8 text-center hover:bg-primary-50 transition-colors cursor-pointer">
-                                        <svg class="w-10 h-10 text-primary-600 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                                        </svg>
-                                        <p class="text-slate-600 mb-2">Tarik file ke sini atau <span class="text-primary-600 font-semibold">pilih file</span></p>
-                                                <p class="text-xs text-slate-500">Maksimal 6MB - Format: JPG, JPEG, PNG, GIF</p>
-                                                <input type="file" name="file" accept="image/*" required class="hidden">
-                                    </div>
-                                            @error('file')
-                                            <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
-                                            @enderror
-                                </div>
-
-                                <!-- Row: Kategori & Tahun -->
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-sm font-medium text-slate-700 mb-2">Kategori</label>
-                                                <select name="category" required
-                                                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                                                    <option value="">Pilih Kategori</option>
-                                                    <option value="kegiatan" {{ old('category') === 'kegiatan' ? 'selected' : '' }}>Kegiatan</option>
-                                                    <option value="lomba" {{ old('category') === 'lomba' ? 'selected' : '' }}>Lomba</option>
-                                                    <option value="sosialisasi" {{ old('category') === 'sosialisasi' ? 'selected' : '' }}>Sosialisasi</option>
-                                                    <option value="hari-besar" {{ old('category') === 'hari-besar' ? 'selected' : '' }}>Hari Besar</option>
-                                                    <option value="panen" {{ old('category') === 'panen' ? 'selected' : '' }}>Panen</option>
-                                                    <option value="gotong-royong" {{ old('category') === 'gotong-royong' ? 'selected' : '' }}>Gotong Royong</option>
-                                        </select>
-                                                @error('category')
-                                                <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
-                                                @enderror
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-slate-700 mb-2">Tahun</label>
-                                                <input type="number" name="year" required min="2000" max="{{ date('Y') + 1 }}" value="{{ old('year', date('Y')) }}"
-                                               class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                                                @error('year')
-                                                <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
-                                                @enderror
-                                    </div>
-                                </div>
-
-                                <!-- Submit Button -->
-                                <button type="submit" 
-                                        class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors duration-300">
-                                    Upload ke Galeri
-                                </button>
-                            </form>
-                        </div>
-
-                        <!-- Preview Area -->
-                        <div>
-                            <h3 class="text-lg font-semibold text-slate-800 mb-4">Preview Upload Terbaru</h3>
-                            
-                            <div class="space-y-4 mb-6">
-                                <!-- Preview Item 1 -->
-                                <div class="flex items-center gap-4 p-3 bg-slate-50 rounded-xl">
-                                    <div class="w-16 h-16 bg-primary-100 rounded-lg flex items-center justify-center">
-                                        <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                        </svg>
-                                    </div>
-                                    <div class="flex-1">
-                                        <h4 class="font-semibold text-slate-800">Festival Budaya.jpg</h4>
-                                        <p class="text-sm text-slate-500">2.3 MB • Kegiatan • 2024</p>
-                                    </div>
-                                    <span class="text-primary-600 font-medium text-sm">✓ Berhasil</span>
-                                </div>
-
-                                <!-- Preview Item 2 (Progress) -->
-                                <div class="flex items-center gap-4 p-3 bg-slate-50 rounded-xl">
-                                    <div class="w-16 h-16 bg-amber-100 rounded-lg flex items-center justify-center">
-                                        <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                        </svg>
-                                    </div>
-                                    <div class="flex-1">
-                                        <h4 class="font-semibold text-slate-800">Panen_Raya.mp4</h4>
-                                        <p class="text-sm text-slate-500">8.7 MB • Panen • 2024</p>
-                                        <div class="w-full bg-slate-200 rounded-full h-2 mt-2">
-                                            <div class="bg-primary-500 h-2 rounded-full" style="width: 65%"></div>
-                                        </div>
-                                    </div>
-                                    <span class="text-primary-600 font-medium text-sm">65%</span>
-                                </div>
-                            </div>
-
-                            <!-- Upload Stats -->
-                            <div class="pt-6 border-t border-slate-200">
-                                <h4 class="font-semibold text-slate-800 mb-4">Statistik Upload</h4>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="text-center p-3 bg-primary-50 rounded-xl">
-                                        <div class="text-2xl font-bold text-primary-600">{{ $totalFoto ?? 0 }}</div>
-                                        <div class="text-sm text-slate-600">Total Foto</div>
-                                    </div>
-                                    <div class="text-center p-3 bg-amber-50 rounded-xl">
-                                        <div class="text-2xl font-bold text-amber-600">{{ $totalVideo ?? 0 }}</div>
-                                        <div class="text-sm text-slate-600">Total Video</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Sub-section: Galeri -->
             <div>
                 <div class="flex flex-col sm:flex-row gap-4 mb-8 justify-between items-center">
@@ -193,21 +29,6 @@
                     </h2>
 
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <!-- Filter Tahun -->
-                        <select class="px-4 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                            <option value="">Semua Tahun</option>
-                            <option value="2025">2025</option>
-                            <option value="2024">2024</option>
-                            <option value="2023">2023</option>
-                        </select>
-
-                        <!-- Filter Jenis -->
-                        <select class="px-4 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                            <option value="">Semua Konten</option>
-                            <option value="foto">Foto</option>
-                            <option value="video">Video</option>
-                        </select>
-
                         <!-- Button Lihat Semua Foto -->
                         <a href="{{ route('desa.galeri-wisata.galeri-foto') }}" 
                            class="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-2 rounded-xl transition-colors duration-300 flex items-center gap-2 whitespace-nowrap">
@@ -297,227 +118,62 @@
                         </svg>
                         Daftar Destinasi
                     </h2>
-
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <!-- Search -->
-                        <div class="relative">
-                            <input type="text" placeholder="Cari destinasi wisata..."
-                                   class="pl-10 pr-4 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 w-64">
-                            <svg class="absolute left-3 top-2.5 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                        </div>
-
-                        <!-- Filter Kategori -->
-                        <select class="px-4 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                            <option value="">Semua Kategori</option>
-                            <option value="alam">Wisata Alam</option>
-                            <option value="budaya">Wisata Budaya</option>
-                            <option value="ekonomi">Wisata Ekonomi</option>
-                        </select>
-                    </div>
                 </div>
 
                 <!-- Destinasi Grid -->
+                @if(isset($wisataItems) && $wisataItems->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Destinasi 1 -->
+                    @foreach($wisataItems as $item)
                     <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group cursor-pointer border border-slate-100">
                         <div class="relative aspect-[4/3] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=400&fit=crop" 
-                                 alt="Air Terjun Curug Indah" 
+                            <img src="{{ $item['gambar'] }}" 
+                                 alt="{{ $item['judul'] }}" 
                                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             <div class="absolute top-4 left-4">
-                                <span class="bg-primary-600 text-white px-3 py-1 rounded-full text-sm font-medium">Wisata Alam</span>
+                                @php
+                                    $categoryColors = [
+                                        'Wisata Alam' => 'bg-primary-600',
+                                        'Wisata Budaya' => 'bg-amber-600',
+                                        'Wisata Ekonomi' => 'bg-green-600',
+                                    ];
+                                    $colorClass = $categoryColors[$item['kategori']] ?? 'bg-primary-600';
+                                @endphp
+                                <span class="{{ $colorClass }} text-white px-3 py-1 rounded-full text-sm font-medium">{{ $item['kategori'] }}</span>
                             </div>
                             <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
                             <div class="absolute bottom-4 left-4 right-4">
                                 <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <button class="bg-amber-400 text-slate-900 font-semibold px-4 py-2 rounded-lg w-full">
+                                    <a href="{{ route('desa.galeri-wisata.detail', $item['slug']) }}" class="block bg-amber-400 text-slate-900 font-semibold px-4 py-2 rounded-lg w-full text-center">
                                         Lihat Detail
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                         <div class="p-6">
-                            <h3 class="text-xl font-bold text-slate-800 mb-2">Air Terjun Curug Indah</h3>
-                            <p class="flex items-center gap-1 text-slate-500 text-sm mb-3">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                2 km dari pusat desa
-                            </p>
+                            <h3 class="text-xl font-bold text-slate-800 mb-2">{{ $item['judul'] }}</h3>
+                            @if(!empty($item['ringkasan']))
                             <p class="text-slate-600 text-sm leading-relaxed">
-                                Air terjun setinggi 25 meter dengan kolam alami yang jernih. Cocok untuk berenang dan bersantai menikmati keindahan alam.
+                                {{ $item['ringkasan'] }}
                             </p>
+                            @elseif(!empty($item['deskripsi']))
+                            <p class="text-slate-600 text-sm leading-relaxed line-clamp-3">
+                                {{ \Illuminate\Support\Str::limit(strip_tags($item['deskripsi']), 120) }}
+                            </p>
+                            @endif
                         </div>
                     </div>
-
-                    <!-- Destinasi 2 -->
-                    <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group cursor-pointer border border-slate-100">
-                        <div class="relative aspect-[4/3] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=400&fit=crop" 
-                                 alt="Rumah Adat Tradisional" 
-                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                            <div class="absolute top-4 left-4">
-                                <span class="bg-amber-600 text-white px-3 py-1 rounded-full text-sm font-medium">Wisata Budaya</span>
-                            </div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
-                            <div class="absolute bottom-4 left-4 right-4">
-                                <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <button class="bg-amber-400 text-slate-900 font-semibold px-4 py-2 rounded-lg w-full">
-                                        Lihat Detail
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-slate-800 mb-2">Rumah Adat Tradisional</h3>
-                            <p class="flex items-center gap-1 text-slate-500 text-sm mb-3">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                Pusat desa
-                            </p>
-                            <p class="text-slate-600 text-sm leading-relaxed">
-                                Museum hidup yang menampilkan arsitektur tradisional dan koleksi benda-benda bersejarah. Tersedia pemandu wisata lokal.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Destinasi 3 -->
-                    <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group cursor-pointer border border-slate-100">
-                        <div class="relative aspect-[4/3] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&h=400&fit=crop" 
-                                 alt="Kebun Organik Desa" 
-                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                            <div class="absolute top-4 left-4">
-                                <span class="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-medium">Wisata Ekonomi</span>
-                            </div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
-                            <div class="absolute bottom-4 left-4 right-4">
-                                <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <button class="bg-amber-400 text-slate-900 font-semibold px-4 py-2 rounded-lg w-full">
-                                        Lihat Detail
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-slate-800 mb-2">Kebun Organik Desa</h3>
-                            <p class="flex items-center gap-1 text-slate-500 text-sm mb-3">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                1.5 km dari pusat desa
-                            </p>
-                            <p class="text-slate-600 text-sm leading-relaxed">
-                                Pengalaman bercocok tanam organik dengan petani lokal. Wisatawan dapat ikut panen dan membeli produk segar langsung.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Destinasi 4 -->
-                    <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group cursor-pointer border border-slate-100">
-                        <div class="relative aspect-[4/3] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=500&h=400&fit=crop" 
-                                 alt="Bukit Sunrise Point" 
-                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                            <div class="absolute top-4 left-4">
-                                <span class="bg-primary-600 text-white px-3 py-1 rounded-full text-sm font-medium">Wisata Alam</span>
-                            </div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
-                            <div class="absolute bottom-4 left-4 right-4">
-                                <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <button class="bg-amber-400 text-slate-900 font-semibold px-4 py-2 rounded-lg w-full">
-                                        Lihat Detail
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-slate-800 mb-2">Bukit Sunrise Point</h3>
-                            <p class="flex items-center gap-1 text-slate-500 text-sm mb-3">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                3 km dari pusat desa
-                            </p>
-                            <p class="text-slate-600 text-sm leading-relaxed">
-                                Spot terbaik untuk menikmati sunrise dan sunset dengan pemandangan 360 derajat. Tersedia area camping dan gazebo.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Destinasi 5 -->
-                    <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group cursor-pointer border border-slate-100">
-                        <div class="relative aspect-[4/3] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=500&h=400&fit=crop" 
-                                 alt="Sanggar Kerajinan Bambu" 
-                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                            <div class="absolute top-4 left-4">
-                                <span class="bg-amber-600 text-white px-3 py-1 rounded-full text-sm font-medium">Wisata Budaya</span>
-                            </div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
-                            <div class="absolute bottom-4 left-4 right-4">
-                                <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <button class="bg-amber-400 text-slate-900 font-semibold px-4 py-2 rounded-lg w-full">
-                                        Lihat Detail
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-slate-800 mb-2">Sanggar Kerajinan Bambu</h3>
-                            <p class="flex items-center gap-1 text-slate-500 text-sm mb-3">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                0.5 km dari pusat desa
-                            </p>
-                            <p class="text-slate-600 text-sm leading-relaxed">
-                                Workshop membuat kerajinan bambu dengan pengrajin lokal. Wisatawan dapat belajar dan membawa pulang hasil karya.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Destinasi 6 -->
-                    <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group cursor-pointer border border-slate-100">
-                        <div class="relative aspect-[4/3] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1574263867128-a3d5c1b1decc?w=500&h=400&fit=crop" 
-                                 alt="Danau Wisata Keluarga" 
-                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                            <div class="absolute top-4 left-4">
-                                <span class="bg-primary-600 text-white px-3 py-1 rounded-full text-sm font-medium">Wisata Alam</span>
-                            </div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
-                            <div class="absolute bottom-4 left-4 right-4">
-                                <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <button class="bg-amber-400 text-slate-900 font-semibold px-4 py-2 rounded-lg w-full">
-                                        Lihat Detail
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-slate-800 mb-2">Danau Wisata Keluarga</h3>
-                            <p class="flex items-center gap-1 text-slate-500 text-sm mb-3">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                4 km dari pusat desa
-                            </p>
-                            <p class="text-slate-600 text-sm leading-relaxed">
-                                Danau buatan dengan fasilitas perahu kayuh, area piknik, dan playground anak. Ideal untuk wisata keluarga dan rekreasi.
-                            </p>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
+                @else
+                <div class="text-center py-16">
+                    <svg class="w-16 h-16 text-slate-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <h3 class="text-lg font-semibold text-slate-600 mb-2">Belum ada destinasi wisata</h3>
+                    <p class="text-slate-500">Destinasi wisata akan ditampilkan di sini setelah ditambahkan melalui admin.</p>
+                </div>
+                @endif
             </div>
 
             <!-- Sub-section: Fasilitas Pendukung -->

@@ -38,9 +38,6 @@
             <button onclick="scrollToSection('surat-online')" class="nav-tab active whitespace-nowrap py-4 px-2 border-b-2 border-teal-600 text-teal-600 font-medium">
                 Surat Online
             </button>
-            <button onclick="scrollToSection('arsip-surat')" class="nav-tab whitespace-nowrap py-4 px-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 font-medium">
-                Arsip Surat
-            </button>
             <button onclick="scrollToSection('pengaduan-warga')" class="nav-tab whitespace-nowrap py-4 px-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 font-medium">
                 Pengaduan Warga
             </button>
@@ -160,83 +157,6 @@
                         </button>
                     </form>
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Section 2: Arsip Surat -->
-<section id="arsip-surat" class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 md:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-slate-800 mb-4">Arsip Surat</h2>
-            <p class="text-slate-600 max-w-2xl mx-auto">
-                Lihat riwayat pengajuan surat dan unduh dokumen yang telah selesai diproses
-            </p>
-        </div>
-        
-        <!-- Search & Filter -->
-        <div class="bg-slate-50 rounded-2xl p-6 mb-8">
-            <div class="flex flex-col md:flex-row gap-4">
-                <div class="flex-1">
-                    <input type="text" id="searchArsip" placeholder="Cari berdasarkan nama pemohon atau jenis surat..." class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-400 focus:border-transparent transition">
-                </div>
-                <select id="filterStatus" class="px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-400 focus:border-transparent transition">
-                    <option value="semua">Semua Status</option>
-                    <option value="selesai">Selesai</option>
-                    <option value="proses">Dalam Proses</option>
-                    <option value="ditolak">Ditolak</option>
-                </select>
-                <input type="date" id="filterTanggal" class="px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-400 focus:border-transparent transition">
-            </div>
-        </div>
-        
-        <!-- Table -->
-        <div class="bg-white rounded-2xl shadow-md overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="bg-slate-50 sticky top-0">
-                        <tr>
-                            <th class="text-left py-4 px-6 font-semibold text-slate-800">ID Surat</th>
-                            <th class="text-left py-4 px-6 font-semibold text-slate-800">Jenis Surat</th>
-                            <th class="text-left py-4 px-6 font-semibold text-slate-800">Pemohon</th>
-                            <th class="text-left py-4 px-6 font-semibold text-slate-800">Tanggal</th>
-                            <th class="text-left py-4 px-6 font-semibold text-slate-800">Status</th>
-                            <th class="text-left py-4 px-6 font-semibold text-slate-800">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-200">
-                        @foreach($arsipSurat as $arsip)
-                        <tr class="hover:bg-slate-50 transition-colors">
-                            <td class="py-4 px-6 font-mono text-sm text-slate-600">{{ $arsip['id'] }}</td>
-                            <td class="py-4 px-6 text-slate-800">{{ $arsip['jenis'] }}</td>
-                            <td class="py-4 px-6 text-slate-800">{{ $arsip['pemohon'] }}</td>
-                            <td class="py-4 px-6 text-slate-600">{{ date('d/m/Y', strtotime($arsip['tanggal'])) }}</td>
-                            <td class="py-4 px-6">
-                                @if($arsip['status'] === 'selesai')
-                                    <span class="bg-emerald-100 text-emerald-800 text-xs font-medium px-3 py-1 rounded-full">Selesai</span>
-                                @elseif($arsip['status'] === 'proses')
-                                    <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-3 py-1 rounded-full">Dalam Proses</span>
-                                @else
-                                    <span class="bg-red-100 text-red-800 text-xs font-medium px-3 py-1 rounded-full">Ditolak</span>
-                                @endif
-                            </td>
-                            <td class="py-4 px-6">
-                                @if($arsip['file_url'])
-                                    <a href="{{ route('desa.layanan.download-arsip', $arsip['id']) }}" class="inline-flex items-center gap-1 text-teal-600 hover:text-teal-700 text-sm font-medium">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                        </svg>
-                                        Download
-                                    </a>
-                                @else
-                                    <span class="text-slate-400 text-sm">Belum tersedia</span>
-                                @endif
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
@@ -454,6 +374,14 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                
+                <!-- Anonymous Checkbox -->
+                <div class="flex items-start gap-3">
+                    <input type="checkbox" id="is_anonymous" name="is_anonymous" value="1" class="mt-1 w-4 h-4 text-teal-600 border-slate-300 rounded focus:ring-teal-400">
+                    <label for="is_anonymous" class="text-sm text-slate-600">
+                        Saya ingin identitas saya dirahasiakan (Anonim)
+                    </label>
                 </div>
                 
                 <!-- Checkbox Agreement -->
@@ -712,13 +640,43 @@ function submitSurat(event) {
     `;
     submitBtn.disabled = true;
     
-    // Simulate API call
-    setTimeout(() => {
-        showToast('Permohonan surat berhasil dikirim! Kode tracking: SRT-' + Date.now(), 'success');
-        event.target.reset();
+    // Submit to backend
+    fetch('{{ route("desa.layanan.submit-surat") }}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Permohonan surat berhasil dikirim! Kode tracking: ' + data.tracking_id, 'success');
+            event.target.reset();
+            // Reset file inputs
+            document.querySelectorAll('input[type="file"]').forEach(input => {
+                input.value = '';
+                const label = input.nextElementSibling;
+                if (label) {
+                    const fileInfo = label.querySelector('div > div:last-child');
+                    if (fileInfo) {
+                        fileInfo.textContent = 'Klik untuk upload file (PDF, JPG, PNG)';
+                        fileInfo.className = 'text-sm text-slate-500';
+                    }
+                }
+            });
+        } else {
+            showToast(data.message || 'Terjadi kesalahan saat mengirim permohonan', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Terjadi kesalahan saat mengirim permohonan', 'error');
+    })
+    .finally(() => {
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
-    }, 2000);
+    });
 }
 
 // Toast notification
@@ -769,23 +727,35 @@ function submitPengaduan(event) {
     `;
     submitBtn.disabled = true;
     
-    // Simulate API call
-    setTimeout(() => {
-        const ticketId = 'ADU-' + new Date().getFullYear() + 
-                        String(new Date().getMonth() + 1).padStart(2, '0') + 
-                        String(new Date().getDate()).padStart(2, '0') + '-' + 
-                        Math.floor(Math.random() * 9000 + 1000);
-        
-        showToast(`Pengaduan berhasil dikirim! Kode tracking: ${ticketId}. Kami akan menindaklanjuti dalam 3x24 jam.`, 'success');
-        event.target.reset();
-        
-        // Reset file input labels
-        document.getElementById('bukti1-info').textContent = 'Klik untuk upload';
-        document.getElementById('bukti2-info').textContent = 'Klik untuk upload';
-        
+    // Submit to backend
+    fetch('{{ route("desa.layanan.submit-pengaduan") }}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast(`Pengaduan berhasil dikirim! Kode tracking: ${data.tracking_id}. Kami akan menindaklanjuti dalam 3x24 jam.`, 'success');
+            event.target.reset();
+            
+            // Reset file input labels
+            document.getElementById('bukti1-info').textContent = 'Klik untuk upload';
+            document.getElementById('bukti2-info').textContent = 'Klik untuk upload';
+        } else {
+            showToast(data.message || 'Terjadi kesalahan saat mengirim pengaduan', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Terjadi kesalahan saat mengirim pengaduan', 'error');
+    })
+    .finally(() => {
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
-    }, 2500);
+    });
 }
 
 // Select kategori pengaduan

@@ -67,8 +67,8 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Desa</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">URL</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Domain Custom</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Admin</th>
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
@@ -81,16 +81,26 @@
                             <div class="text-sm font-medium text-gray-900">{{ $website->name }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">
+                                {{ $website->village->name ?? '-' }}
+                            </div>
+                            @if($website->village)
+                            <div class="text-xs text-gray-500 mt-1">
+                                {{ $website->village->location ?? '' }}
+                            </div>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-500">
                                 <a href="http://{{ $website->url }}" target="_blank" class="text-emerald-600 hover:text-emerald-900">
                                     {{ $website->url }}
                                 </a>
                             </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-500">
-                                {{ $website->custom_domain ?: '-' }}
+                            @if($website->custom_domain)
+                            <div class="text-xs text-gray-400 mt-1">
+                                {{ $website->custom_domain }}
                             </div>
+                            @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($website->status === 'active')
@@ -150,7 +160,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+                        <td colspan="7" class="px-6 py-12 text-center text-gray-500">
                             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
                             </svg>
@@ -165,7 +175,7 @@
         <!-- Pagination -->
         @if($websites->hasPages())
         <div class="px-6 py-4 border-t border-gray-200">
-            {{ $websites->links() }}
+            {{ $websites->appends(request()->query())->links() }}
         </div>
         @endif
     </div>

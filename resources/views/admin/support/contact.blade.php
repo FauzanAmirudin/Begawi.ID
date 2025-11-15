@@ -46,85 +46,57 @@
                 </div>
                 @endif
 
-                <form action="{{ route('admin.support.contact.submit') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                <form action="{{ route('admin.support.contact.submit') }}" method="POST" class="space-y-6">
                     @csrf
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="flex flex-col">
-                            <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Nama Pengirim</label>
-                            <input type="text" name="name" value="{{ old('name', auth()->user()->name ?? '') }}" class="mt-2 bg-gray-100 border-0 rounded-lg text-sm text-gray-700 px-3 py-2 focus:bg-white focus:ring-2 focus:ring-purple-500" placeholder="Nama lengkap">
-                            @error('name')
-                            <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="flex flex-col">
-                            <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</label>
-                            <input type="email" name="email" value="{{ old('email', auth()->user()->email ?? '') }}" class="mt-2 bg-gray-100 border-0 rounded-lg text-sm text-gray-700 px-3 py-2 focus:bg-white focus:ring-2 focus:ring-purple-500" placeholder="Email aktif">
-                            @error('email')
-                            <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
-                            @enderror
-                        </div>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Subjek</label>
+                        <input type="text" name="subject" value="{{ old('subject', $prefill['subject'] ?? '') }}" required class="mt-2 w-full bg-gray-100 border-0 rounded-lg text-sm text-gray-700 px-3 py-2 focus:bg-white focus:ring-2 focus:ring-purple-500" placeholder="Masukkan subjek pengaduan">
+                        @error('subject')
+                        <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
+                        @enderror
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="flex flex-col">
-                            <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Tenant</label>
-                            <input type="text" name="tenant" value="{{ old('tenant', $prefill['tenant'] ?? '') }}" class="mt-2 bg-gray-100 border-0 rounded-lg text-sm text-gray-700 px-3 py-2 focus:bg-white focus:ring-2 focus:ring-purple-500" placeholder="Nama Desa / UMKM">
-                            @error('tenant')
-                            <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="flex flex-col">
-                            <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Topik</label>
-                            <select name="topic" class="mt-2 bg-gray-100 border-0 rounded-lg text-sm text-gray-700 px-3 py-2 focus:bg-white focus:ring-2 focus:ring-purple-500">
-                                <option value="">Pilih topik</option>
-                                @foreach($topics as $topic)
-                                <option value="{{ $topic }}" {{ old('topic', $prefill['topic'] ?? '') === $topic ? 'selected' : '' }}>
-                                    {{ $topic }}
-                                </option>
-                                @endforeach
-                            </select>
-                            @error('topic')
-                            <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
-                            @enderror
-                        </div>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Kategori</label>
+                        <select name="category" required class="mt-2 w-full bg-gray-100 border-0 rounded-lg text-sm text-gray-700 px-3 py-2 focus:bg-white focus:ring-2 focus:ring-purple-500">
+                            <option value="">Pilih kategori</option>
+                            <option value="Integrasi" {{ old('category', $prefill['category'] ?? '') === 'Integrasi' ? 'selected' : '' }}>Integrasi</option>
+                            <option value="Akses Akun" {{ old('category', $prefill['category'] ?? '') === 'Akses Akun' ? 'selected' : '' }}>Akses Akun</option>
+                            <option value="Data & Analitik" {{ old('category', $prefill['category'] ?? '') === 'Data & Analitik' ? 'selected' : '' }}>Data & Analitik</option>
+                            <option value="Pelatihan" {{ old('category', $prefill['category'] ?? '') === 'Pelatihan' ? 'selected' : '' }}>Pelatihan</option>
+                            <option value="Bug & Gangguan Sistem" {{ old('category', $prefill['category'] ?? '') === 'Bug & Gangguan Sistem' ? 'selected' : '' }}>Bug & Gangguan Sistem</option>
+                            <option value="Permintaan Fitur Baru" {{ old('category', $prefill['category'] ?? '') === 'Permintaan Fitur Baru' ? 'selected' : '' }}>Permintaan Fitur Baru</option>
+                            <option value="Lainnya" {{ old('category', $prefill['category'] ?? '') === 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                        </select>
+                        @error('category')
+                        <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
+                        @enderror
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="flex flex-col">
-                            <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Prioritas</label>
-                            <div class="mt-3 flex items-center gap-3">
-                                <label class="flex items-center gap-2 text-sm text-gray-600">
-                                    <input type="radio" name="priority" value="high" class="text-purple-600 focus:ring-purple-500" {{ old('priority', $prefill['priority'] ?? '') === 'high' ? 'checked' : '' }}>
-                                    <span>Tinggi</span>
-                                </label>
-                                <label class="flex items-center gap-2 text-sm text-gray-600">
-                                    <input type="radio" name="priority" value="medium" class="text-purple-600 focus:ring-purple-500" {{ old('priority', $prefill['priority'] ?? 'medium') === 'medium' ? 'checked' : '' }}>
-                                    <span>Menengah</span>
-                                </label>
-                                <label class="flex items-center gap-2 text-sm text-gray-600">
-                                    <input type="radio" name="priority" value="low" class="text-purple-600 focus:ring-purple-500" {{ old('priority', $prefill['priority'] ?? '') === 'low' ? 'checked' : '' }}>
-                                    <span>Rendah</span>
-                                </label>
-                            </div>
-                            @error('priority')
-                            <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
-                            @enderror
+                    <div>
+                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Prioritas</label>
+                        <div class="mt-3 flex items-center gap-3">
+                            <label class="flex items-center gap-2 text-sm text-gray-600">
+                                <input type="radio" name="priority" value="low" class="text-purple-600 focus:ring-purple-500" {{ old('priority', $prefill['priority'] ?? 'medium') === 'low' ? 'checked' : '' }}>
+                                <span>Rendah</span>
+                            </label>
+                            <label class="flex items-center gap-2 text-sm text-gray-600">
+                                <input type="radio" name="priority" value="medium" class="text-purple-600 focus:ring-purple-500" {{ old('priority', $prefill['priority'] ?? 'medium') === 'medium' ? 'checked' : '' }}>
+                                <span>Sedang</span>
+                            </label>
+                            <label class="flex items-center gap-2 text-sm text-gray-600">
+                                <input type="radio" name="priority" value="high" class="text-purple-600 focus:ring-purple-500" {{ old('priority', $prefill['priority'] ?? '') === 'high' ? 'checked' : '' }}>
+                                <span>Tinggi</span>
+                            </label>
                         </div>
-                        <div class="flex flex-col">
-                            <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Lampiran</label>
-                            <div class="mt-2">
-                                <input type="file" name="attachment" class="block w-full text-sm text-gray-500 border border-dashed border-gray-300 rounded-lg px-3 py-2 cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                                <p class="text-xs text-gray-400 mt-2">Format: PDF, JPG, PNG, ZIP (maks 5 MB)</p>
-                            </div>
-                            @error('attachment')
-                            <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
-                            @enderror
-                        </div>
+                        @error('priority')
+                        <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
+                        @enderror
                     </div>
 
-                    <div class="flex flex-col">
-                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Deskripsi Detail</label>
-                        <textarea name="message" rows="6" class="mt-2 bg-gray-100 border-0 rounded-xl text-sm text-gray-700 px-3 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500" placeholder="Ceritakan kronologi, langkah yang sudah dicoba, dan dampak pada layanan.">{{ old('message', $prefill['message'] ?? '') }}</textarea>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Pesan</label>
+                        <textarea name="message" rows="6" required class="mt-2 w-full bg-gray-100 border-0 rounded-xl text-sm text-gray-700 px-3 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500" placeholder="Jelaskan masalah atau kendala yang Anda alami...">{{ old('message', $prefill['message'] ?? '') }}</textarea>
                         @error('message')
                         <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
                         @enderror

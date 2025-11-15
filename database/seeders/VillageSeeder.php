@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use App\Models\Village;
 use App\Models\VillageAchievement;
 use App\Models\VillageGalleryCategory;
@@ -9,9 +10,11 @@ use App\Models\VillageGalleryItem;
 use App\Models\VillageNews;
 use App\Models\VillagePotential;
 use App\Models\VillageProgram;
+use App\Models\Website;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class VillageSeeder extends Seeder
@@ -106,6 +109,62 @@ class VillageSeeder extends Seeder
                 ],
             ]
         );
+
+        // Create or link Website for this village
+        if (!$village->website_id) {
+            // Get or create admin desa user
+            $adminUser = User::where('role', User::ROLE_ADMIN_DESA)
+                ->where('village_id', $village->id)
+                ->first();
+
+            if (!$adminUser) {
+                $adminUser = User::where('role', User::ROLE_ADMIN_DESA)
+                    ->whereNull('village_id')
+                    ->first();
+            }
+
+            if (!$adminUser) {
+                $adminUser = User::updateOrCreate(
+                    ['email' => 'admin.desa@begawi.id'],
+                    [
+                        'name' => 'Admin Desa',
+                        'password' => Hash::make('password'),
+                        'role' => User::ROLE_ADMIN_DESA,
+                        'status' => 'active',
+                        'village_id' => $village->id,
+                        'email_verified_at' => now(),
+                    ]
+                );
+            } else {
+                $adminUser->update(['village_id' => $village->id]);
+            }
+
+            // Generate subdomain
+            $subdomain = Str::slug($village->name);
+            $counter = 1;
+            $originalSubdomain = $subdomain;
+            while (Website::where('url', $subdomain)->exists()) {
+                $subdomain = $originalSubdomain . '-' . $counter;
+                $counter++;
+            }
+
+            // Create website
+            $website = Website::updateOrCreate(
+                [
+                    'type' => 'desa',
+                    'name' => $village->name,
+                ],
+                [
+                    'url' => $subdomain,
+                    'status' => 'active',
+                    'user_id' => $adminUser->id,
+                    'template_id' => 'desa-template',
+                ]
+            );
+
+            // Link village to website
+            $village->update(['website_id' => $website->id]);
+        }
 
         $newsData = [
             [

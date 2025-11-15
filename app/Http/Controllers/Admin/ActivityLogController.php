@@ -198,12 +198,193 @@ class ActivityLogController extends Controller
         $type = $request->get('type', 'user');
         $format = strtolower($request->get('format', 'xls')); // xls|xlsx|pdf
 
-        // Build rows
-        $rows = [
-            ['Time', 'User', 'Action', 'Context', 'Description'],
-            ['2025-11-13 09:20', 'Super Admin', 'CREATE', 'Artikel / Berita', 'Admin Desa A menambahkan konten berita'],
-            ['2025-11-13 08:55', 'Admin Desa B', 'UPDATE', 'Manajemen Website', 'Mengubah status domain desa-b.id menjadi aktif'],
-        ];
+        // Get data based on type, using the same logic as view methods
+        if ($type === 'system') {
+            $filters = [
+                'level' => $request->get('level'),
+                'date' => $request->get('date'),
+                'search' => $request->get('search'),
+            ];
+
+            $systemLogs = collect([
+                [
+                    'time' => '2025-11-13 09:30:12',
+                    'level' => 'INFO',
+                    'component' => 'Scheduler',
+                    'message' => 'Backup otomatis selesai dalam 2m13s',
+                    'meta' => ['job' => 'daily-backup', 'status' => 'success'],
+                ],
+                [
+                    'time' => '2025-11-13 09:02:01',
+                    'level' => 'WARNING',
+                    'component' => 'Queue',
+                    'message' => 'Antrian email meningkat di atas ambang batas',
+                    'meta' => ['queue' => 'emails', 'size' => 128],
+                ],
+                [
+                    'time' => '2025-11-13 08:47:55',
+                    'level' => 'ERROR',
+                    'component' => 'PaymentGateway',
+                    'message' => 'Timeout saat menghubungi provider',
+                    'meta' => ['provider' => 'Midtrans', 'timeout_ms' => 3000],
+                ],
+                [
+                    'time' => '2025-11-13 08:20:11',
+                    'level' => 'INFO',
+                    'component' => 'System',
+                    'message' => 'Rotasi log berhasil dijalankan',
+                    'meta' => ['files_rotated' => 5],
+                ],
+            ]);
+
+            // Apply filters (same logic as systemAudit method)
+            $filtered = $systemLogs->filter(function ($item) use ($filters) {
+                if (!empty($filters['level'])) {
+                    if (Str::upper($item['level']) !== Str::upper($filters['level'])) {
+                        return false;
+                    }
+                }
+
+                if (!empty($filters['date'])) {
+                    $datePart = substr($item['time'], 0, 10);
+                    if ($datePart !== $filters['date']) {
+                        return false;
+                    }
+                }
+
+                if (!empty($filters['search'])) {
+                    $needle = Str::lower($filters['search']);
+                    $metaStr = Str::lower(json_encode($item['meta']));
+                    $haystack = Str::lower(
+                        implode(' ', [
+                            $item['time'],
+                            $item['level'],
+                            $item['component'],
+                            $item['message'],
+                            $metaStr,
+                        ])
+                    );
+                    if (!Str::contains($haystack, $needle)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            })->values();
+
+            // Build rows for system audit
+            $rows = [
+                ['Waktu', 'Level', 'Komponen', 'Pesan', 'Metadata'],
+            ];
+
+            foreach ($filtered as $log) {
+                $metaStr = '';
+                foreach ($log['meta'] as $k => $v) {
+                    $metaStr .= $k . ': ' . (is_array($v) ? json_encode($v) : $v) . '; ';
+                }
+                $metaStr = rtrim($metaStr, '; ');
+
+                $rows[] = [
+                    $log['time'],
+                    $log['level'],
+                    $log['component'],
+                    $log['message'],
+                    $metaStr,
+                ];
+            }
+        } else {
+            // User activity
+            $filters = [
+                'user' => $request->get('user'),
+                'date' => $request->get('date'),
+                'search' => $request->get('search'),
+            ];
+
+            $activities = collect([
+                [
+                    'time' => '2025-11-13 09:20',
+                    'type' => 'create',
+                    'user' => 'Super Admin',
+                    'user_role' => 'super_admin',
+                    'desc' => 'Admin Desa A menambahkan konten berita',
+                    'context' => 'Artikel / Berita',
+                ],
+                [
+                    'time' => '2025-11-13 08:55',
+                    'type' => 'update',
+                    'user' => 'Admin Desa B',
+                    'user_role' => 'admin_desa',
+                    'desc' => 'Mengubah status domain desa-b.id menjadi aktif',
+                    'context' => 'Manajemen Website',
+                ],
+                [
+                    'time' => '2025-11-13 08:10',
+                    'type' => 'login',
+                    'user' => 'Finance Admin',
+                    'user_role' => 'finance',
+                    'desc' => 'Login berhasil dari IP 103.15.12.22',
+                    'context' => 'Otentikasi',
+                ],
+                [
+                    'time' => '2025-11-13 07:42',
+                    'type' => 'payment',
+                    'user' => 'UMKM Admin',
+                    'user_role' => 'umkm',
+                    'desc' => 'Mencatat pembayaran paket langganan PRO',
+                    'context' => 'Keuangan',
+                ],
+            ]);
+
+            // Apply filters (same logic as userActivity method)
+            $filtered = $activities->filter(function ($item) use ($filters) {
+                if (!empty($filters['user'])) {
+                    if (!Str::of($item['user'])->lower()->contains(Str::lower($filters['user']))) {
+                        return false;
+                    }
+                }
+
+                if (!empty($filters['date'])) {
+                    $datePart = substr($item['time'], 0, 10);
+                    if ($datePart !== $filters['date']) {
+                        return false;
+                    }
+                }
+
+                if (!empty($filters['search'])) {
+                    $needle = Str::lower($filters['search']);
+                    $haystack = Str::lower(
+                        implode(' ', [
+                            $item['time'],
+                            $item['type'],
+                            $item['user'],
+                            $item['user_role'],
+                            $item['desc'],
+                            $item['context'],
+                        ])
+                    );
+                    if (!Str::contains($haystack, $needle)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            })->values();
+
+            // Build rows for user activity
+            $rows = [
+                ['Waktu', 'User', 'Aksi', 'Konteks', 'Deskripsi'],
+            ];
+
+            foreach ($filtered as $act) {
+                $rows[] = [
+                    $act['time'],
+                    $act['user'],
+                    strtoupper($act['type']),
+                    $act['context'],
+                    $act['desc'],
+                ];
+            }
+        }
 
         if (in_array($format, ['xls', 'xlsx'])) {
             // Use HTML table-based XLS for maximum compatibility without external packages

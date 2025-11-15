@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Desa;
 
 use App\Http\Controllers\Controller;
 use App\Models\Village;
+use App\Models\VillageAgenda;
 use App\Models\VillageNews;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -98,12 +99,45 @@ class BeritaController extends Controller
 
     public function agenda()
     {
-        $data = [
-            'kegiatan' => $this->getKegiatanMendatang(),
-            'kalender_events' => $this->getKalenderEvents(),
-        ];
+        $village = $this->village();
+        
+        $agendas = $village->agendas()
+            ->where('is_published', true)
+            ->orderBy('date')
+            ->orderBy('time')
+            ->get();
 
-        return view('pages.desa.berita.agenda', $data);
+        $kegiatan = $agendas->map(function ($agenda) {
+            return [
+                'id' => $agenda->id,
+                'judul' => $agenda->title,
+                'tanggal' => $agenda->date->toDateString(),
+                'waktu' => \Carbon\Carbon::parse($agenda->time)->format('H:i'),
+                'tempat' => $agenda->location,
+                'kategori' => $agenda->category,
+                'deskripsi' => $agenda->description ?? '',
+            ];
+        })->toArray();
+
+        $kalender_events = $agendas->map(function ($agenda) {
+            return [
+                'title' => $agenda->title,
+                'start' => $agenda->date->toDateString(),
+                'color' => match ($agenda->category) {
+                    'Rapat' => '#166534',
+                    'Pelatihan' => '#3B82F6',
+                    'Acara' => '#F59E0B',
+                    'Kesehatan' => '#EC4899',
+                    default => '#166534',
+                },
+                'category' => strtolower($agenda->category),
+            ];
+        })->toArray();
+
+        return view('pages.desa.berita.agenda', [
+            'kegiatan' => $kegiatan,
+            'kalender_events' => $kalender_events,
+        ]);
     }
 
     public function detail($slug)
@@ -148,18 +182,41 @@ class BeritaController extends Controller
 
     public function agendaDetail($id)
     {
-        $agenda = collect($this->getKegiatanMendatang())->firstWhere('id', (int) $id);
+        $village = $this->village();
+        
+        $agenda = $village->agendas()
+            ->where('is_published', true)
+            ->findOrFail($id);
 
-        if (! $agenda) {
-            abort(404);
-        }
+        $agendaData = [
+            'id' => $agenda->id,
+            'judul' => $agenda->title,
+            'tanggal' => $agenda->date->toDateString(),
+            'waktu' => \Carbon\Carbon::parse($agenda->time)->format('H:i'),
+            'tempat' => $agenda->location,
+            'kategori' => $agenda->category,
+            'deskripsi' => $agenda->description ?? '',
+        ];
 
-        $related = collect($this->getKegiatanMendatang())
-            ->reject(fn ($item) => $item['id'] === $agenda['id'])
+        $related = $village->agendas()
+            ->where('is_published', true)
+            ->where('id', '!=', $agenda->id)
+            ->orderBy('date')
             ->take(4)
-            ->values();
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'judul' => $item->title,
+                    'tanggal' => $item->date->toDateString(),
+                    'waktu' => \Carbon\Carbon::parse($item->time)->format('H:i'),
+                    'tempat' => $item->location,
+                    'kategori' => $item->category,
+                ];
+            })
+            ->toArray();
 
-        $timeline = [
+        $timeline = $agenda->timeline ?? [
             ['time' => '08.00', 'title' => 'Registrasi Peserta', 'desc' => 'Penerimaan peserta, distribusi kit acara, dan briefing awal.'],
             ['time' => '09.00', 'title' => 'Sesi Pembukaan', 'desc' => 'Sambutan dari Kepala Desa serta penjelasan tujuan kegiatan.'],
             ['time' => '10.00', 'title' => 'Sesi Inti', 'desc' => 'Pelaksanaan kegiatan utama sesuai agenda.'],
@@ -167,14 +224,14 @@ class BeritaController extends Controller
             ['time' => '13.00', 'title' => 'Penutupan', 'desc' => 'Kesimpulan, dokumentasi, dan pengumuman jadwal berikutnya.'],
         ];
 
-        $checklist = [
+        $checklist = $agenda->checklist ?? [
             'Membawa undangan/reservasi (jika diperlukan).',
             'Menggunakan pakaian sesuai tema kegiatan.',
             'Mengisi daftar hadir dan mendapatkan kit acara.',
             'Mematuhi protokol kesehatan yang berlaku.',
         ];
 
-        $organizers = [
+        $organizers = $agenda->organizers ?? [
             [
                 'name' => 'Sekretariat Desa Sejahtera',
                 'contact' => 'sekretariat@desasejahtera.id',
@@ -188,7 +245,7 @@ class BeritaController extends Controller
         ];
 
         return view('pages.desa.berita.agenda-detail', [
-            'agenda' => $agenda,
+            'agenda' => $agendaData,
             'related' => $related,
             'timeline' => $timeline,
             'checklist' => $checklist,
@@ -256,65 +313,6 @@ class BeritaController extends Controller
         ];
     }
 
-    private function getKegiatanMendatang(): array
-    {
-        return [
-            [
-                'id' => 1,
-                'judul' => 'Rapat Koordinasi RT/RW',
-                'tanggal' => now()->addDays(5)->toDateString(),
-                'waktu' => '19:00',
-                'tempat' => 'Balai Desa',
-                'kategori' => 'Rapat',
-                'deskripsi' => 'Rapat koordinasi bulanan dengan seluruh RT/RW se-desa',
-            ],
-            [
-                'id' => 2,
-                'judul' => 'Pelatihan Hidroponik untuk Ibu-Ibu',
-                'tanggal' => now()->addDays(7)->toDateString(),
-                'waktu' => '09:00',
-                'tempat' => 'Ruang Serbaguna',
-                'kategori' => 'Pelatihan',
-                'deskripsi' => 'Pelatihan budidaya tanaman hidroponik untuk meningkatkan ekonomi keluarga',
-            ],
-            [
-                'id' => 3,
-                'judul' => 'Pasar Minggu Desa',
-                'tanggal' => now()->addDays(10)->toDateString(),
-                'waktu' => '06:00',
-                'tempat' => 'Lapangan Desa',
-                'kategori' => 'Acara',
-                'deskripsi' => 'Pasar minggu dengan produk-produk UMKM lokal',
-            ],
-            [
-                'id' => 4,
-                'judul' => 'Posyandu Balita',
-                'tanggal' => now()->addDays(15)->toDateString(),
-                'waktu' => '08:00',
-                'tempat' => 'Puskesmas Pembantu',
-                'kategori' => 'Kesehatan',
-                'deskripsi' => 'Pemeriksaan kesehatan rutin untuk balita',
-            ],
-        ];
-    }
-
-    private function getKalenderEvents(): array
-    {
-        return collect($this->getKegiatanMendatang())->map(function ($agenda) {
-            return [
-                'title' => $agenda['judul'],
-                'start' => $agenda['tanggal'],
-                'color' => match ($agenda['kategori']) {
-                    'Rapat' => '#166534',
-                    'Pelatihan' => '#3B82F6',
-                    'Acara' => '#F59E0B',
-                    'Kesehatan' => '#EC4899',
-                    default => '#166534',
-                },
-                'category' => strtolower($agenda['kategori']),
-            ];
-        })->toArray();
-    }
 
     protected function village(): Village
     {

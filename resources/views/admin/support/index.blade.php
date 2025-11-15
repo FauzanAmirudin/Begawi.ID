@@ -8,18 +8,105 @@
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
                 <h1 class="text-2xl font-semibold text-gray-900">Support & Pengaduan</h1>
-                <p class="text-sm text-gray-500">Pusat layanan untuk memantau tiket, dokumentasi bantuan, dan komunikasi dengan tim teknis.</p>
+                <p class="text-sm text-gray-500">
+                    @if(isset($showForm))
+                        Formulir untuk mengirim pengaduan atau laporan masalah kepada super admin.
+                    @else
+                        Pusat layanan untuk memantau tiket, dokumentasi bantuan, dan komunikasi dengan tim teknis.
+                    @endif
+                </p>
             </div>
             <div class="flex items-center gap-3">
+                @if(!isset($showForm))
                 <a href="{{ route('admin.support.tickets') }}" class="px-4 py-2 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-sm font-medium rounded-lg shadow-sm hover:opacity-90 transition">
                     Lihat Semua Tiket
                 </a>
-                <a href="{{ route('admin.support.contact') }}" class="px-4 py-2 bg-white border border-gray-200 text-sm font-medium rounded-lg text-gray-700 hover:border-gray-300 hover:text-gray-900 transition">
-                    Hubungi Tim Teknis
+                @else
+                <a href="{{ route('admin.support.tickets') }}" class="px-4 py-2 bg-white border border-gray-200 text-sm font-medium rounded-lg text-gray-700 hover:border-gray-300 hover:text-gray-900 transition">
+                    Lihat Tiket Saya
+                </a>
+                @endif
+                <a href="{{ route('admin.support.contact') }}" class="px-4 py-2 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-sm font-medium rounded-lg shadow-sm hover:opacity-90 transition">
+                    {{ isset($showForm) ? 'Kirim Pengaduan' : 'Hubungi Tim Teknis' }}
                 </a>
             </div>
         </div>
 
+        @if(isset($showForm))
+        <!-- Form Pengaduan untuk Admin Desa/UMKM -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <h2 class="text-lg font-semibold text-gray-800 mb-6">Formulir Pengaduan</h2>
+            
+            @if(session('status'))
+            <div class="mb-6 p-4 bg-emerald-50 border border-emerald-100 rounded-xl text-sm text-emerald-700">
+                {{ session('status') }}
+            </div>
+            @endif
+
+            <form action="{{ route('admin.support.contact.submit') }}" method="POST" class="space-y-6">
+                @csrf
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Subjek</label>
+                    <input type="text" name="subject" value="{{ old('subject') }}" required class="w-full bg-gray-100 border-0 rounded-lg text-sm text-gray-700 px-3 py-2 focus:bg-white focus:ring-2 focus:ring-purple-500" placeholder="Masukkan subjek pengaduan">
+                    @error('subject')
+                    <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Kategori</label>
+                    <select name="category" required class="w-full bg-gray-100 border-0 rounded-lg text-sm text-gray-700 px-3 py-2 focus:bg-white focus:ring-2 focus:ring-purple-500">
+                        <option value="">Pilih kategori</option>
+                        <option value="Integrasi" {{ old('category') === 'Integrasi' ? 'selected' : '' }}>Integrasi</option>
+                        <option value="Akses Akun" {{ old('category') === 'Akses Akun' ? 'selected' : '' }}>Akses Akun</option>
+                        <option value="Data & Analitik" {{ old('category') === 'Data & Analitik' ? 'selected' : '' }}>Data & Analitik</option>
+                        <option value="Pelatihan" {{ old('category') === 'Pelatihan' ? 'selected' : '' }}>Pelatihan</option>
+                        <option value="Bug & Gangguan Sistem" {{ old('category') === 'Bug & Gangguan Sistem' ? 'selected' : '' }}>Bug & Gangguan Sistem</option>
+                        <option value="Permintaan Fitur Baru" {{ old('category') === 'Permintaan Fitur Baru' ? 'selected' : '' }}>Permintaan Fitur Baru</option>
+                        <option value="Lainnya" {{ old('category') === 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                    </select>
+                    @error('category')
+                    <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Prioritas</label>
+                    <div class="flex items-center gap-4">
+                        <label class="flex items-center gap-2 text-sm text-gray-600">
+                            <input type="radio" name="priority" value="low" {{ old('priority', 'medium') === 'low' ? 'checked' : '' }} class="text-purple-600 focus:ring-purple-500">
+                            <span>Rendah</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-gray-600">
+                            <input type="radio" name="priority" value="medium" {{ old('priority', 'medium') === 'medium' ? 'checked' : '' }} class="text-purple-600 focus:ring-purple-500">
+                            <span>Sedang</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-gray-600">
+                            <input type="radio" name="priority" value="high" {{ old('priority') === 'high' ? 'checked' : '' }} class="text-purple-600 focus:ring-purple-500">
+                            <span>Tinggi</span>
+                        </label>
+                    </div>
+                    @error('priority')
+                    <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Pesan</label>
+                    <textarea name="message" rows="6" required class="w-full bg-gray-100 border-0 rounded-lg text-sm text-gray-700 px-3 py-2 focus:bg-white focus:ring-2 focus:ring-purple-500" placeholder="Jelaskan masalah atau kendala yang Anda alami...">{{ old('message') }}</textarea>
+                    @error('message')
+                    <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="px-6 py-2 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-sm font-medium rounded-lg shadow-sm hover:opacity-90 transition">
+                        Kirim Pengaduan
+                    </button>
+                </div>
+            </form>
+        </div>
+        @else
         <!-- Stats Overview -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl p-6 text-white shadow-sm">
@@ -256,6 +343,7 @@
                 </div>
             </div>
         </div>
+        @endif
     </div>
 </div>
 @endsection

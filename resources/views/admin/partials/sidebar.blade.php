@@ -231,18 +231,18 @@
         @elseif(auth()->user()->role === \App\Models\User::ROLE_ADMIN_DESA)
         <!-- Manajemen Website Desa -->
         <div class="space-y-1">
-            <button onclick="toggleDropdown('village-content-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.desa-management.index') || request()->routeIs('admin.desa-management.profile') || request()->routeIs('admin.desa-management.news') || request()->routeIs('admin.desa-management.gallery') || request()->routeIs('admin.desa-management.potentials') || request()->routeIs('admin.desa-management.achievements') ? 'ring-2 ring-indigo-300' : '' }}">
+            <button onclick="toggleDropdown('village-content-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.desa-management.index') || request()->routeIs('admin.desa-management.profile') || request()->routeIs('admin.desa-management.news') || request()->routeIs('admin.desa-management.agendas') || request()->routeIs('admin.desa-management.gallery') || request()->routeIs('admin.desa-management.potentials') || request()->routeIs('admin.desa-management.achievements') ? 'ring-2 ring-indigo-300' : '' }}">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                     </svg>
                     <span>Manajemen Desa</span>
                 </div>
-                <svg id="village-content-dropdown-icon" class="w-4 h-4 transition-transform duration-200 {{ request()->routeIs('admin.desa-management.index') || request()->routeIs('admin.desa-management.profile') || request()->routeIs('admin.desa-management.news') || request()->routeIs('admin.desa-management.gallery') || request()->routeIs('admin.desa-management.potentials') || request()->routeIs('admin.desa-management.achievements') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg id="village-content-dropdown-icon" class="w-4 h-4 transition-transform duration-200 {{ request()->routeIs('admin.desa-management.index') || request()->routeIs('admin.desa-management.profile') || request()->routeIs('admin.desa-management.news') || request()->routeIs('admin.desa-management.agendas') || request()->routeIs('admin.desa-management.gallery') || request()->routeIs('admin.desa-management.potentials') || request()->routeIs('admin.desa-management.achievements') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
-            <div id="village-content-dropdown" class="ml-4 space-y-1 overflow-hidden transition-all duration-300 {{ request()->routeIs('admin.desa-management.index') || request()->routeIs('admin.desa-management.profile') || request()->routeIs('admin.desa-management.news') || request()->routeIs('admin.desa-management.gallery') || request()->routeIs('admin.desa-management.potentials') || request()->routeIs('admin.desa-management.achievements') ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0' }}">
+            <div id="village-content-dropdown" class="ml-4 space-y-1 overflow-hidden transition-all duration-300 {{ request()->routeIs('admin.desa-management.index') || request()->routeIs('admin.desa-management.profile') || request()->routeIs('admin.desa-management.news') || request()->routeIs('admin.desa-management.agendas') || request()->routeIs('admin.desa-management.gallery') || request()->routeIs('admin.desa-management.potentials') || request()->routeIs('admin.desa-management.achievements') ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0' }}">
                 <a href="{{ route('admin.desa-management.index') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-lg transition {{ request()->routeIs('admin.desa-management.index') ? 'bg-blue-50 text-blue-700 font-medium' : '' }}">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm8 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm8 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
@@ -259,7 +259,13 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 5H9a2 2 0 00-2 2v12m12-14h2a1 1 0 011 1v12a1 1 0 01-1 1h-2m0-14v14M7 9h6m-6 4h6m-6 4h6"></path>
                     </svg>
-                    <span>Berita & Agenda</span>
+                    <span>Berita</span>
+                </a>
+                <a href="{{ route('admin.desa-management.agendas') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-lg transition {{ request()->routeIs('admin.desa-management.agendas') ? 'bg-blue-50 text-blue-700 font-medium' : '' }}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Agenda</span>
                 </a>
                 <a href="{{ route('admin.desa-management.gallery') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-lg transition {{ request()->routeIs('admin.desa-management.gallery') ? 'bg-blue-50 text-blue-700 font-medium' : '' }}">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -320,18 +326,6 @@
                     </svg>
                     <span>Monitoring</span>
                 </a>
-                <a href="{{ route('admin.desa-management.umkm-management.validation') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 rounded-lg transition {{ request()->routeIs('admin.desa-management.umkm-management.validation') ? 'bg-purple-50 text-purple-700 font-medium' : '' }}">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <span>Validasi Konten</span>
-                </a>
-                <a href="{{ route('admin.desa-management.umkm-management.guides') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 rounded-lg transition {{ request()->routeIs('admin.desa-management.umkm-management.guides') ? 'bg-purple-50 text-purple-700 font-medium' : '' }}">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                    </svg>
-                    <span>Bimbingan Digital</span>
-                </a>
             </div>
         </div>
 
@@ -372,6 +366,32 @@
                 </a>
             </div>
         </div>
+
+        <!-- Surat Online -->
+        <a href="{{ route('admin.desa-management.letters.index') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-teal-500 to-emerald-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.desa-management.letters.*') ? 'ring-2 ring-teal-300' : '' }}">
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span>Surat Online</span>
+            </div>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </a>
+
+        <!-- Pengaduan Warga -->
+        <a href="{{ route('admin.desa-management.complaints.index') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.desa-management.complaints.*') ? 'ring-2 ring-orange-300' : '' }}">
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                </svg>
+                <span>Pengaduan Warga</span>
+            </div>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </a>
 
         <!-- Laporan & Statistik -->
         <div class="space-y-1">

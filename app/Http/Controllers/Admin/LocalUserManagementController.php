@@ -97,25 +97,33 @@ class LocalUserManagementController extends Controller
                 $q->where('village_id', $village->id);
             }]);
 
-        // Search filter
-        if ($request->has('search') && $request->search) {
-            $query->where(function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%')
-                    ->orWhere('email', 'like', '%' . $request->search . '%');
-            });
+        // Search filter - case insensitive and trim whitespace
+        // Search in name, email, and UMKM business name
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            if ($search !== '') {
+                $query->where(function ($q) use ($search, $village) {
+                    $q->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('email', 'like', '%' . $search . '%')
+                        ->orWhereHas('umkmBusinesses', function ($q2) use ($search, $village) {
+                            $q2->where('village_id', $village->id)
+                                ->where('name', 'like', '%' . $search . '%');
+                        });
+                });
+            }
         }
 
         // Role filter
-        if ($request->has('role') && $request->role) {
+        if ($request->filled('role')) {
             $query->where('role', $request->role);
         }
 
         // Status filter
-        if ($request->has('status') && $request->status !== '') {
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        $users = $query->orderBy('created_at', 'desc')->paginate(15);
+        $users = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
 
         // Get statistics
         $stats = [

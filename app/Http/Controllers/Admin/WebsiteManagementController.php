@@ -31,24 +31,31 @@ class WebsiteManagementController extends Controller
     {
         $this->checkSuperAdmin();
 
-        $query = Website::where('type', 'desa')->with('user');
+        $query = Website::where('type', 'desa')
+            ->with(['user', 'village']);
 
         // Search
-        if ($request->has('search') && $request->search) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('url', 'like', "%{$search}%")
-                    ->orWhere('custom_domain', 'like', "%{$search}%");
-            });
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            if ($search !== '') {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('url', 'like', "%{$search}%")
+                        ->orWhere('custom_domain', 'like', "%{$search}%")
+                        ->orWhereHas('village', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%")
+                                ->orWhere('location', 'like', "%{$search}%");
+                        });
+                });
+            }
         }
 
         // Filter by status
-        if ($request->has('status') && $request->status !== '') {
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        $websites = $query->orderBy('created_at', 'desc')->paginate(15);
+        $websites = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
 
         return view('admin.super-admin.websites.desa', compact('websites'));
     }
@@ -60,31 +67,43 @@ class WebsiteManagementController extends Controller
     {
         $this->checkSuperAdmin();
 
-        $query = Website::where('type', 'umkm')->with('user');
+        $query = Website::where('type', 'umkm')
+            ->with(['user', 'umkmBusiness.village']);
 
         // Search
-        if ($request->has('search') && $request->search) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('url', 'like', "%{$search}%")
-                    ->orWhere('custom_domain', 'like', "%{$search}%");
-            });
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            if ($search !== '') {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('url', 'like', "%{$search}%")
+                        ->orWhere('custom_domain', 'like', "%{$search}%")
+                        ->orWhereHas('umkmBusiness', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%")
+                                ->orWhere('category', 'like', "%{$search}%")
+                                ->orWhere('owner_name', 'like', "%{$search}%");
+                        });
+                });
+            }
         }
 
-        // Filter by desa (via user)
-        if ($request->has('desa') && $request->desa) {
-            $query->whereHas('user', function ($q) use ($request) {
-                $q->where('name', 'like', "%{$request->desa}%");
-            });
+        // Filter by desa (via UmkmBusiness->village)
+        if ($request->filled('desa')) {
+            $desa = trim($request->desa);
+            if ($desa !== '') {
+                $query->whereHas('umkmBusiness.village', function ($q) use ($desa) {
+                    $q->where('name', 'like', "%{$desa}%")
+                        ->orWhere('location', 'like', "%{$desa}%");
+                });
+            }
         }
 
         // Filter by status
-        if ($request->has('status') && $request->status !== '') {
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        $websites = $query->orderBy('created_at', 'desc')->paginate(15);
+        $websites = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
 
         return view('admin.super-admin.websites.umkm', compact('websites'));
     }
@@ -96,9 +115,109 @@ class WebsiteManagementController extends Controller
     {
         $this->checkSuperAdmin();
         
-        $website->load('user');
+        $website->load(['user', 'village']);
         
-        return view('admin.super-admin.websites.show', compact('website'));
+        // If it's a desa website, load village data
+        if ($website->type === 'desa' && $website->village) {
+            $village = $website->village;
+            $village->load([
+                'news',
+                'galleryCategories.items',
+                'potentials',
+                'achievements',
+                'programs',
+                'users'
+            ]);
+            
+            // Get UMKM businesses for this village
+            $umkmBusinesses = \App\Models\UmkmBusiness::where('village_id', $village->id)
+                ->with('user')
+                ->get();
+            
+            // Calculate stats
+            $villageStats = [
+                'news_total' => $village->news->count(),
+                'news_published' => $village->news->where('status', \App\Models\VillageNews::STATUS_PUBLISHED)->count(),
+                'gallery_total' => $village->galleryCategories->sum(fn($cat) => $cat->items->count()),
+                'potentials_total' => $village->potentials->count(),
+                'achievements_total' => $village->achievements->count(),
+                'programs_total' => $village->programs->count(),
+                'umkm_total' => $umkmBusinesses->count(),
+                'users_total' => $village->users->count(),
+            ];
+        } else {
+            $village = null;
+            $villageStats = null;
+            $umkmBusinesses = collect([]);
+        }
+        
+        return view('admin.super-admin.websites.show', compact('website', 'village', 'villageStats', 'umkmBusinesses'));
+    }
+
+    /**
+     * Show village detail management (for super admin)
+     */
+    public function villageDetail(Website $website): View
+    {
+        $this->checkSuperAdmin();
+        
+        if ($website->type !== 'desa') {
+            abort(404, 'Halaman ini hanya untuk website desa.');
+        }
+        
+        $village = \App\Models\Village::where('website_id', $website->id)->first();
+        
+        if (!$village) {
+            abort(404, 'Data desa tidak ditemukan untuk website ini.');
+        }
+        
+        // Load all village data
+        $village->load([
+            'news' => function($q) {
+                $q->orderBy('created_at', 'desc')->limit(10);
+            },
+            'galleryCategories' => function($q) {
+                $q->with(['items' => function($q) {
+                    $q->where('is_published', true)->limit(5);
+                }]);
+            },
+            'potentials' => function($q) {
+                $q->orderBy('created_at', 'desc')->limit(10);
+            },
+            'achievements' => function($q) {
+                $q->orderBy('created_at', 'desc')->limit(10);
+            },
+            'programs' => function($q) {
+                $q->orderBy('created_at', 'desc')->limit(10);
+            },
+            'users'
+        ]);
+        
+        // Get UMKM businesses
+        $umkmBusinesses = \App\Models\UmkmBusiness::where('village_id', $village->id)
+            ->with(['user', 'products'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        // Calculate comprehensive stats
+        $stats = [
+            'news_total' => \App\Models\VillageNews::where('village_id', $village->id)->count(),
+            'news_published' => \App\Models\VillageNews::where('village_id', $village->id)
+                ->where('status', \App\Models\VillageNews::STATUS_PUBLISHED)->count(),
+            'news_draft' => \App\Models\VillageNews::where('village_id', $village->id)
+                ->where('status', '!=', \App\Models\VillageNews::STATUS_PUBLISHED)->count(),
+            'gallery_total' => \App\Models\VillageGalleryItem::whereHas('category', function($q) use ($village) {
+                $q->where('village_id', $village->id);
+            })->where('is_published', true)->count(),
+            'potentials_total' => $village->potentials()->count(),
+            'achievements_total' => $village->achievements()->count(),
+            'programs_total' => $village->programs()->count(),
+            'umkm_total' => $umkmBusinesses->count(),
+            'umkm_active' => $umkmBusinesses->where('status', 'active')->count(),
+            'users_total' => $village->users()->count(),
+        ];
+        
+        return view('admin.super-admin.websites.village-detail', compact('website', 'village', 'stats', 'umkmBusinesses'));
     }
 
     /**

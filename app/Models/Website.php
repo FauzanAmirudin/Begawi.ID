@@ -36,6 +36,22 @@ class Website extends Model
     }
 
     /**
+     * Get the village associated with this website (for desa type)
+     */
+    public function village(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Village::class);
+    }
+
+    /**
+     * Get the UMKM business associated with this website (for umkm type)
+     */
+    public function umkmBusiness(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(\App\Models\UmkmBusiness::class);
+    }
+
+    /**
      * Get status badge color
      */
     public function getStatusColorAttribute(): string

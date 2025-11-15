@@ -68,5 +68,47 @@ class UmkmBusiness extends Model
     {
         return $this->hasMany(UmkmProductCategory::class);
     }
+
+    public function contentValidations()
+    {
+        return $this->hasMany(UmkmContentValidation::class, 'umkm_business_id');
+    }
+
+    /**
+     * Get status label
+     */
+    public function getStatusLabelAttribute(): string
+    {
+        return match($this->status) {
+            'active' => 'Aktif',
+            'onboarding' => 'Onboarding',
+            'suspended' => 'Ditangguhkan',
+            'inactive' => 'Tidak Aktif',
+            default => ucfirst($this->status ?? 'Unknown'),
+        };
+    }
+
+    /**
+     * Get status badge class
+     */
+    public function getStatusBadgeAttribute(): string
+    {
+        return match($this->status) {
+            'active' => 'bg-emerald-50 text-emerald-600',
+            'onboarding' => 'bg-blue-50 text-blue-600',
+            'suspended' => 'bg-amber-50 text-amber-600',
+            'inactive' => 'bg-gray-100 text-gray-600',
+            default => 'bg-gray-100 text-gray-600',
+        };
+    }
+
+    /**
+     * Generate subdomain from business name
+     */
+    public static function generateSubdomain(string $name): string
+    {
+        $slug = \Illuminate\Support\Str::slug($name);
+        return $slug . '.desa.begawi.id';
+    }
 }
 

@@ -194,9 +194,6 @@
                     <option value="11">November</option>
                     <option value="12">Desember</option>
                 </select>
-                <button class="bg-gradient-accent hover:bg-primary-700 text-white rounded-xl px-4 py-2 transition-colors text-sm font-medium" onclick="openAddEventModal()">
-                    + Tambah Jadwal
-                </button>
             </div>
         </div>
     </div>

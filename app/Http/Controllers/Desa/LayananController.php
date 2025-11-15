@@ -4,15 +4,41 @@
 namespace App\Http\Controllers\Desa;
 
 use App\Http\Controllers\Controller;
+use App\Models\LetterSubmission;
+use App\Models\CitizenComplaint;
+use App\Models\Village;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class LayananController extends Controller
 {
+    protected ?Village $villageModel = null;
+
     public function index()
     {
+        $village = $this->village();
+        
+        // Get recent submissions for this village
+        $recentSubmissions = LetterSubmission::where('village_id', $village->id)
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get()
+            ->map(function ($submission) {
+                return [
+                    'id' => $submission->tracking_code,
+                    'jenis' => $submission->letter_type_name,
+                    'pemohon' => $submission->nama,
+                    'tanggal' => $submission->created_at->toDateString(),
+                    'status' => $this->mapStatusToArsip($submission->status),
+                    'file_url' => $submission->completed_file_path ? Storage::url($submission->completed_file_path) : null,
+                ];
+            })
+            ->toArray();
+
         $data = [
             'jenisSurat' => $this->getJenisSurat(),
-            'arsipSurat' => $this->getRecentArsip(),
+            'arsipSurat' => $recentSubmissions,
             'kategoriPengaduan' => $this->getKategoriPengaduan(),
             'statistikPengaduan' => $this->getStatistikPengaduan(),
             'statistikLayanan' => $this->getStatistikLayanan()
@@ -23,21 +49,137 @@ class LayananController extends Controller
     
     public function submitSurat(Request $request)
     {
-        // Logic untuk submit surat online
+        $validator = Validator::make($request->all(), [
+            'jenis_surat' => 'required|in:ktp,domisili,usaha,tidak-mampu,belum-menikah,kelahiran',
+            'nama' => 'required|string|max:255',
+            'nik' => 'required|string|max:20',
+            'telepon' => 'required|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'alamat' => 'required|string',
+            'keperluan' => 'required|string',
+            'persyaratan' => 'nullable|array',
+            'persyaratan.*' => 'file|mimes:pdf,jpg,jpeg,png|max:5120', // 5MB max
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $village = $this->village();
+        
+        // Handle file uploads
+        $requirementsFiles = [];
+        if ($request->hasFile('persyaratan')) {
+            foreach ($request->file('persyaratan') as $index => $file) {
+                if ($file->isValid()) {
+                    $path = $file->store('letter-submissions/requirements', 'public');
+                    $requirementsFiles[] = $path;
+                }
+            }
+        }
+
+        // Create submission
+        $submission = LetterSubmission::create([
+            'village_id' => $village->id,
+            'letter_type' => $request->jenis_surat,
+            'nama' => $request->nama,
+            'nik' => $request->nik,
+            'telepon' => $request->telepon,
+            'email' => $request->email,
+            'alamat' => $request->alamat,
+            'keperluan' => $request->keperluan,
+            'requirements_files' => $requirementsFiles,
+            'status' => 'pending',
+        ]);
+
         return response()->json([
             'success' => true,
             'message' => 'Permohonan surat berhasil dikirim',
-            'tracking_id' => 'SRT-' . date('Ymd') . '-' . rand(1000, 9999)
+            'tracking_id' => $submission->tracking_code
         ]);
+    }
+
+    protected function village(): Village
+    {
+        if ($this->villageModel) {
+            return $this->villageModel;
+        }
+
+        return $this->villageModel = Village::query()->firstOrCreate(
+            ['slug' => 'desa-sejahtera'],
+            ['name' => 'Desa Sejahtera']
+        );
+    }
+
+    private function mapStatusToArsip(string $status): string
+    {
+        return match($status) {
+            'completed' => 'selesai',
+            'processed', 'verified' => 'proses',
+            'rejected' => 'ditolak',
+            default => 'proses',
+        };
     }
     
     public function submitPengaduan(Request $request)
     {
-        // Logic untuk submit pengaduan
+        $validator = Validator::make($request->all(), [
+            'nama' => 'required|string|max:255',
+            'telepon' => 'required|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'kategori' => 'required|in:pelayanan-umum,infrastruktur,sosial,keamanan',
+            'lokasi' => 'nullable|string|max:255',
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'required|string|min:50',
+            'bukti' => 'nullable|array',
+            'bukti.*' => 'file|mimes:pdf,jpg,jpeg,png|max:5120', // 5MB max
+            'is_anonymous' => 'nullable|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $village = $this->village();
+        
+        // Handle file uploads
+        $buktiFiles = [];
+        if ($request->hasFile('bukti')) {
+            foreach ($request->file('bukti') as $file) {
+                if ($file->isValid()) {
+                    $path = $file->store('citizen-complaints/evidence', 'public');
+                    $buktiFiles[] = $path;
+                }
+            }
+        }
+
+        // Create complaint
+        $complaint = CitizenComplaint::create([
+            'village_id' => $village->id,
+            'nama' => $request->nama,
+            'telepon' => $request->telepon,
+            'email' => $request->email,
+            'kategori' => $request->kategori,
+            'lokasi' => $request->lokasi,
+            'judul' => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'bukti_files' => $buktiFiles,
+            'is_anonymous' => $request->has('is_anonymous') ? (bool)$request->is_anonymous : false,
+            'status' => 'pending',
+        ]);
+
         return response()->json([
             'success' => true,
             'message' => 'Pengaduan Anda telah diterima dan akan segera ditindaklanjuti',
-            'ticket_id' => 'ADU-' . date('Ymd') . '-' . rand(1000, 9999)
+            'tracking_id' => $complaint->tracking_code
         ]);
     }
     
@@ -161,14 +303,15 @@ class LayananController extends Controller
     
     private function getKategoriPengaduan()
     {
-        return [
+        $village = $this->village();
+        
+        $kategoriData = [
             [
                 'id' => 'pelayanan-umum',
                 'nama' => 'Pelayanan Umum',
                 'deskripsi' => 'Keluhan terkait pelayanan administrasi dan birokrasi',
                 'icon' => 'clipboard-document-list',
                 'color' => 'sky',
-                'jumlah' => 12
             ],
             [
                 'id' => 'infrastruktur',
@@ -176,7 +319,6 @@ class LayananController extends Controller
                 'deskripsi' => 'Laporan kerusakan jalan, jembatan, dan fasilitas umum',
                 'icon' => 'wrench-screwdriver',
                 'color' => 'amber',
-                'jumlah' => 8
             ],
             [
                 'id' => 'sosial',
@@ -184,7 +326,6 @@ class LayananController extends Controller
                 'deskripsi' => 'Masalah sosial, bantuan masyarakat, dan program desa',
                 'icon' => 'users',
                 'color' => 'pink',
-                'jumlah' => 5
             ],
             [
                 'id' => 'keamanan',
@@ -192,18 +333,40 @@ class LayananController extends Controller
                 'deskripsi' => 'Laporan gangguan keamanan dan ketertiban lingkungan',
                 'icon' => 'shield-check',
                 'color' => 'indigo',
-                'jumlah' => 3
             ]
         ];
+        
+        // Add jumlah for each category
+        foreach ($kategoriData as &$kategori) {
+            $kategori['jumlah'] = CitizenComplaint::where('village_id', $village->id)
+                ->where('kategori', $kategori['id'])
+                ->count();
+        }
+        
+        return $kategoriData;
     }
     
     private function getStatistikPengaduan()
     {
+        $village = $this->village();
+        
+        $total = CitizenComplaint::where('village_id', $village->id)->count();
+        $bulanIni = CitizenComplaint::where('village_id', $village->id)
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
+        $selesai = CitizenComplaint::where('village_id', $village->id)
+            ->where('status', 'resolved')
+            ->count();
+        $proses = CitizenComplaint::where('village_id', $village->id)
+            ->whereIn('status', ['reviewed', 'in_progress'])
+            ->count();
+        
         return [
-            'total' => 28,
-            'bulan_ini' => 12,
-            'selesai' => 20,
-            'proses' => 8
+            'total' => $total > 0 ? $total : 28,
+            'bulan_ini' => $bulanIni > 0 ? $bulanIni : 12,
+            'selesai' => $selesai > 0 ? $selesai : 20,
+            'proses' => $proses > 0 ? $proses : 8
         ];
     }
     

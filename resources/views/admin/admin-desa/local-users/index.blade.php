@@ -109,7 +109,7 @@
                             type="text" 
                             name="search" 
                             value="{{ $filters['search'] ?? '' }}"
-                            placeholder="Nama atau Email..."
+                            placeholder="Nama, Email, atau Nama UMKM..."
                             class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                         >
                     </div>
@@ -145,6 +145,22 @@
                     </div>
                 </form>
             </div>
+
+            <!-- Results Info -->
+            @if(request()->hasAny(['search', 'role', 'status']))
+            <div class="mb-4 text-sm text-gray-600">
+                Menampilkan <span class="font-semibold text-gray-900">{{ $users->total() }}</span> hasil
+                @if(request()->filled('search'))
+                    untuk "<span class="font-semibold text-gray-900">{{ request('search') }}</span>"
+                @endif
+                @if(request()->filled('role'))
+                    dengan role <span class="font-semibold text-gray-900">{{ request('role') === 'admin_umkm' ? 'Admin UMKM' : 'Editor Desa' }}</span>
+                @endif
+                @if(request()->filled('status'))
+                    dengan status <span class="font-semibold text-gray-900">{{ request('status') === 'active' ? 'Aktif' : 'Nonaktif' }}</span>
+                @endif
+            </div>
+            @endif
 
             <!-- Users Table -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">

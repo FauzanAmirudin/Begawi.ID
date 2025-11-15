@@ -36,25 +36,27 @@ class UserManagementController extends Controller
         $query = User::query();
 
         // Search functionality
-        if ($request->has('search') && $request->search) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
-            });
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            if ($search !== '') {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                });
+            }
         }
 
         // Filter by role
-        if ($request->has('role') && $request->role) {
+        if ($request->filled('role')) {
             $query->where('role', $request->role);
         }
 
         // Filter by status
-        if ($request->has('status') && $request->status !== '') {
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        $users = $query->orderBy('created_at', 'desc')->paginate(15);
+        $users = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
 
         return view('admin.super-admin.users.index', compact('users'));
     }

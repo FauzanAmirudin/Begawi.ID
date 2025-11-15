@@ -80,8 +80,14 @@
                         </div>
                     </div>
                     <div class="md:col-span-4 flex items-center justify-end gap-3">
-                        <a href="{{ route('admin.logs.download', ['type' => 'system', 'format' => 'xls']) }}" class="px-3 py-2 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600">Download Excel</a>
-                        <a href="{{ route('admin.logs.download', ['type' => 'system', 'format' => 'pdf']) }}" class="px-3 py-2 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600">Download PDF</a>
+                        @php
+                            $downloadParams = array_merge(['type' => 'system', 'format' => 'xls'], array_filter($filters, fn($value) => !empty($value)));
+                        @endphp
+                        <a href="{{ route('admin.logs.download', $downloadParams) }}" class="px-3 py-2 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600">Download Excel</a>
+                        @php
+                            $downloadParamsPdf = array_merge(['type' => 'system', 'format' => 'pdf'], array_filter($filters, fn($value) => !empty($value)));
+                        @endphp
+                        <a href="{{ route('admin.logs.download', $downloadParamsPdf) }}" class="px-3 py-2 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600">Download PDF</a>
                         <button class="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700">Terapkan</button>
                     </div>
                 </form>
@@ -146,13 +152,19 @@
                     <h3 class="text-lg font-semibold text-gray-800">Tindakan</h3>
                 </div>
                 <div class="space-y-3">
-                    <a href="{{ route('admin.logs.download', ['type' => 'system', 'format' => 'xlsx']) }}" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600">
+                    @php
+                        $downloadParamsXlsx = array_merge(['type' => 'system', 'format' => 'xlsx'], array_filter($filters, fn($value) => !empty($value)));
+                    @endphp
+                    <a href="{{ route('admin.logs.download', $downloadParamsXlsx) }}" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v16h16M8 8l8 8M16 8l-8 8"></path>
                         </svg>
                         Ekspor XLSX
                     </a>
-                    <a href="{{ route('admin.logs.download', ['type' => 'system', 'format' => 'pdf']) }}" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-rose-500 text-white rounded-lg text-sm hover:bg-rose-600">
+                    @php
+                        $downloadParamsPdfSidebar = array_merge(['type' => 'system', 'format' => 'pdf'], array_filter($filters, fn($value) => !empty($value)));
+                    @endphp
+                    <a href="{{ route('admin.logs.download', $downloadParamsPdfSidebar) }}" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-rose-500 text-white rounded-lg text-sm hover:bg-rose-600">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m-4-4h8M4 4h16v16H4z"></path>
                         </svg>

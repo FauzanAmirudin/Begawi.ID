@@ -60,6 +60,11 @@ class Village extends Model
         return $this->hasMany(VillageNews::class);
     }
 
+    public function agendas(): HasMany
+    {
+        return $this->hasMany(VillageAgenda::class);
+    }
+
     public function galleryCategories(): HasMany
     {
         return $this->hasMany(VillageGalleryCategory::class);
@@ -91,5 +96,21 @@ class Village extends Model
     public function users(): HasMany
     {
         return $this->hasMany(User::class);
+    }
+
+    /**
+     * Get letter submissions for this village
+     */
+    public function letterSubmissions(): HasMany
+    {
+        return $this->hasMany(LetterSubmission::class);
+    }
+
+    /**
+     * Get citizen complaints for this village
+     */
+    public function citizenComplaints(): HasMany
+    {
+        return $this->hasMany(CitizenComplaint::class);
     }
 }

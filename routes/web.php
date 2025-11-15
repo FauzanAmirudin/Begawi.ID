@@ -132,6 +132,7 @@ Route::prefix('desa')->name('desa.')->group(function () {
     Route::get('/galeri-wisata', [App\Http\Controllers\Desa\GaleriWisataController::class, 'index'])->name('galeri-wisata.index');
     Route::get('/galeri-wisata/foto', [App\Http\Controllers\Desa\GaleriWisataController::class, 'galeriFoto'])->name('galeri-wisata.galeri-foto');
     Route::post('/galeri-wisata/upload', [App\Http\Controllers\Desa\GaleriWisataController::class, 'uploadStore'])->name('galeri-wisata.upload');
+    Route::get('/galeri-wisata/wisata/{slug}', [App\Http\Controllers\Desa\GaleriWisataController::class, 'detailWisata'])->name('galeri-wisata.detail');
 
     Route::get('/contact', [DesaController::class, 'contact'])->name('contact');
     Route::get('/directory', [DesaController::class, 'directory'])->name('directory');
@@ -205,12 +206,34 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::put('/news/{news}', [VillageNewsController::class, 'update'])->name('news.update');
         Route::delete('/news/{news}', [VillageNewsController::class, 'destroy'])->name('news.destroy');
 
+        Route::get('/agendas', [\App\Http\Controllers\Admin\VillageAgendaController::class, 'index'])->name('agendas');
+        Route::get('/agendas/{agenda}/edit', [\App\Http\Controllers\Admin\VillageAgendaController::class, 'edit'])->name('agendas.edit');
+        Route::post('/agendas', [\App\Http\Controllers\Admin\VillageAgendaController::class, 'store'])->name('agendas.store');
+        Route::put('/agendas/{agenda}', [\App\Http\Controllers\Admin\VillageAgendaController::class, 'update'])->name('agendas.update');
+        Route::delete('/agendas/{agenda}', [\App\Http\Controllers\Admin\VillageAgendaController::class, 'destroy'])->name('agendas.destroy');
+
         Route::post('/gallery', [VillageGalleryController::class, 'store'])->name('gallery.store');
         Route::delete('/gallery/{item}', [VillageGalleryController::class, 'destroy'])->name('gallery.destroy');
 
         Route::post('/potentials', [VillagePotentialController::class, 'store'])->name('potentials.store');
         Route::put('/potentials/{potential}', [VillagePotentialController::class, 'update'])->name('potentials.update');
         Route::delete('/potentials/{potential}', [VillagePotentialController::class, 'destroy'])->name('potentials.destroy');
+
+        // Letter Submissions Management
+        Route::prefix('letters')->name('letters.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\LetterSubmissionController::class, 'index'])->name('index');
+            Route::get('/{id}', [\App\Http\Controllers\Admin\LetterSubmissionController::class, 'show'])->name('show');
+            Route::put('/{id}/status', [\App\Http\Controllers\Admin\LetterSubmissionController::class, 'updateStatus'])->name('update-status');
+            Route::get('/{id}/download-requirement/{index}', [\App\Http\Controllers\Admin\LetterSubmissionController::class, 'downloadRequirement'])->name('download-requirement');
+        });
+
+        // Citizen Complaints Management
+        Route::prefix('complaints')->name('complaints.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\CitizenComplaintController::class, 'index'])->name('index');
+            Route::get('/{id}', [\App\Http\Controllers\Admin\CitizenComplaintController::class, 'show'])->name('show');
+            Route::put('/{id}/status', [\App\Http\Controllers\Admin\CitizenComplaintController::class, 'updateStatus'])->name('update-status');
+            Route::get('/{id}/download-evidence/{index}', [\App\Http\Controllers\Admin\CitizenComplaintController::class, 'downloadEvidence'])->name('download-evidence');
+        });
 
         Route::post('/achievements', [VillageAchievementController::class, 'store'])->name('achievements.store');
         Route::put('/achievements/{achievement}', [VillageAchievementController::class, 'update'])->name('achievements.update');
@@ -233,6 +256,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::get('/domain', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'domain'])->name('domain');
         Route::get('/template', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'template'])->name('template');
         Route::post('/template', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'updateTemplate'])->name('template.update');
+        Route::get('/{website}/village-detail', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'villageDetail'])->name('village-detail');
         Route::get('/{website}', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'show'])->name('show');
         Route::get('/{website}/edit', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'edit'])->name('edit');
         Route::put('/{website}', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'update'])->name('update');

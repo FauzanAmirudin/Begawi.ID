@@ -126,7 +126,7 @@ class EducationController extends Controller
             });
         
         // Combine featured content
-        $featured_content = $featured_articles->merge($featured_videos)->shuffle()->take(6);
+        $featured_content = $featured_articles->concat($featured_videos)->shuffle()->take(6);
         
         // Get upcoming webinars (can be kept static or made dynamic later)
         $upcoming_webinars = [];

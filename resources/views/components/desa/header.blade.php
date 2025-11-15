@@ -27,7 +27,6 @@
                         <div class="py-2">
                             <a href="{{ route('desa.berita.index') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-primary-50 hover:text-primary-600">📰 Semua Berita</a>
                             <a href="{{ route('desa.berita.agenda') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-primary-50 hover:text-primary-600">📅 Agenda Kegiatan</a>
-                            <a href="{{ route('desa.berita.arsip') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-primary-50 hover:text-primary-600">📂 Arsip Berita</a>
                         </div>
                     </div>
                 </div>

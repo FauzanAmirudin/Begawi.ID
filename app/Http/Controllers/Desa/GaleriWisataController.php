@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Village;
 use App\Models\VillageGalleryCategory;
 use App\Models\VillageGalleryItem;
+use App\Models\VillagePotential;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -82,10 +83,29 @@ class GaleriWisataController extends Controller
             ->where('type', VillageGalleryItem::TYPE_VIDEO)
             ->count();
 
+        // Ambil data wisata dari database
+        $wisataItems = $village->potentials()
+            ->where('status', VillagePotential::STATUS_ACTIVE)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function (VillagePotential $item) {
+                return [
+                    'id' => $item->id,
+                    'slug' => $item->slug,
+                    'judul' => $item->title,
+                    'kategori' => $item->category ?? 'Wisata Alam',
+                    'gambar' => $this->mediaUrl($item->featured_image, 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=400&fit=crop'),
+                    'ringkasan' => $item->summary,
+                    'deskripsi' => $item->description,
+                    'map_embed' => $item->map_embed,
+                ];
+            });
+
         return view('pages.desa.galeri-wisata.index', [
             'galleryItems' => $galleryItems,
             'totalFoto' => $totalFoto,
             'totalVideo' => $totalVideo,
+            'wisataItems' => $wisataItems,
         ]);
     }
 
@@ -233,5 +253,49 @@ class GaleriWisataController extends Controller
                 ->withInput($request->except('file'))
                 ->with('error', 'Maaf, terjadi kesalahan saat menyimpan foto. Silakan coba kembali.');
         }
+    }
+
+    public function detailWisata(string $slug)
+    {
+        $village = $this->village();
+        
+        $wisata = $village->potentials()
+            ->where('slug', $slug)
+            ->where('status', VillagePotential::STATUS_ACTIVE)
+            ->firstOrFail();
+
+        // Ambil wisata terkait (dari kategori yang sama)
+        $relatedWisata = $village->potentials()
+            ->where('status', VillagePotential::STATUS_ACTIVE)
+            ->where('id', '!=', $wisata->id)
+            ->where('category', $wisata->category)
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->get()
+            ->map(function (VillagePotential $item) {
+                return [
+                    'id' => $item->id,
+                    'slug' => $item->slug,
+                    'judul' => $item->title,
+                    'kategori' => $item->category ?? 'Wisata Alam',
+                    'gambar' => $this->mediaUrl($item->featured_image, 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=400&fit=crop'),
+                    'ringkasan' => $item->summary,
+                ];
+            });
+
+        return view('pages.desa.galeri-wisata.detail', [
+            'wisata' => [
+                'id' => $wisata->id,
+                'slug' => $wisata->slug,
+                'judul' => $wisata->title,
+                'kategori' => $wisata->category ?? 'Wisata Alam',
+                'gambar' => $this->mediaUrl($wisata->featured_image, 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=600&fit=crop'),
+                'ringkasan' => $wisata->summary,
+                'deskripsi' => $wisata->description,
+                'map_embed' => $wisata->map_embed,
+                'status' => $wisata->status,
+            ],
+            'relatedWisata' => $relatedWisata,
+        ]);
     }
 }

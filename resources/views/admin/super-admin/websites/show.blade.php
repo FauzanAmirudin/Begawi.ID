@@ -72,6 +72,62 @@
                 <p class="text-sm text-gray-600">{{ $website->notes }}</p>
             </div>
             @endif
+
+            @if($website->type === 'desa' && $village)
+            <!-- Village Data Section -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800">Data Desa</h3>
+                    <a href="{{ route('admin.websites.village-detail', $website) }}" class="text-sm text-emerald-600 hover:text-emerald-700 font-medium">
+                        Lihat Detail Lengkap →
+                    </a>
+                </div>
+                
+                @if($villageStats)
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4">
+                        <p class="text-xs text-gray-600 mb-1">Berita</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ $villageStats['news_published'] }}</p>
+                        <p class="text-xs text-gray-500 mt-1">dari {{ $villageStats['news_total'] }} total</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4">
+                        <p class="text-xs text-gray-600 mb-1">Galeri</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ $villageStats['gallery_total'] }}</p>
+                        <p class="text-xs text-gray-500 mt-1">item foto/video</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-4">
+                        <p class="text-xs text-gray-600 mb-1">Potensi</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ $villageStats['potentials_total'] }}</p>
+                        <p class="text-xs text-gray-500 mt-1">wisata & ekonomi</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4">
+                        <p class="text-xs text-gray-600 mb-1">UMKM</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ $villageStats['umkm_total'] }}</p>
+                        <p class="text-xs text-gray-500 mt-1">bisnis aktif</p>
+                    </div>
+                </div>
+                @endif
+
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-sm text-gray-600">Nama Desa</span>
+                        <span class="text-sm font-semibold text-gray-900">{{ $village->name }}</span>
+                    </div>
+                    @if($village->location)
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-sm text-gray-600">Lokasi</span>
+                        <span class="text-sm font-semibold text-gray-900">{{ $village->location }}</span>
+                    </div>
+                    @endif
+                    @if($village->head)
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-sm text-gray-600">Kepala Desa</span>
+                        <span class="text-sm font-semibold text-gray-900">{{ $village->head }}</span>
+                    </div>
+                    @endif
+                </div>
+            </div>
+            @endif
         </div>
 
         <!-- Sidebar -->

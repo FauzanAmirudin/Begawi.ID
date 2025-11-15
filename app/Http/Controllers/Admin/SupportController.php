@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use App\Models\SupportTicket;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -13,27 +15,59 @@ class SupportController extends Controller
 {
     public function index(Request $request)
     {
-        $recentTickets = $this->filteredTickets()->take(4);
-
+        $user = Auth::user();
+        
+        // Super admin melihat semua tiket dari admin desa dan admin umkm
+        if ($user->role === User::ROLE_SUPER_ADMIN) {
+            $recentTickets = $this->getTicketsForSuperAdmin()->take(4);
+            
+            return view('admin.support.index', [
+                'stats' => $this->getStatsForSuperAdmin(),
+                'tickets' => $recentTickets,
+                'faqs' => $this->getFaqs(),
+                'activities' => $this->getActivities(),
+                'resources' => $this->getResources(),
+            ]);
+        }
+        
+        // Admin desa dan admin umkm melihat form untuk membuat tiket
         return view('admin.support.index', [
-            'stats' => $this->getStats(),
-            'tickets' => $recentTickets->all(),
+            'showForm' => true,
             'faqs' => $this->getFaqs(),
-            'activities' => $this->getActivities(),
             'resources' => $this->getResources(),
         ]);
     }
 
     public function tickets(Request $request)
     {
+        $user = Auth::user();
+        
+        // Super admin melihat semua tiket
+        if ($user->role === User::ROLE_SUPER_ADMIN) {
+            $inputs = $this->sanitizeInputs($request->only(['status', 'priority', 'category', 'search']));
+            $filters = $this->normalizeFilters($inputs);
+
+            $filteredTickets = $this->getTicketsForSuperAdmin($filters);
+
+            return view('admin.support.tickets', [
+                'stats' => $this->getStatsForSuperAdmin($filteredTickets),
+                'tickets' => $filteredTickets,
+                'filterOptions' => $this->getTicketFilters(),
+                'formState' => $inputs,
+                'agents' => $this->getSupportAgents(),
+                'resultCount' => $filteredTickets->count(),
+            ]);
+        }
+        
+        // Admin desa dan admin umkm melihat tiket mereka sendiri
         $inputs = $this->sanitizeInputs($request->only(['status', 'priority', 'category', 'search']));
         $filters = $this->normalizeFilters($inputs);
 
-        $filteredTickets = $this->filteredTickets($filters);
+        $filteredTickets = $this->getTicketsForUser($user, $filters);
 
         return view('admin.support.tickets', [
-            'stats' => $this->getStats($filteredTickets),
-            'tickets' => $filteredTickets->all(),
+            'stats' => $this->getStatsForUser($filteredTickets),
+            'tickets' => $filteredTickets,
             'filterOptions' => $this->getTicketFilters(),
             'formState' => $inputs,
             'agents' => $this->getSupportAgents(),
@@ -149,15 +183,14 @@ class SupportController extends Controller
         $prefill = [];
 
         if ($request->filled('ticket')) {
-            $ticketPrefill = $this->ticketCollection()->firstWhere('id', $request->input('ticket'));
-            if ($ticketPrefill) {
+            $ticket = SupportTicket::with('creator')->find($request->input('ticket'));
+            if ($ticket) {
                 $prefill = [
-                    'ticket_id' => $ticketPrefill['id'],
-                    'tenant' => $ticketPrefill['tenant'],
-                    'topic' => $this->mapCategoryToTopic($ticketPrefill['category_slug']),
-                    'priority' => $ticketPrefill['priority'],
-                    'subject' => $ticketPrefill['subject'],
-                    'message' => "Menindaklanjuti tiket {$ticketPrefill['id']} - {$ticketPrefill['subject']}.\n\nCatatan tambahan:\n",
+                    'ticket_id' => $ticket->ticket_code,
+                    'subject' => 'Re: ' . $ticket->subject,
+                    'category' => $ticket->category,
+                    'priority' => $ticket->priority,
+                    'message' => "Menindaklanjuti tiket {$ticket->ticket_code} - {$ticket->subject}.\n\nCatatan tambahan:\n",
                 ];
             }
         }
@@ -172,30 +205,53 @@ class SupportController extends Controller
 
     public function show(string $ticketId)
     {
-        $ticket = $this->findTicketOrFail($ticketId);
+        $user = Auth::user();
+        
+        // Find by ticket_code or id
+        $ticket = SupportTicket::with(['creator', 'assignee'])
+            ->where(function ($query) use ($ticketId) {
+                $query->where('ticket_code', $ticketId)
+                    ->orWhere('id', $ticketId);
+            })
+            ->firstOrFail();
+        
+        // Super admin bisa melihat semua tiket
+        // Admin desa dan admin umkm hanya bisa melihat tiket mereka sendiri
+        if ($user->role !== User::ROLE_SUPER_ADMIN && $ticket->created_by !== $user->id) {
+            abort(403, 'Anda tidak memiliki akses ke tiket ini.');
+        }
+
+        $ticketData = $this->formatTicketForView($ticket);
+        $relatedTickets = $this->getRelatedTickets($ticket, $user);
 
         return view('admin.support.show', [
-            'ticket' => $ticket,
-            'relatedTickets' => $this->relatedTickets($ticket)->all(),
+            'ticket' => $ticketData,
+            'relatedTickets' => $relatedTickets,
         ]);
     }
 
     public function submitContact(Request $request)
     {
+        $user = Auth::user();
+        
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:120'],
-            'email' => ['required', 'email', 'max:120'],
-            'tenant' => ['required', 'string', 'max:120'],
-            'topic' => ['required', 'string'],
-            'priority' => ['required', 'string'],
+            'subject' => ['required', 'string', 'max:255'],
             'message' => ['required', 'string'],
-            'attachment' => ['nullable', 'file', 'max:5120'],
-            'ticket_id' => ['nullable', 'string', 'max:120'],
+            'category' => ['required', 'string', 'in:Integrasi,Akses Akun,Data & Analitik,Pelatihan,Bug & Gangguan Sistem,Permintaan Fitur Baru,Lainnya'],
+            'priority' => ['required', 'string', 'in:low,medium,high'],
         ]);
 
-        // TODO: Implement email integration or ticket dispatch logic.
+        // Create support ticket
+        $ticket = SupportTicket::create([
+            'created_by' => $user->id,
+            'subject' => $validated['subject'],
+            'message' => $validated['message'],
+            'category' => $validated['category'],
+            'priority' => $validated['priority'],
+            'status' => 'open',
+        ]);
 
-        return back()->with('status', 'Permintaan dukungan telah dikirim. Tim teknis akan segera menghubungi Anda.');
+        return back()->with('status', 'Pengaduan Anda telah dikirim dengan nomor tiket: ' . $ticket->ticket_code . '. Tim teknis akan segera menghubungi Anda.');
     }
 
     protected function sanitizeInputs(array $inputs): array
@@ -321,9 +377,12 @@ class SupportController extends Controller
 
     protected function getTicketFilters(): array
     {
-        $categories = $this->ticketCollection()
-            ->pluck('category', 'category_slug')
-            ->unique();
+        $categories = SupportTicket::distinct()
+            ->pluck('category')
+            ->filter()
+            ->mapWithKeys(function ($category) {
+                return [Str::slug($category) => $category];
+            });
 
         return [
             'status' => [
@@ -331,6 +390,7 @@ class SupportController extends Controller
                 'open' => 'Open',
                 'in_progress' => 'In Progress',
                 'resolved' => 'Resolved',
+                'closed' => 'Closed',
             ],
             'priority' => [
                 '' => 'Semua Prioritas',
@@ -593,6 +653,205 @@ class SupportController extends Controller
             'data-analitik' => 'Bug & Gangguan Sistem',
             default => 'Bug & Gangguan Sistem',
         };
+    }
+
+    protected function getTicketsForSuperAdmin(array $filters = []): Collection
+    {
+        $query = SupportTicket::with(['creator', 'assignee'])
+            ->whereHas('creator', function ($q) {
+                $q->whereIn('role', [User::ROLE_ADMIN_DESA, User::ROLE_ADMIN_UMKM]);
+            });
+
+        // Apply filters
+        if (isset($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        if (isset($filters['priority'])) {
+            $query->where('priority', $filters['priority']);
+        }
+
+        if (isset($filters['category'])) {
+            $query->where('category', $filters['category']);
+        }
+
+        if (isset($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('subject', 'like', '%' . $search . '%')
+                    ->orWhere('message', 'like', '%' . $search . '%')
+                    ->orWhere('ticket_code', 'like', '%' . $search . '%')
+                    ->orWhereHas('creator', function ($q) use ($search) {
+                        $q->where('name', 'like', '%' . $search . '%')
+                            ->orWhere('email', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+
+        return $query->orderByDesc('created_at')->get()->map(function ($ticket) {
+            return $this->formatTicketForView($ticket);
+        });
+    }
+
+    protected function getTicketsForUser(User $user, array $filters = []): Collection
+    {
+        $query = SupportTicket::with(['creator', 'assignee'])
+            ->where('created_by', $user->id);
+
+        // Apply filters
+        if (isset($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        if (isset($filters['priority'])) {
+            $query->where('priority', $filters['priority']);
+        }
+
+        if (isset($filters['category'])) {
+            $query->where('category', $filters['category']);
+        }
+
+        if (isset($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('subject', 'like', '%' . $search . '%')
+                    ->orWhere('message', 'like', '%' . $search . '%')
+                    ->orWhere('ticket_code', 'like', '%' . $search . '%');
+            });
+        }
+
+        return $query->orderByDesc('created_at')->get()->map(function ($ticket) {
+            return $this->formatTicketForView($ticket);
+        });
+    }
+
+    protected function formatTicketForView(SupportTicket $ticket): array
+    {
+        $creator = $ticket->creator;
+        $assignee = $ticket->assignee;
+        
+        // Determine tenant name based on creator role
+        $tenant = '-';
+        if ($creator) {
+            if ($creator->role === User::ROLE_ADMIN_DESA && $creator->village) {
+                $tenant = $creator->village->name;
+            } elseif ($creator->role === User::ROLE_ADMIN_UMKM) {
+                $tenant = $creator->name . ' (UMKM)';
+            } else {
+                $tenant = $creator->name;
+            }
+        }
+
+        return [
+            'id' => $ticket->ticket_code,
+            'subject' => $ticket->subject,
+            'tenant' => $tenant,
+            'priority' => $ticket->priority,
+            'status' => $ticket->status,
+            'category' => $ticket->category,
+            'category_slug' => Str::slug($ticket->category),
+            'created_at' => $ticket->created_at->format('d M Y H:i'),
+            'created_at_iso' => $ticket->created_at->toIso8601String(),
+            'updated_at' => $ticket->updated_at->format('d M Y H:i'),
+            'updated_at_iso' => $ticket->updated_at->toIso8601String(),
+            'message' => $ticket->message,
+            'response' => $ticket->response,
+            'requester' => $creator ? [
+                'name' => $creator->name,
+                'role' => $this->formatRole($creator->role),
+                'email' => $creator->email,
+            ] : null,
+            'assignee' => $assignee ? [
+                'name' => $assignee->name,
+                'role' => $this->formatRole($assignee->role),
+            ] : null,
+        ];
+    }
+
+    protected function formatRole(string $role): string
+    {
+        return match($role) {
+            User::ROLE_SUPER_ADMIN => 'Super Admin',
+            User::ROLE_ADMIN_DESA => 'Admin Desa',
+            User::ROLE_ADMIN_UMKM => 'Admin UMKM',
+            default => ucfirst(str_replace('_', ' ', $role)),
+        };
+    }
+
+    protected function getStatsForSuperAdmin(?Collection $tickets = null): array
+    {
+        if ($tickets) {
+            return [
+                'open' => $tickets->where('status', 'open')->count(),
+                'in_progress' => $tickets->where('status', 'in_progress')->count(),
+                'resolved' => $tickets->where('status', 'resolved')->count(),
+                'avg_response_time' => '1 jam 24 menit',
+                'satisfaction' => 94,
+            ];
+        }
+
+        $allTickets = SupportTicket::whereHas('creator', function ($q) {
+            $q->whereIn('role', [User::ROLE_ADMIN_DESA, User::ROLE_ADMIN_UMKM]);
+        })->get();
+
+        return [
+            'open' => $allTickets->where('status', 'open')->count(),
+            'in_progress' => $allTickets->where('status', 'in_progress')->count(),
+            'resolved' => $allTickets->where('status', 'resolved')->count(),
+            'avg_response_time' => '1 jam 24 menit',
+            'satisfaction' => 94,
+        ];
+    }
+
+    protected function getStatsForUser(?Collection $tickets = null): array
+    {
+        $user = Auth::user();
+        
+        if ($tickets) {
+            return [
+                'open' => $tickets->where('status', 'open')->count(),
+                'in_progress' => $tickets->where('status', 'in_progress')->count(),
+                'resolved' => $tickets->where('status', 'resolved')->count(),
+                'avg_response_time' => '1 jam 24 menit',
+                'satisfaction' => 94,
+            ];
+        }
+
+        $userTickets = SupportTicket::where('created_by', $user->id)->get();
+
+        return [
+            'open' => $userTickets->where('status', 'open')->count(),
+            'in_progress' => $userTickets->where('status', 'in_progress')->count(),
+            'resolved' => $userTickets->where('status', 'resolved')->count(),
+            'avg_response_time' => '1 jam 24 menit',
+            'satisfaction' => 94,
+        ];
+    }
+
+    protected function getRelatedTickets(SupportTicket $ticket, User $user): array
+    {
+        $query = SupportTicket::with(['creator', 'assignee'])
+            ->where('id', '!=', $ticket->id);
+
+        if ($user->role !== User::ROLE_SUPER_ADMIN) {
+            $query->where('created_by', $user->id);
+        } else {
+            $query->whereHas('creator', function ($q) {
+                $q->whereIn('role', [User::ROLE_ADMIN_DESA, User::ROLE_ADMIN_UMKM]);
+            });
+        }
+
+        return $query->where(function ($q) use ($ticket) {
+            $q->where('category', $ticket->category)
+                ->orWhere('priority', $ticket->priority);
+        })
+        ->orderByDesc('created_at')
+        ->take(3)
+        ->get()
+        ->map(function ($t) {
+            return $this->formatTicketForView($t);
+        })
+        ->toArray();
     }
 
     protected function baseTicketData(): array
