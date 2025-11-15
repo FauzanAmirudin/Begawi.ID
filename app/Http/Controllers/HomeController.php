@@ -4,18 +4,40 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Models\Website;
+use App\Models\Village;
+use App\Models\UmkmBusiness;
+use App\Models\User;
 
 class HomeController extends Controller
 {
     public function index()
     {
+        // Ambil data real dari database
+        $villagesCount = Website::where('type', 'desa')
+            ->where('status', 'active')
+            ->count();
+        
+        $umkmCount = Website::where('type', 'umkm')
+            ->where('status', 'active')
+            ->count();
+        
+        $premiumUsersCount = User::whereHas('websites', function($query) {
+            $query->where('status', 'active');
+        })->count();
+        
+        // Total visitors bisa diambil dari UmkmVisitor jika ada, atau gunakan dummy
+        $totalVisitors = 125000; // Bisa diambil dari analytics jika ada
+        
         $stats = [
-            'villages' => 1250,
-            'umkm' => 3420,
-            'premium_users' => 850,
-            'total_visitors' => 125000
+            'villages' => $villagesCount ?: 1250, // Fallback ke dummy jika belum ada data
+            'umkm' => $umkmCount ?: 3420,
+            'premium_users' => $premiumUsersCount ?: 850,
+            'total_visitors' => $totalVisitors
         ];
         
+        // Featured templates - bisa diambil dari database jika ada tabel templates
+        // Untuk sekarang tetap menggunakan dummy data
         $featured_templates = [
             [
                 'id' => 1,
@@ -49,6 +71,7 @@ class HomeController extends Controller
             ]
         ];
         
+        // Testimonials - bisa diambil dari database jika ada
         $testimonials = [
             [
                 'name' => 'Pak Budi Santoso',

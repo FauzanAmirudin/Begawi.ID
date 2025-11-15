@@ -70,4 +70,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(UmkmBusiness::class);
     }
+
+    /**
+     * Get the websites owned by this user
+     */
+    public function websites()
+    {
+        return $this->hasMany(Website::class);
+    }
 }

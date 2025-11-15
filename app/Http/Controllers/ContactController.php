@@ -22,8 +22,15 @@ class ContactController extends Controller
             'message' => 'required|string|max:5000',
         ]);
         
-        // Logic untuk menyimpan pesan kontak
-        // Bisa menggunakan Mail, Queue, atau database
+        // Save contact message to database
+        $contactMessage = \App\Models\ContactMessage::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'subject' => $request->subject,
+            'message' => $request->message,
+            'status' => 'unread',
+        ]);
         
         return response()->json([
             'success' => true,

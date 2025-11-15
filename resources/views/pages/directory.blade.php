@@ -39,21 +39,21 @@
                 <div class="mb-10">
                     <h3 class="font-poppins font-bold text-2xl text-charcoal-grey mb-12">Daftar Desa Digital</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Item Desa -->
+                        @forelse($allVillages ?? [] as $desa)
                         <div class="relative flex flex-col rounded-2xl bg-white bg-clip-border text-gray-700 shadow-md hover:shadow-xl transition-all">
                             <div class="relative mx-4 -mt-8 h-44 overflow-hidden rounded-3xl shadow-lg shadow-emerald-500/40">
-                                <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&h=600&fit=crop" alt="Desa Sukamaju" class="h-full w-full object-cover" loading="lazy">
+                                <img src="{{ $desa['image'] }}" alt="{{ $desa['name'] }}" class="h-full w-full object-cover" loading="lazy">
                             </div>
                             <div class="p-6 pt-8 space-y-3">
-                                <span class="inline-block text-xs font-semibold uppercase tracking-wide text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">Desa Digital Unggulan</span>
+                                <span class="inline-block text-xs font-semibold uppercase tracking-wide text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">Desa Digital</span>
                                 <div>
-                                    <h4 class="text-2xl font-extrabold text-charcoal-grey">Desa Sukamaju</h4>
-                                    <p class="text-sm font-medium text-gray-500">Kabupaten Bandung, Jawa Barat</p>
+                                    <h4 class="text-2xl font-extrabold text-charcoal-grey">{{ $desa['name'] }}</h4>
+                                    <p class="text-sm font-medium text-gray-500">{{ $desa['location'] }}</p>
                                 </div>
-                                <p class="text-sm leading-relaxed text-gray-600">Platform layanan publik terpadu dengan dashboard transparansi anggaran, layanan surat digital, dan monitoring program desa.</p>
+                                <p class="text-sm leading-relaxed text-gray-600">{{ Str::limit($desa['description'] ?? 'Desa digital dengan layanan terpadu', 100) }}</p>
                             </div>
                             <div class="p-6 pt-0">
-                                <a href="#" class="inline-flex items-center gap-2 select-none rounded-lg bg-emerald-500 py-3 px-5 text-center text-xs font-bold uppercase tracking-wide text-white shadow-md shadow-emerald-500/30 transition-all hover:bg-emerald-600 focus:outline-none">
+                                <a href="{{ $desa['url'] }}" target="_blank" class="inline-flex items-center gap-2 select-none rounded-lg bg-emerald-500 py-3 px-5 text-center text-xs font-bold uppercase tracking-wide text-white shadow-md shadow-emerald-500/30 transition-all hover:bg-emerald-600 focus:outline-none">
                                     Kunjungi Website
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 3h7m0 0v7m0-7L10 14"></path>
@@ -61,48 +61,11 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="relative flex flex-col rounded-2xl bg-white bg-clip-border text-gray-700 shadow-md hover:shadow-xl transition-all">
-                            <div class="relative mx-4 -mt-8 h-44 overflow-hidden rounded-3xl shadow-lg shadow-amber-500/40">
-                                <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=600&fit=crop" alt="Desa Harapan Jaya" class="h-full w-full object-cover" loading="lazy">
-                            </div>
-                            <div class="p-6 pt-8 space-y-3">
-                                <span class="inline-block text-xs font-semibold uppercase tracking-wide text-orange-600 bg-orange-50 px-3 py-1 rounded-full">Smart Village</span>
-                                <div>
-                                    <h4 class="text-2xl font-extrabold text-charcoal-grey">Desa Harapan Jaya</h4>
-                                    <p class="text-sm font-medium text-gray-500">Kabupaten Sleman, DI Yogyakarta</p>
-                                </div>
-                                <p class="text-sm leading-relaxed text-gray-600">Portal layanan mandiri dengan integrasi e-budgeting, katalog produk BUMDes, dan laporan aktivitas masyarakat terkini.</p>
-                            </div>
-                            <div class="p-6 pt-0">
-                                <a href="#" class="inline-flex items-center gap-2 select-none rounded-lg bg-emerald-500 py-3 px-5 text-center text-xs font-bold uppercase tracking-wide text-white shadow-md shadow-emerald-500/30 transition-all hover:bg-emerald-600 focus:outline-none">
-                                    Kunjungi Website
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 3h7m0 0v7m0-7L10 14"></path>
-                                    </svg>
-                                </a>
-                            </div>
+                        @empty
+                        <div class="col-span-full text-center py-12">
+                            <p class="text-gray-500">Belum ada desa yang terdaftar.</p>
                         </div>
-                        <div class="relative flex flex-col rounded-2xl bg-white bg-clip-border text-gray-700 shadow-md hover:shadow-xl transition-all">
-                            <div class="relative mx-4 -mt-8 h-44 overflow-hidden rounded-3xl shadow-lg shadow-sky-500/40">
-                                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop" alt="Desa Tunas Mekar" class="h-full w-full object-cover" loading="lazy">
-                            </div>
-                            <div class="p-6 pt-8 space-y-3">
-                                <span class="inline-block text-xs font-semibold uppercase tracking-wide text-sky-600 bg-sky-50 px-3 py-1 rounded-full">Ekowisata & UMKM</span>
-                                <div>
-                                    <h4 class="text-2xl font-extrabold text-charcoal-grey">Desa Tunas Mekar</h4>
-                                    <p class="text-sm font-medium text-gray-500">Kabupaten Badung, Bali</p>
-                                </div>
-                                <p class="text-sm leading-relaxed text-gray-600">Tampilkan kalender budaya, marketplace produk unggulan, serta pemesanan wisata terpadu berbasis komunitas lokal.</p>
-                            </div>
-                            <div class="p-6 pt-0">
-                                <a href="#" class="inline-flex items-center gap-2 select-none rounded-lg bg-emerald-500 py-3 px-5 text-center text-xs font-bold uppercase tracking-wide text-white shadow-md shadow-emerald-500/30 transition-all hover:bg-emerald-600 focus:outline-none">
-                                    Kunjungi Website
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 3h7m0 0v7m0-7L10 14"></path>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
+                        @endforelse
                     </div>
                 </div>
                 <!-- Statistik Aktivitas -->
@@ -135,32 +98,36 @@
                     <h3 class="font-poppins font-bold text-2xl text-charcoal-grey mb-4">Filter Kategori</h3>
                     <div class="flex flex-wrap gap-3">
                         <button class="umkm-filter px-4 py-2 bg-gradient-accent text-white rounded-xl font-semibold" data-category="all">Semua</button>
-                        <button class="umkm-filter px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-xl" data-category="kuliner">Kuliner</button>
-                        <button class="umkm-filter px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-xl" data-category="kerajinan">Kerajinan</button>
-                        <button class="umkm-filter px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-xl" data-category="jasa">Jasa</button>
-                        <button class="umkm-filter px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-xl" data-category="pertanian">Pertanian</button>
+                        @php
+                            $categories = collect($allUmkm ?? [])->pluck('category')->filter()->unique()->values();
+                        @endphp
+                        @foreach($categories as $cat)
+                        <button class="umkm-filter px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-xl" data-category="{{ Str::slug($cat) }}">{{ $cat }}</button>
+                        @endforeach
                     </div>
                 </div>
                 <!-- Katalog UMKM -->
                 <div>
                     <h3 class="font-poppins font-bold text-2xl text-charcoal-grey mb-12">Katalog UMKM</h3>
                     <div id="umkmGallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Card UMKM -->
-                        <div class="umkm-card relative flex flex-col rounded-2xl bg-white bg-clip-border text-gray-700 shadow-md hover:shadow-xl transition-all" data-category="kuliner">
+                        @forelse($allUmkm ?? [] as $umkm)
+                        <div class="umkm-card relative flex flex-col rounded-2xl bg-white bg-clip-border text-gray-700 shadow-md hover:shadow-xl transition-all" data-category="{{ Str::slug($umkm['category'] ?? 'umum') }}">
                             <div class="relative mx-4 -mt-8 h-44 overflow-hidden rounded-3xl shadow-lg shadow-orange-500/40">
-                                <img src="https://images.unsplash.com/photo-1615367423057-4dab1be5b44b?w=800&h=600&fit=crop" alt="Keripik Singkong Rempah" class="h-full w-full object-cover" loading="lazy">
+                                <img src="{{ $umkm['image'] }}" alt="{{ $umkm['name'] }}" class="h-full w-full object-cover" loading="lazy">
                             </div>
                             <div class="p-6 pt-8 space-y-3">
-                                <span class="inline-block text-xs font-semibold uppercase tracking-wide text-orange-600 bg-orange-50 px-3 py-1 rounded-full">Kategori Kuliner</span>
+                                <span class="inline-block text-xs font-semibold uppercase tracking-wide text-orange-600 bg-orange-50 px-3 py-1 rounded-full">{{ $umkm['category'] ?? 'UMKM' }}</span>
                                 <div>
-                                    <h4 class="text-2xl font-extrabold text-charcoal-grey">Keripik Singkong Rempah</h4>
-                                    <p class="text-sm font-medium text-gray-500">UMKM Cita Rasa Nusantara</p>
+                                    <h4 class="text-2xl font-extrabold text-charcoal-grey">{{ $umkm['name'] }}</h4>
+                                    <p class="text-sm font-medium text-gray-500">{{ $umkm['location'] }}</p>
                                 </div>
-                                <p class="text-sm leading-relaxed text-gray-600">Keripik singkong artisan dengan baluran sambal matah dan kemasan ramah lingkungan, tersedia dalam varian pedas dan original.</p>
-                                <div class="text-xs font-semibold inline-flex items-center gap-2 rounded-full bg-orange-100 px-3 py-1 text-orange-700 uppercase tracking-wide">Produk Unggulan</div>
+                                <p class="text-sm leading-relaxed text-gray-600">{{ Str::limit($umkm['description'] ?? 'UMKM digital dengan produk berkualitas', 100) }}</p>
+                                @if(isset($umkm['products']) && $umkm['products'] > 0)
+                                <div class="text-xs font-semibold inline-flex items-center gap-2 rounded-full bg-orange-100 px-3 py-1 text-orange-700 uppercase tracking-wide">{{ $umkm['products'] }} Produk</div>
+                                @endif
                             </div>
                             <div class="p-6 pt-0">
-                                <a href="#" class="inline-flex items-center gap-2 select-none rounded-lg bg-emerald-500 py-3 px-5 text-center text-xs font-bold uppercase tracking-wide text-white shadow-md shadow-emerald-500/30 transition-all hover:bg-emerald-600 focus:outline-none">
+                                <a href="{{ $umkm['url'] }}" target="_blank" class="inline-flex items-center gap-2 select-none rounded-lg bg-emerald-500 py-3 px-5 text-center text-xs font-bold uppercase tracking-wide text-white shadow-md shadow-emerald-500/30 transition-all hover:bg-emerald-600 focus:outline-none">
                                     Kunjungi Website UMKM
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 3h7m0 0v7m0-7L10 14"></path>
@@ -168,50 +135,11 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="umkm-card relative flex flex-col rounded-2xl bg-white bg-clip-border text-gray-700 shadow-md hover:shadow-xl transition-all" data-category="kerajinan">
-                            <div class="relative mx-4 -mt-8 h-44 overflow-hidden rounded-3xl shadow-lg shadow-emerald-500/40">
-                                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop" alt="Anyaman Bambu Prakarsa" class="h-full w-full object-cover" loading="lazy">
-                            </div>
-                            <div class="p-6 pt-8 space-y-3">
-                                <span class="inline-block text-xs font-semibold uppercase tracking-wide text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">Kategori Kerajinan</span>
-                                <div>
-                                    <h4 class="text-2xl font-extrabold text-charcoal-grey">Anyaman Bambu Prakarsa</h4>
-                                    <p class="text-sm font-medium text-gray-500">Komunitas Perajin Kulon Progo</p>
-                                </div>
-                                <p class="text-sm leading-relaxed text-gray-600">Rangkaian keranjang premium dengan desain kontemporer, menggunakan bahan bambu terpilih dan finishing food grade.</p>
-                                <div class="text-xs font-semibold inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-emerald-700 uppercase tracking-wide">Sertifikasi HALAL &amp; SNI</div>
-                            </div>
-                            <div class="p-6 pt-0">
-                                <a href="#" class="inline-flex items-center gap-2 select-none rounded-lg bg-emerald-500 py-3 px-5 text-center text-xs font-bold uppercase tracking-wide text-white shadow-md shadow-emerald-500/30 transition-all hover:bg-emerald-600 focus:outline-none">
-                                    Kunjungi Website UMKM
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 3h7m0 0v7m0-7L10 14"></path>
-                                    </svg>
-                                </a>
-                            </div>
+                        @empty
+                        <div class="col-span-full text-center py-12">
+                            <p class="text-gray-500">Belum ada UMKM yang terdaftar.</p>
                         </div>
-                        <div class="umkm-card relative flex flex-col rounded-2xl bg-white bg-clip-border text-gray-700 shadow-md hover:shadow-xl transition-all" data-category="jasa">
-                            <div class="relative mx-4 -mt-8 h-44 overflow-hidden rounded-3xl shadow-lg shadow-purple-500/40">
-                                <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=600&fit=crop" alt="Studio Desain Kemasan" class="h-full w-full object-cover" loading="lazy">
-                            </div>
-                            <div class="p-6 pt-8 space-y-3">
-                                <span class="inline-block text-xs font-semibold uppercase tracking-wide text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Kategori Jasa</span>
-                                <div>
-                                    <h4 class="text-2xl font-extrabold text-charcoal-grey">Studio Desain Kemasan</h4>
-                                    <p class="text-sm font-medium text-gray-500">Creative House Lampung</p>
-                                </div>
-                                <p class="text-sm leading-relaxed text-gray-600">Layanan branding, desain kemasan fleksibel, mockup 3D, dan konsultasi strategi pemasaran untuk UMKM naik kelas.</p>
-                                <div class="text-xs font-semibold inline-flex items-center gap-2 rounded-full bg-purple-100 px-3 py-1 text-purple-700 uppercase tracking-wide">Starter Kit Branding</div>
-                            </div>
-                            <div class="p-6 pt-0">
-                                <a href="#" class="inline-flex items-center gap-2 select-none rounded-lg bg-emerald-500 py-3 px-5 text-center text-xs font-bold uppercase tracking-wide text-white shadow-md shadow-emerald-500/30 transition-all hover:bg-emerald-600 focus:outline-none">
-                                    Kunjungi Website UMKM
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 3h7m0 0v7m0-7L10 14"></path>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
+                        @endforelse
                     </div>
                 </div>
             </div>

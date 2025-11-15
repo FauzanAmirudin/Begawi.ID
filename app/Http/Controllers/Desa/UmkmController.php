@@ -68,7 +68,7 @@ class UmkmController extends Controller
         $validations = UmkmContentValidation::query()
             ->where('content_type', 'product')
             ->where('status', 'approved')
-            ->with(['umkmBusiness'])
+            ->with(['umkmBusiness.website'])
             ->orderByDesc('created_at')
             ->get();
 
@@ -130,8 +130,11 @@ class UmkmController extends Controller
                     'slug' => $umkm->slug,
                     'pemilik' => $umkm->owner_name,
                     'kontak' => $umkm->owner_phone,
-                    'alamat' => $contentData['address'] ?? '-',
-                    'deskripsi' => $umkm->description ?? ''
+                    'alamat' => $umkm->address ?? $contentData['address'] ?? '-',
+                    'deskripsi' => $umkm->description ?? '',
+                    'website_url' => $umkm->website 
+                        ? ($umkm->website->custom_domain ? 'http://' . $umkm->website->custom_domain : 'http://' . $umkm->website->url)
+                        : ($umkm->subdomain ? 'http://' . $umkm->subdomain : route('umkm.home'))
                 ],
                 'rating' => (float) $rating,
                 'terjual' => (int) $terjual,
@@ -291,8 +294,11 @@ class UmkmController extends Controller
                             'slug' => $umkm->slug,
                             'pemilik' => $umkm->owner_name,
                             'kontak' => $umkm->owner_phone,
-                            'alamat' => $contentData['address'] ?? '-',
-                            'deskripsi' => $umkm->description ?? ''
+                            'alamat' => $umkm->address ?? $contentData['address'] ?? '-',
+                            'deskripsi' => $umkm->description ?? '',
+                            'website_url' => $umkm->website 
+                                ? ($umkm->website->custom_domain ? 'http://' . $umkm->website->custom_domain : 'http://' . $umkm->website->url)
+                                : ($umkm->subdomain ? 'http://' . $umkm->subdomain : route('umkm.home'))
                         ],
                         'rating' => (float) $rating,
                         'terjual' => (int) $terjual,
@@ -362,17 +368,28 @@ class UmkmController extends Controller
                 $logo = Storage::url($logo);
             }
             
+            // Get website URL
+            $websiteUrl = route('umkm.home');
+            if ($umkm->website) {
+                $websiteUrl = $umkm->website->custom_domain 
+                    ? 'http://' . $umkm->website->custom_domain 
+                    : 'http://' . $umkm->website->url;
+            } elseif ($umkm->subdomain) {
+                $websiteUrl = 'http://' . $umkm->subdomain;
+            }
+            
             return [
                 'nama' => $umkm->name,
                 'slug' => $umkm->slug,
                 'pemilik' => $umkm->owner_name,
                 'kontak' => $umkm->owner_phone,
                 'email' => $umkm->owner_email,
-                'alamat' => '-', // Bisa ditambahkan field alamat di migration jika diperlukan
+                'alamat' => $umkm->address ?? '-',
                 'deskripsi' => $umkm->description ?? '',
                 'kategori' => $umkm->category,
                 'logo' => $logo ?? 'https://via.placeholder.com/200x200?text=' . urlencode(substr($umkm->name, 0, 2)),
                 'subdomain' => $umkm->subdomain,
+                'website_url' => $websiteUrl,
             ];
         }
         
@@ -432,6 +449,9 @@ class UmkmController extends Controller
                         'slug' => $umkm->slug,
                         'pemilik' => $umkm->owner_name,
                         'kontak' => $umkm->owner_phone,
+                        'website_url' => $umkm->website 
+                            ? ($umkm->website->custom_domain ? 'http://' . $umkm->website->custom_domain : 'http://' . $umkm->website->url)
+                            : ($umkm->subdomain ? 'http://' . $umkm->subdomain : route('umkm.home'))
                     ],
                     'rating' => (float) $rating,
                     'terjual' => (int) $terjual,

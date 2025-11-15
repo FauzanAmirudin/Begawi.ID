@@ -62,9 +62,11 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
 });
 
-Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-    ->middleware('auth')
-    ->name('logout');
+// Logout - support both GET and POST for better UX
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+    Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout.get');
+});
 
 // API Routes for AJAX
 Route::prefix('api')->group(function () {
@@ -248,6 +250,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::resource('users', \App\Http\Controllers\Admin\UserManagementController::class);
     Route::post('/users/{user}/toggle-status', [\App\Http\Controllers\Admin\UserManagementController::class, 'toggleStatus'])->name('users.toggle-status');
     Route::post('/users/{user}/reset-password', [\App\Http\Controllers\Admin\UserManagementController::class, 'resetPassword'])->name('users.reset-password');
+    
+    // Contact Messages Management (Super Admin Only)
+    Route::prefix('contact-messages')->name('contact-messages.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\ContactMessageController::class, 'index'])->name('index');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\ContactMessageController::class, 'show'])->name('show');
+        Route::put('/{id}/status', [\App\Http\Controllers\Admin\ContactMessageController::class, 'updateStatus'])->name('update-status');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\ContactMessageController::class, 'destroy'])->name('destroy');
+    });
     
     // Website Management (Super Admin Only)
     Route::prefix('websites')->name('websites.')->group(function () {

@@ -59,15 +59,28 @@ class AuthenticatedSessionController extends Controller
 
     /**
      * Destroy an authenticated session.
+     * Handles both POST (with CSRF) and GET (direct URL access) requests.
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
+        try {
+            // Logout user (safe to call even if already logged out)
+            if (Auth::check()) {
+                Auth::guard('web')->logout();
+            }
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+            // Invalidate session if it exists
+            if ($request->hasSession()) {
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+            }
 
-        return redirect()->route('home');
+            // Redirect to home with success message
+            return redirect()->route('home')->with('status', 'Anda telah berhasil logout.');
+        } catch (\Exception $e) {
+            // If there's any error (e.g., session expired), just redirect to home
+            return redirect()->route('home');
+        }
     }
 }
 

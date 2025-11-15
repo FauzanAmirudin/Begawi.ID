@@ -44,6 +44,17 @@
             <span class="bg-white/20 text-xs px-2 py-1 rounded-full">{{ \App\Models\User::count() }}</span>
         </a>
 
+        <!-- Pesan Kontak -->
+        <a href="{{ route('admin.contact-messages.index') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl font-medium {{ request()->routeIs('admin.contact-messages.*') ? 'ring-2 ring-cyan-300' : '' }}">
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+                <span>Pesan Kontak</span>
+            </div>
+            <span class="bg-white/20 text-xs px-2 py-1 rounded-full">{{ \App\Models\ContactMessage::where('status', 'unread')->count() }}</span>
+        </a>
+
         <!-- Manajemen Website - Dropdown -->
         <div class="space-y-1">
             <button onclick="toggleDropdown('website-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl font-medium {{ request()->routeIs('admin.websites.*') ? 'ring-2 ring-blue-300' : '' }} hover:opacity-90 transition">

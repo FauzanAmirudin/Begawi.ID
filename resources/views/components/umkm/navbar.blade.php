@@ -22,6 +22,19 @@
     <div class="flex md:order-2 items-center space-x-3 md:space-x-0 rtl:space-x-reverse">
 
       <div class="flex items-center gap-2">
+        {{-- Dashboard Admin UMKM (Desktop) - Hanya muncul jika login sebagai admin_umkm --}}
+        @auth
+          @if(auth()->user()->role === \App\Models\User::ROLE_ADMIN_UMKM)
+            <a href="{{ route('admin.dashboard.index') }}" 
+              class="hidden md:inline-flex items-center gap-2 text-white bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2 text-center transition-all shadow-md hover:shadow-lg">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+              </svg>
+              Dashboard
+            </a>
+          @endif
+        @endauth
+
         {{-- Hubungi Kami (Desktop) --}}
       <a href="{{ $linkWA ?? '#' }}" target="_blank" rel="noopener noreferrer"
         class="hidden md:inline-block text-dark bg-accent hover:brightness-90 focus:ring-4 h-fit focus:outline-none focus:ring-accent font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-accent dark:hover:brightness-90 dark:focus:ring-accent">
@@ -70,6 +83,21 @@
       <li><a href="{{ route('umkm.home') }}" class="{{ $baseMobile }} {{ request()->routeIs('umkm.home') ? $activeMobile : $inactiveMobile }}">Beranda</a></li>
       <li><a href="{{ route('umkm.product') }}" class="{{ $baseMobile }} {{ request()->routeIs('umkm.product*') ? $activeMobile : $inactiveMobile }}">Produk</a></li>
       <li><a href="{{ route('umkm.about') }}" class="{{ $baseMobile }} {{ request()->routeIs('umkm.about') ? $activeMobile : $inactiveMobile }}">Tentang Kami</a></li>
+      
+      {{-- Dashboard Admin UMKM (Mobile) - Hanya muncul jika login sebagai admin_umkm --}}
+      @auth
+        @if(auth()->user()->role === \App\Models\User::ROLE_ADMIN_UMKM)
+          <li>
+            <a href="{{ route('admin.dashboard.index') }}" class="flex items-center gap-2 w-full mt-2 text-white bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2 text-center transition-all shadow-md hover:shadow-lg">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+              </svg>
+              Dashboard Admin
+            </a>
+          </li>
+        @endif
+      @endauth
+      
       <li><a href="{{ $linkWA ?? '#' }}" target="_blank" class="block w-full mt-2 text-dark bg-accent hover:brightness-90 focus:ring-4 focus:outline-none focus:ring-accent font-medium rounded-lg text-sm px-4 py-2 text-center">Hubungi Kami</a></li>
     </ul>
   </div>

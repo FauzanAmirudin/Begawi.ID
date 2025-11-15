@@ -4,53 +4,169 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Models\Website;
+use App\Models\Village;
+use App\Models\UmkmBusiness;
+use Illuminate\Support\Facades\Storage;
 
 class DirectoryController extends Controller
 {
     public function index()
     {
+        // Ambil data real dari database
+        $villagesCount = Website::where('type', 'desa')
+            ->where('status', 'active')
+            ->count();
+        
+        $umkmCount = Website::where('type', 'umkm')
+            ->where('status', 'active')
+            ->count();
+        
         $stats = [
-            'villages' => 1250,
-            'umkm' => 3420,
-            'communities' => 850,
+            'villages' => $villagesCount ?: 1250,
+            'umkm' => $umkmCount ?: 3420,
+            'communities' => 850, // Bisa diambil dari database jika ada tabel communities
             'provinces' => 34,
             'cities' => 514
         ];
         
-        $featured_listings = [
-            [
-                'id' => 1,
-                'name' => 'Desa Sukamaju',
-                'type' => 'desa',
-                'image' => 'directory/desa-sukamaju.jpg',
-                'description' => 'Desa modern dengan transparansi APBDes dan pelayanan digital terdepan',
-                'location' => 'Jawa Barat',
-                'visitors' => 2500,
-                'is_featured' => true
-            ],
-            [
-                'id' => 2,
-                'name' => 'Batik Nusantara',
-                'type' => 'umkm',
-                'image' => 'directory/batik-nusantara.jpg',
-                'description' => 'Toko online batik tradisional dengan kualitas premium dan desain modern',
-                'location' => 'Yogyakarta',
-                'products' => 150,
-                'is_featured' => true
-            ],
-            [
-                'id' => 3,
-                'name' => 'Karang Taruna Maju',
-                'type' => 'komunitas',
-                'image' => 'directory/karang-taruna.jpg',
-                'description' => 'Organisasi pemuda desa dengan program pemberdayaan dan kegiatan sosial',
-                'location' => 'Bali',
-                'members' => 200,
-                'is_featured' => true
-            ]
-        ];
+        // Ambil featured listings dari database
+        $featuredVillages = Website::where('type', 'desa')
+            ->where('status', 'active')
+            ->with('village')
+            ->take(3)
+            ->get()
+            ->map(function($website) {
+                $village = $website->village;
+                return [
+                    'id' => $website->id,
+                    'name' => $village->name ?? $website->name,
+                    'type' => 'desa',
+                    'image' => $village && $village->logo_path 
+                        ? Storage::url($village->logo_path) 
+                        : 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&h=600&fit=crop',
+                    'description' => $village->description ?? 'Desa digital dengan layanan terpadu',
+                    'location' => $village->location ?? 'Indonesia',
+                    'visitors' => 2500, // Bisa diambil dari analytics
+                    'is_featured' => true,
+                    'url' => $website->custom_domain ?: route('desa.home')
+                ];
+            });
         
-        return view('pages.directory', compact('stats', 'featured_listings'));
+        $featuredUmkm = Website::where('type', 'umkm')
+            ->where('status', 'active')
+            ->with('umkmBusiness')
+            ->take(3)
+            ->get()
+            ->map(function($website) {
+                $umkm = $website->umkmBusiness;
+                $productCount = $umkm ? $umkm->products()->where('is_active', true)->count() : 0;
+                return [
+                    'id' => $website->id,
+                    'name' => $umkm->name ?? $website->name,
+                    'type' => 'umkm',
+                    'image' => $umkm && $umkm->logo_path 
+                        ? Storage::url($umkm->logo_path) 
+                        : 'https://images.unsplash.com/photo-1615367423057-4dab1be5b44b?w=800&h=600&fit=crop',
+                    'description' => $umkm->description ?? 'UMKM digital dengan produk berkualitas',
+                    'location' => $umkm && $umkm->village ? $umkm->village->location : 'Indonesia',
+                    'products' => $productCount,
+                    'is_featured' => true,
+                    'url' => $website->custom_domain ?: route('umkm.home')
+                ];
+            });
+        
+        // Gabungkan dan ambil 3 teratas
+        $featured_listings = $featuredVillages->merge($featuredUmkm)->take(3)->values()->toArray();
+        
+        // Ambil semua desa untuk panel desa
+        $allVillages = Website::where('type', 'desa')
+            ->where('status', 'active')
+            ->with('village')
+            ->get()
+            ->map(function($website) {
+                $village = $website->village;
+                return [
+                    'id' => $website->id,
+                    'name' => $village->name ?? $website->name,
+                    'type' => 'desa',
+                    'image' => $village && $village->logo_path 
+                        ? Storage::url($village->logo_path) 
+                        : 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&h=600&fit=crop',
+                    'description' => $village->description ?? 'Desa digital dengan layanan terpadu',
+                    'location' => $village->location ?? 'Indonesia',
+                    'visitors' => 2500,
+                    'url' => $website->custom_domain ?: route('desa.home')
+                ];
+            });
+        
+        // Ambil semua UMKM untuk panel UMKM
+        $allUmkm = Website::where('type', 'umkm')
+            ->where('status', 'active')
+            ->with(['umkmBusiness.village'])
+            ->get()
+            ->map(function($website) {
+                $umkm = $website->umkmBusiness;
+                if (!$umkm) return null;
+                
+                $productCount = $umkm->products()->where('is_active', true)->count();
+                $village = $umkm->village;
+                
+                return [
+                    'id' => $website->id,
+                    'name' => $umkm->name,
+                    'type' => 'umkm',
+                    'image' => $umkm->logo_path 
+                        ? Storage::url($umkm->logo_path) 
+                        : 'https://images.unsplash.com/photo-1615367423057-4dab1be5b44b?w=800&h=600&fit=crop',
+                    'description' => $umkm->description ?? 'UMKM digital dengan produk berkualitas',
+                    'location' => $village ? $village->location : 'Indonesia',
+                    'products' => $productCount,
+                    'category' => $umkm->category ?? 'Umum',
+                    'url' => $website->custom_domain ?: route('umkm.home')
+                ];
+            })->filter();
+        
+        // Jika tidak ada data, gunakan dummy
+        if (empty($featured_listings)) {
+            $featured_listings = [
+                [
+                    'id' => 1,
+                    'name' => 'Desa Sukamaju',
+                    'type' => 'desa',
+                    'image' => 'directory/desa-sukamaju.jpg',
+                    'description' => 'Desa modern dengan transparansi APBDes dan pelayanan digital terdepan',
+                    'location' => 'Jawa Barat',
+                    'visitors' => 2500,
+                    'is_featured' => true,
+                    'url' => route('desa.home')
+                ],
+                [
+                    'id' => 2,
+                    'name' => 'Batik Nusantara',
+                    'type' => 'umkm',
+                    'image' => 'directory/batik-nusantara.jpg',
+                    'description' => 'Toko online batik tradisional dengan kualitas premium dan desain modern',
+                    'location' => 'Yogyakarta',
+                    'products' => 150,
+                    'is_featured' => true,
+                    'url' => route('umkm.home')
+                ],
+                [
+                    'id' => 3,
+                    'name' => 'Karang Taruna Maju',
+                    'type' => 'komunitas',
+                    'image' => 'directory/karang-taruna.jpg',
+                    'description' => 'Organisasi pemuda desa dengan program pemberdayaan dan kegiatan sosial',
+                    'location' => 'Bali',
+                    'members' => 200,
+                    'is_featured' => true,
+                    'url' => '#'
+                ]
+            ];
+        }
+        
+        return view('pages.directory', compact('stats', 'featured_listings', 'allVillages', 'allUmkm'));
     }
     
     public function type($type)
@@ -102,87 +218,109 @@ class DirectoryController extends Controller
     
     private function getListingsByType($type)
     {
-        $allListings = [
-            // Desa listings
-            [
-                'id' => 1,
-                'name' => 'Desa Sukamaju',
-                'type' => 'desa',
-                'image' => 'directory/desa-sukamaju.jpg',
-                'description' => 'Desa modern dengan transparansi APBDes dan pelayanan digital terdepan',
-                'location' => 'Jawa Barat',
-                'province' => 'Jawa Barat',
-                'visitors' => 2500,
-                'website_url' => 'https://sukamaju.desa.id',
-                'is_featured' => true
-            ],
-            [
-                'id' => 4,
-                'name' => 'Desa Makmur',
-                'type' => 'desa',
-                'image' => 'directory/desa-makmur.jpg',
-                'description' => 'Desa dengan program pemberdayaan ekonomi dan digitalisasi layanan',
-                'location' => 'Jawa Tengah',
-                'province' => 'Jawa Tengah',
-                'visitors' => 1800,
-                'website_url' => 'https://makmur.desa.id',
-                'is_featured' => false
-            ],
-            // UMKM listings
-            [
-                'id' => 2,
-                'name' => 'Batik Nusantara',
-                'type' => 'umkm',
-                'image' => 'directory/batik-nusantara.jpg',
-                'description' => 'Toko online batik tradisional dengan kualitas premium dan desain modern',
-                'location' => 'Yogyakarta',
-                'province' => 'DI Yogyakarta',
-                'products' => 150,
-                'website_url' => 'https://batiknusantara.com',
-                'is_featured' => true
-            ],
-            [
-                'id' => 5,
-                'name' => 'Kerajinan Bambu Jaya',
-                'type' => 'umkm',
-                'image' => 'directory/kerajinan-bambu.jpg',
-                'description' => 'Produk kerajinan bambu berkualitas tinggi dengan desain modern',
-                'location' => 'Bali',
-                'province' => 'Bali',
-                'products' => 85,
-                'website_url' => 'https://bambujaya.com',
-                'is_featured' => false
-            ],
-            // Komunitas listings
-            [
-                'id' => 3,
-                'name' => 'Karang Taruna Maju',
-                'type' => 'komunitas',
-                'image' => 'directory/karang-taruna.jpg',
-                'description' => 'Organisasi pemuda desa dengan program pemberdayaan dan kegiatan sosial',
-                'location' => 'Bali',
-                'province' => 'Bali',
-                'members' => 200,
-                'website_url' => 'https://karangtarunamaju.org',
-                'is_featured' => true
-            ],
-            [
-                'id' => 6,
-                'name' => 'Komunitas Petani Digital',
-                'type' => 'komunitas',
-                'image' => 'directory/petani-digital.jpg',
-                'description' => 'Komunitas petani yang memanfaatkan teknologi untuk meningkatkan produktivitas',
-                'location' => 'Sumatera Utara',
-                'province' => 'Sumatera Utara',
-                'members' => 150,
-                'website_url' => 'https://petanidigital.id',
-                'is_featured' => false
-            ]
+        $listings = [];
+        
+        if ($type === 'desa') {
+            $websites = Website::where('type', 'desa')
+                ->where('status', 'active')
+                ->with('village')
+                ->get();
+            
+            foreach ($websites as $website) {
+                $village = $website->village;
+                $listings[] = [
+                    'id' => $website->id,
+                    'name' => $village->name ?? $website->name,
+                    'type' => 'desa',
+                    'image' => $village && $village->logo_path 
+                        ? Storage::url($village->logo_path) 
+                        : 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&h=600&fit=crop',
+                    'description' => $village->description ?? 'Desa digital dengan layanan terpadu',
+                    'location' => $village->location ?? 'Indonesia',
+                    'province' => $this->extractProvince($village->location ?? ''),
+                    'visitors' => 2500, // Bisa diambil dari analytics
+                    'website_url' => $website->custom_domain ?: ('http://' . $website->url),
+                    'is_featured' => false
+                ];
+            }
+        } elseif ($type === 'umkm') {
+            $websites = Website::where('type', 'umkm')
+                ->where('status', 'active')
+                ->with(['umkmBusiness.village'])
+                ->get();
+            
+            foreach ($websites as $website) {
+                $umkm = $website->umkmBusiness;
+                if (!$umkm) continue;
+                
+                $productCount = $umkm->products()->where('is_active', true)->count();
+                $village = $umkm->village;
+                
+                $listings[] = [
+                    'id' => $website->id,
+                    'name' => $umkm->name,
+                    'type' => 'umkm',
+                    'image' => $umkm->logo_path 
+                        ? Storage::url($umkm->logo_path) 
+                        : 'https://images.unsplash.com/photo-1615367423057-4dab1be5b44b?w=800&h=600&fit=crop',
+                    'description' => $umkm->description ?? 'UMKM digital dengan produk berkualitas',
+                    'location' => $village ? $village->location : 'Indonesia',
+                    'province' => $this->extractProvince($village ? $village->location : ''),
+                    'products' => $productCount,
+                    'website_url' => $website->custom_domain ?: ('http://' . $website->url),
+                    'is_featured' => false
+                ];
+            }
+        } elseif ($type === 'komunitas') {
+            // Komunitas masih menggunakan dummy data karena belum ada tabel khusus
+            $listings = [
+                [
+                    'id' => 3,
+                    'name' => 'Karang Taruna Maju',
+                    'type' => 'komunitas',
+                    'image' => 'directory/karang-taruna.jpg',
+                    'description' => 'Organisasi pemuda desa dengan program pemberdayaan dan kegiatan sosial',
+                    'location' => 'Bali',
+                    'province' => 'Bali',
+                    'members' => 200,
+                    'website_url' => '#',
+                    'is_featured' => true
+                ],
+                [
+                    'id' => 6,
+                    'name' => 'Komunitas Petani Digital',
+                    'type' => 'komunitas',
+                    'image' => 'directory/petani-digital.jpg',
+                    'description' => 'Komunitas petani yang memanfaatkan teknologi untuk meningkatkan produktivitas',
+                    'location' => 'Sumatera Utara',
+                    'province' => 'Sumatera Utara',
+                    'members' => 150,
+                    'website_url' => '#',
+                    'is_featured' => false
+                ]
+            ];
+        }
+        
+        // Jika tidak ada data, return empty array
+        return $listings;
+    }
+    
+    private function extractProvince($location)
+    {
+        // Extract province from location string
+        $provinces = [
+            'Jawa Barat', 'Jawa Tengah', 'Jawa Timur', 'DI Yogyakarta',
+            'Bali', 'Sumatera Utara', 'Sumatera Selatan', 'Lampung',
+            'Banten', 'Jakarta', 'Sulawesi Selatan', 'Kalimantan Barat'
         ];
         
-        return array_filter($allListings, function($listing) use ($type) {
-            return $listing['type'] === $type;
-        });
+        foreach ($provinces as $province) {
+            if (stripos($location, $province) !== false) {
+                return $province;
+            }
+        }
+        
+        return 'Indonesia';
     }
     
     private function getListingById($id)
