@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-    prefix: "tw-", // Prefix untuk Tailwind v3 agar tidak konflik dengan v4
+    // Tidak menggunakan prefix agar kompatibel dengan semua template
     content: [
         "./resources/**/*.blade.php",
         "./resources/**/*.js",

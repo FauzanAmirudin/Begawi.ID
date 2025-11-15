@@ -1,8 +1,116 @@
-/* @tailwind base;
-@tailwind components; */
-@tailwind utilities;
+@import "tailwindcss";
 
-/* Custom CSS Variables */
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+@source '../../app/**/*.php';
+@source '../../routes/**/*.php';
+
+@theme {
+    /* Font Families */
+    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+    --font-manrope: "Manrope", ui-sans-serif, system-ui, sans-serif;
+    --font-poppins: "Poppins", ui-sans-serif, system-ui, sans-serif;
+
+    /* Primary Green Palette (Brand Color) */
+    --color-primary: #83cd20;
+    --color-primary-light: #a5d85a;
+    --color-primary-lighter: #c7e394;
+    --color-primary-dark: #6ba41a;
+    --color-primary-darker: #1a723d;
+    --color-primary-50: #f1f5eb;
+    --color-primary-100: #e8f0d8;
+    --color-primary-200: #d1e1b1;
+    --color-primary-300: #bad28a;
+    --color-primary-400: #a3c363;
+    --color-primary-500: #83cd20;
+    --color-primary-600: #6ba41a;
+    --color-primary-700: #1a723d;
+    --color-primary-800: #14552e;
+    --color-primary-900: #0e381f;
+
+    /* Dark Navy (Text & Dark Backgrounds) */
+    --color-navy: #0c1724;
+    --color-navy-light: #1a2a3d;
+    --color-navy-lighter: #283d56;
+    --color-navy-50: #f0f2f5;
+    --color-navy-100: #d9dee5;
+    --color-navy-200: #b3bdcb;
+    --color-navy-300: #8d9cb1;
+    --color-navy-400: #677b97;
+    --color-navy-500: #415a7d;
+    --color-navy-600: #344763;
+    --color-navy-700: #273549;
+    --color-navy-800: #1a222f;
+    --color-navy-900: #0c1724;
+
+    /* Legacy support (mapping to new colors) */
+    --color-emerald-green: #83cd20;
+    --color-emerald-dark: #1a723d;
+    --color-emerald-light: #a5d85a;
+    --color-emerald-50: #f1f5eb;
+    --color-emerald-100: #e8f0d8;
+    --color-emerald-200: #d1e1b1;
+    --color-emerald-300: #bad28a;
+    --color-emerald-400: #a3c363;
+    --color-emerald-500: #83cd20;
+    --color-emerald-600: #6ba41a;
+    --color-emerald-700: #1a723d;
+    --color-emerald-800: #14552e;
+    --color-emerald-900: #0e381f;
+
+    /* Custom Brand Colors */
+    --color-warm-ivory: #f1f5eb;
+    --color-charcoal-grey: #0c1724;
+
+    /* Custom Spacing */
+    --spacing-18: 4.5rem;
+    --spacing-88: 22rem;
+    --spacing-128: 32rem;
+
+    /* Custom Border Radius */
+    --radius-4xl: 2rem;
+
+    /* Custom Backdrop Blur */
+    --blur-xs: 2px;
+
+    /* Custom Z-Index */
+    --z-index-60: 60;
+    --z-index-70: 70;
+    --z-index-80: 80;
+    --z-index-90: 90;
+    --z-index-100: 100;
+
+    /* Custom Animations */
+    --animate-float: float 3s ease-in-out infinite;
+    --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+    --animate-fadeInUp: fadeInUp 0.8s ease-out forwards;
+    --animate-bounceIn: bounceIn 0.6s ease-out forwards;
+    --animate-liquid-underline: liquid-underline 0.3s ease forwards;
+
+    /* Custom Box Shadows */
+    --shadow-glow-emerald: 0 10px 40px rgba(131, 205, 32, 0.3);
+    --shadow-glow-emerald-lg: 0 20px 60px rgba(131, 205, 32, 0.4);
+    --shadow-glow-primary: 0 10px 40px rgba(131, 205, 32, 0.3);
+    --shadow-glow-primary-lg: 0 20px 60px rgba(131, 205, 32, 0.4);
+
+    /* Custom Background Images (Gradients) */
+    --bg-gradient-accent: linear-gradient(135deg, #1a723d, #83cd20);
+    --bg-gradient-emerald: linear-gradient(135deg, #1a723d, #83cd20);
+    --bg-gradient-hero: linear-gradient(
+        135deg,
+        rgba(26, 114, 61, 0.9),
+        rgba(131, 205, 32, 0.8)
+    );
+    --bg-gradient-primary: linear-gradient(135deg, #83cd20, #a5d85a);
+    --bg-gradient-dark: linear-gradient(135deg, #0c1724, #1a723d);
+    --bg-gradient-light: linear-gradient(135deg, #f1f5eb, #ffffff);
+}
+
+/* Custom CSS Variables (untuk kompatibilitas dengan custom classes) */
 :root {
     /* Primary Colors */
     --primary-green: #83cd20;

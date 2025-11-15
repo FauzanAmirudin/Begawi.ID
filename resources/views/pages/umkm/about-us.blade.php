@@ -93,11 +93,23 @@
                         {{ $profile['alamat'] }}
                     </address>
 
-                    <div
-                        class="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
-                        <iframe src="{{ $mapEmbedUrl }}" width="100%" height="100%" style="border:0;" loading="lazy"
-                            allowfullscreen></iframe>
-                    </div>
+                    @if(!empty($mapEmbedHtml))
+                        {{-- Jika sudah berupa HTML embed code lengkap --}}
+                        <div class="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
+                            {!! $mapEmbedHtml !!}
+                        </div>
+                    @elseif(!empty($mapEmbedUrl))
+                        {{-- Jika hanya URL, wrap dengan iframe --}}
+                        <div
+                            class="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
+                            <iframe src="{{ $mapEmbedUrl }}" width="100%" height="100%" style="border:0;" loading="lazy"
+                                allowfullscreen></iframe>
+                        </div>
+                    @else
+                        <div class="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm bg-gray-100 dark:bg-gray-800 flex items-center justify-center h-64">
+                            <p class="text-gray-500 dark:text-gray-400">Peta lokasi belum ditambahkan</p>
+                        </div>
+                    @endif
                 </section>
             </div>
         </div>

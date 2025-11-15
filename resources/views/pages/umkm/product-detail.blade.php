@@ -59,7 +59,12 @@
                 </h1>
 
                 <p class="text-3xl font-bold text-primary dark:text-primary-light mb-6">
-                    Rp. {{ number_format($produk->harga, 0, ',', '.') }}
+                    @if(isset($produk->harga_diskon) && $produk->harga_diskon > 0)
+                        <span class="line-through text-gray-400 text-xl">Rp. {{ number_format($produk->harga, 0, ',', '.') }}</span>
+                        <span class="ml-2">Rp. {{ number_format($produk->harga_diskon, 0, ',', '.') }}</span>
+                    @else
+                        Rp. {{ number_format($produk->harga, 0, ',', '.') }}
+                    @endif
                 </p>
 
                 {{-- Stok Produk --}}

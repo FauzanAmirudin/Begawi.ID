@@ -130,8 +130,14 @@
         $roleBadgeClass = match ($user->role) {
             \App\Models\User::ROLE_SUPER_ADMIN => 'bg-purple-100 text-purple-600',
             \App\Models\User::ROLE_ADMIN_DESA => 'bg-emerald-100 text-emerald-600',
+            \App\Models\User::ROLE_ADMIN_UMKM => 'bg-purple-100 text-purple-600',
             default => 'bg-blue-100 text-blue-600',
         };
+        
+        $umkmBusiness = null;
+        if ($user->role === \App\Models\User::ROLE_ADMIN_UMKM) {
+            $umkmBusiness = \App\Models\UmkmBusiness::where('user_id', $user->id)->first();
+        }
     @endphp
 
     <!-- Role Context & Quick Actions -->
@@ -142,6 +148,8 @@
             </span>
             @if($user->role === \App\Models\User::ROLE_ADMIN_DESA)
             <span class="text-sm text-gray-500">Panel Desa Sejahtera</span>
+            @elseif($user->role === \App\Models\User::ROLE_ADMIN_UMKM && $umkmBusiness)
+            <span class="text-sm text-gray-500">{{ $umkmBusiness->name }}</span>
             @endif
         </div>
 
@@ -170,6 +178,27 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"></path>
                 </svg>
                 Tambah Berita
+            </a>
+        </div>
+        @elseif($user->role === \App\Models\User::ROLE_ADMIN_UMKM && $umkmBusiness)
+        <div class="hidden md:flex items-center gap-2">
+            <a href="{{ $umkmBusiness->website ? 'https://' . $umkmBusiness->subdomain : '#' }}" target="_blank" class="inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-sm hover:opacity-95 transition">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+                Lihat Website
+            </a>
+            <a href="{{ route('admin.umkm.products.create') }}" class="inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-sm hover:opacity-95 transition">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Tambah Produk
+            </a>
+            <a href="{{ route('admin.umkm.profile.index') }}" class="inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-sm hover:opacity-95 transition">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zm-4 5c-4.418 0-8 2.239-8 5v1a1 1 0 001 1h14a1 1 0 001-1v-1c0-2.761-3.582-5-8-5z"></path>
+                </svg>
+                Edit Profil
             </a>
         </div>
         @endif

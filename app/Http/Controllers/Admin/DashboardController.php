@@ -8,6 +8,8 @@ use App\Models\InformationPage;
 use App\Models\PaymentGatewayConfig;
 use App\Models\SubscriptionPackage;
 use App\Models\Transaction;
+use App\Models\UmkmBusiness;
+use App\Models\UmkmContentValidation;
 use App\Models\User;
 use App\Models\VideoDocumentation;
 use App\Models\Website;
@@ -28,6 +30,10 @@ class DashboardController extends Controller
 
         if ($user && $user->role === User::ROLE_ADMIN_DESA) {
             return $this->renderVillageAdminDashboard();
+        }
+
+        if ($user && $user->role === User::ROLE_ADMIN_UMKM) {
+            return $this->renderUmkmAdminDashboard();
         }
 
         return $this->renderDefaultDashboard();
@@ -311,6 +317,393 @@ class DashboardController extends Controller
                 'growth' => $visitorStats['growth'],
             ],
         ]);
+    }
+
+    /**
+     * Render dashboard for UMKM admin with business-specific insights.
+     */
+    protected function renderUmkmAdminDashboard()
+    {
+        $user = Auth::user();
+        
+        // Get UMKM business for this user
+        $umkmBusiness = UmkmBusiness::where('user_id', $user->id)->first();
+        
+        if (!$umkmBusiness) {
+            // Return dashboard with empty data and error message instead of redirecting
+            return $this->renderUmkmAdminDashboardEmpty('UMKM business tidak ditemukan untuk akun Anda. Silakan hubungi administrator untuk mendaftarkan UMKM business Anda.');
+        }
+
+        // Total produk aktif (approved products)
+        $totalActiveProducts = UmkmContentValidation::where('umkm_business_id', $umkmBusiness->id)
+            ->where('content_type', 'product')
+            ->where('status', 'approved')
+            ->count();
+
+        // Jumlah pengunjung website UMKM
+        $totalVisitors = $umkmBusiness->visits_count ?? 0;
+
+        // Produk paling banyak dilihat (using content_data or placeholder)
+        $topProducts = UmkmContentValidation::where('umkm_business_id', $umkmBusiness->id)
+            ->where('content_type', 'product')
+            ->where('status', 'approved')
+            ->latest('updated_at')
+            ->take(5)
+            ->get()
+            ->map(function ($product) {
+                $views = $product->content_data['views'] ?? rand(10, 500);
+                return [
+                    'title' => $product->title,
+                    'views' => $views,
+                    'image' => $product->content_data['image'] ?? null,
+                ];
+            })
+            ->sortByDesc('views')
+            ->take(3)
+            ->values();
+
+        // Notifikasi: produk menunggu verifikasi
+        $pendingProducts = UmkmContentValidation::where('umkm_business_id', $umkmBusiness->id)
+            ->where('content_type', 'product')
+            ->whereIn('status', ['review', 'verification'])
+            ->count();
+
+        // Template update notifications (placeholder - can be enhanced later)
+        $templateUpdateNeeded = false; // Can be enhanced with actual template version checking
+
+        // Aktivitas terakhir
+        $recentActivities = UmkmContentValidation::where('umkm_business_id', $umkmBusiness->id)
+            ->latest('updated_at')
+            ->take(6)
+            ->get()
+            ->map(function ($activity) {
+                $activityType = match($activity->content_type) {
+                    'product' => 'Produk',
+                    'photo' => 'Foto',
+                    'promotion' => 'Promosi',
+                    'profile_update' => 'Profil',
+                    default => 'Konten',
+                };
+                
+                $action = match($activity->status) {
+                    'approved' => 'disetujui',
+                    'review' => 'menunggu review',
+                    'revision_requested' => 'perlu revisi',
+                    default => 'diperbarui',
+                };
+
+                return [
+                    'time' => $activity->updated_at->format('H:i'),
+                    'type' => 'product_update',
+                    'title' => $activityType . ' ' . $action,
+                    'user' => $activity->submitter->name ?? 'Anda',
+                    'desc' => $activity->title,
+                ];
+            })
+            ->toArray();
+
+        // Overview Cards
+        $overviewCards = [
+            [
+                'label' => 'Total Produk Aktif',
+                'value' => number_format($totalActiveProducts),
+                'description' => 'Produk yang sudah disetujui dan aktif',
+                'gradient' => 'from-emerald-500 to-teal-500',
+                'icon' => 'storefront',
+                'link' => '#', // Can be linked to products page later
+                'link_label' => 'Lihat Produk',
+                'badge' => [
+                    'label' => $pendingProducts . ' Pending',
+                    'text' => 'Menunggu verifikasi',
+                ],
+            ],
+            [
+                'label' => 'Pengunjung Website',
+                'value' => number_format($totalVisitors),
+                'description' => 'Total pengunjung website UMKM',
+                'gradient' => 'from-purple-500 to-indigo-500',
+                'icon' => 'visitors',
+                'link' => $umkmBusiness->website ? 'https://' . $umkmBusiness->subdomain : '#',
+                'link_label' => 'Lihat Website',
+                'badge' => [
+                    'label' => '+12%',
+                    'text' => 'Bulan ini',
+                ],
+            ],
+            [
+                'label' => 'Produk Paling Dilihat',
+                'value' => $topProducts->isNotEmpty() ? $topProducts->first()['title'] : '-',
+                'description' => $topProducts->isNotEmpty() ? number_format($topProducts->first()['views']) . ' kali dilihat' : 'Belum ada data',
+                'gradient' => 'from-orange-500 to-pink-500',
+                'icon' => 'content',
+                'link' => '#',
+                'link_label' => 'Lihat Detail',
+            ],
+        ];
+
+        // Secondary Cards
+        $secondaryCards = [
+            [
+                'label' => 'Produk Menunggu Verifikasi',
+                'value' => number_format($pendingProducts),
+                'description' => 'Produk yang perlu ditinjau',
+                'gradient' => 'from-amber-500 to-orange-500',
+                'icon' => 'content',
+                'link' => '#',
+                'link_label' => 'Lihat Daftar',
+            ],
+            [
+                'label' => 'Update Template',
+                'value' => $templateUpdateNeeded ? 'Tersedia' : 'Terbaru',
+                'description' => $templateUpdateNeeded ? 'Template baru tersedia' : 'Template sudah terbaru',
+                'gradient' => $templateUpdateNeeded ? 'from-blue-500 to-blue-600' : 'from-gray-500 to-gray-600',
+                'icon' => 'content',
+                'link' => '#',
+                'link_label' => 'Cek Update',
+            ],
+            [
+                'label' => 'Total Pesanan',
+                'value' => number_format($umkmBusiness->orders_count ?? 0),
+                'description' => 'Pesanan yang masuk',
+                'gradient' => 'from-cyan-500 to-teal-500',
+                'icon' => 'storefront',
+                'link' => '#',
+                'link_label' => 'Lihat Pesanan',
+            ],
+        ];
+
+        // Quick Actions
+        $quickActions = [
+            [
+                'label' => 'Tambah Produk',
+                'description' => 'Tambahkan produk baru ke katalog',
+                'link' => '#', // Can be linked to add product page
+                'icon' => 'plus',
+                'color' => 'from-emerald-500 to-teal-500',
+            ],
+            [
+                'label' => 'Edit Profil',
+                'description' => 'Perbarui informasi UMKM',
+                'link' => '#', // Can be linked to profile edit page
+                'icon' => 'content',
+                'color' => 'from-blue-500 to-indigo-500',
+            ],
+            [
+                'label' => 'Tambah Banner',
+                'description' => 'Unggah banner promosi',
+                'link' => '#', // Can be linked to banner management
+                'icon' => 'media',
+                'color' => 'from-rose-500 to-orange-500',
+            ],
+        ];
+
+        // Charts data (placeholder for now)
+        $charts = [
+            'visitors' => $this->umkmVisitorStats($umkmBusiness),
+            'products' => $this->umkmProductsChart($umkmBusiness),
+        ];
+
+        // Sidebar highlights
+        $sidebarHighlights = [
+            'topProducts' => $topProducts->toArray(),
+            'stats' => [
+                'totalProducts' => $totalActiveProducts,
+                'pendingProducts' => $pendingProducts,
+            ],
+        ];
+
+        return view('admin.admin-umkm.dashboard.umkm', [
+            'overviewCards' => $overviewCards,
+            'secondaryCards' => $secondaryCards,
+            'charts' => $charts,
+            'activityFeed' => $recentActivities,
+            'pendingValidations' => UmkmContentValidation::where('umkm_business_id', $umkmBusiness->id)
+                ->whereIn('status', ['review', 'verification'])
+                ->latest('created_at')
+                ->take(5)
+                ->get()
+                ->map(function ($validation) {
+                    return [
+                        'type' => $validation->content_type_label,
+                        'title' => $validation->title,
+                        'submitted_by' => $validation->submitter->name ?? 'Anda',
+                        'submitted_at' => $validation->created_at->format('d M · H:i'),
+                        'status' => $validation->status,
+                    ];
+                })
+                ->toArray(),
+            'quickActions' => $quickActions,
+            'sidebarHighlights' => $sidebarHighlights,
+            'visitorSummary' => [
+                'total' => number_format($totalVisitors),
+                'average' => number_format($totalVisitors > 0 ? $totalVisitors / 30 : 0),
+                'growth' => 12, // Placeholder
+            ],
+            'umkmBusiness' => $umkmBusiness,
+        ]);
+    }
+
+    /**
+     * Render dashboard for UMKM admin when business is not found.
+     */
+    protected function renderUmkmAdminDashboardEmpty(string $errorMessage)
+    {
+        // Empty/default data for dashboard
+        $overviewCards = [
+            [
+                'label' => 'Total Produk Aktif',
+                'value' => '0',
+                'description' => 'Belum ada produk terdaftar',
+                'gradient' => 'from-gray-400 to-gray-500',
+                'icon' => 'storefront',
+                'link' => '#',
+                'link_label' => 'Lihat Produk',
+            ],
+            [
+                'label' => 'Pengunjung Website',
+                'value' => '0',
+                'description' => 'Belum ada data pengunjung',
+                'gradient' => 'from-gray-400 to-gray-500',
+                'icon' => 'visitors',
+                'link' => '#',
+                'link_label' => 'Lihat Website',
+            ],
+            [
+                'label' => 'Produk Paling Dilihat',
+                'value' => '-',
+                'description' => 'Belum ada data',
+                'gradient' => 'from-gray-400 to-gray-500',
+                'icon' => 'content',
+                'link' => '#',
+                'link_label' => 'Lihat Detail',
+            ],
+        ];
+
+        $secondaryCards = [
+            [
+                'label' => 'Produk Menunggu Verifikasi',
+                'value' => '0',
+                'description' => 'Belum ada produk',
+                'gradient' => 'from-gray-400 to-gray-500',
+                'icon' => 'content',
+                'link' => '#',
+                'link_label' => 'Lihat Daftar',
+            ],
+            [
+                'label' => 'Update Template',
+                'value' => 'Terbaru',
+                'description' => 'Template sudah terbaru',
+                'gradient' => 'from-gray-400 to-gray-500',
+                'icon' => 'content',
+                'link' => '#',
+                'link_label' => 'Cek Update',
+            ],
+            [
+                'label' => 'Total Pesanan',
+                'value' => '0',
+                'description' => 'Belum ada pesanan',
+                'gradient' => 'from-gray-400 to-gray-500',
+                'icon' => 'storefront',
+                'link' => '#',
+                'link_label' => 'Lihat Pesanan',
+            ],
+        ];
+
+        $quickActions = [
+            [
+                'label' => 'Hubungi Administrator',
+                'description' => 'Daftarkan UMKM business Anda',
+                'link' => '#',
+                'icon' => 'content',
+                'color' => 'from-blue-500 to-indigo-500',
+            ],
+        ];
+
+        $charts = [
+            'visitors' => [
+                'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+                'dataset' => [0, 0, 0, 0, 0, 0],
+                'growth' => 0,
+                'average' => 0,
+            ],
+            'products' => [
+                'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+                'dataset' => [0, 0, 0, 0, 0, 0],
+            ],
+        ];
+
+        return view('admin.admin-umkm.dashboard.umkm', [
+            'overviewCards' => $overviewCards,
+            'secondaryCards' => $secondaryCards,
+            'charts' => $charts,
+            'activityFeed' => [],
+            'pendingValidations' => [],
+            'quickActions' => $quickActions,
+            'sidebarHighlights' => [
+                'topProducts' => [],
+                'stats' => [
+                    'totalProducts' => 0,
+                    'pendingProducts' => 0,
+                ],
+            ],
+            'visitorSummary' => [
+                'total' => '0',
+                'average' => '0',
+                'growth' => 0,
+            ],
+            'umkmBusiness' => null,
+            'errorMessage' => $errorMessage,
+        ]);
+    }
+
+    /**
+     * Get UMKM visitor stats
+     */
+    protected function umkmVisitorStats($umkmBusiness): array
+    {
+        $months = collect(range(5, 0))->map(function (int $offset) {
+            return Carbon::now()->subMonths($offset);
+        });
+
+        // Placeholder data - can be enhanced with actual visitor tracking
+        $baseVisitors = $umkmBusiness->visits_count ?? 0;
+        $dataset = [];
+        foreach (range(0, 5) as $i) {
+            $dataset[] = (int) ($baseVisitors / 6) + rand(0, 50);
+        }
+
+        return [
+            'labels' => $months->map(fn (Carbon $month) => $month->translatedFormat('M'))->all(),
+            'dataset' => $dataset,
+            'growth' => 12,
+            'average' => (int) round(array_sum($dataset) / max(count($dataset), 1)),
+        ];
+    }
+
+    /**
+     * Get UMKM products chart data
+     */
+    protected function umkmProductsChart($umkmBusiness): array
+    {
+        $months = collect(range(5, 0))->map(function (int $offset) {
+            return Carbon::now()->subMonths($offset);
+        });
+
+        $dataset = [];
+        foreach (range(0, 5) as $i) {
+            $count = UmkmContentValidation::where('umkm_business_id', $umkmBusiness->id)
+                ->where('content_type', 'product')
+                ->where('status', 'approved')
+                ->whereMonth('created_at', Carbon::now()->subMonths(5 - $i)->month)
+                ->whereYear('created_at', Carbon::now()->subMonths(5 - $i)->year)
+                ->count();
+            $dataset[] = $count;
+        }
+
+        return [
+            'labels' => $months->map(fn (Carbon $month) => $month->translatedFormat('M'))->all(),
+            'dataset' => $dataset,
+        ];
     }
 
     /**

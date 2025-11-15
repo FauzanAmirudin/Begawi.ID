@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Str;
 
 class UmkmBusiness extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'website_id',
         'village_id',
@@ -19,9 +19,17 @@ class UmkmBusiness extends Model
         'owner_name',
         'owner_email',
         'owner_phone',
+        'whatsapp_number',
+        'address',
+        'maps_embed_url',
         'category',
         'description',
+        'about_business',
         'logo_path',
+        'banner_path',
+        'branding_color',
+        'operating_hours',
+        'social_media',
         'legal_document_path',
         'status',
         'products_count',
@@ -30,68 +38,35 @@ class UmkmBusiness extends Model
         'last_activity_at',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'last_activity_at' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'last_activity_at' => 'datetime',
+        'operating_hours' => 'array',
+        'social_media' => 'array',
+    ];
 
-    public function website(): BelongsTo
-    {
-        return $this->belongsTo(Website::class);
-    }
-
-    public function village(): BelongsTo
-    {
-        return $this->belongsTo(Village::class);
-    }
-
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function contentValidations(): HasMany
+    public function village()
     {
-        return $this->hasMany(UmkmContentValidation::class, 'umkm_business_id');
+        return $this->belongsTo(Village::class);
     }
 
-    /**
-     * Generate subdomain from name
-     */
-    public static function generateSubdomain(string $name, string $domainSuffix = 'desa.begawi.id'): string
+    public function website()
     {
-        $slug = Str::slug($name);
-        return "{$slug}.{$domainSuffix}";
+        return $this->belongsTo(Website::class);
     }
 
-    /**
-     * Get status badge class
-     */
-    public function getStatusBadgeAttribute(): string
+    public function products()
     {
-        return match($this->status) {
-            'active' => 'bg-emerald-50 text-emerald-600',
-            'onboarding' => 'bg-sky-50 text-sky-600',
-            'suspended' => 'bg-rose-50 text-rose-600',
-            'inactive' => 'bg-gray-100 text-gray-600',
-            default => 'bg-gray-100 text-gray-600',
-        };
+        return $this->hasMany(UmkmProduct::class);
     }
 
-    /**
-     * Get status label
-     */
-    public function getStatusLabelAttribute(): string
+    public function categories()
     {
-        return match($this->status) {
-            'active' => 'Aktif',
-            'onboarding' => 'Onboarding',
-            'suspended' => 'Ditangguhkan',
-            'inactive' => 'Tidak Aktif',
-            default => 'Unknown',
-        };
+        return $this->hasMany(UmkmProductCategory::class);
     }
 }
 

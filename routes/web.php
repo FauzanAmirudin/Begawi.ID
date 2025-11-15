@@ -76,7 +76,7 @@ Route::view('/terms', 'pages.terms')->name('terms');
 Route::view('/sitemap', 'pages.sitemap')->name('sitemap');
 
 // UMKM Website Routes
-Route::prefix('umkm')->name('umkm.')->group(function () {
+Route::prefix('umkm')->name('umkm.')->middleware('track.umkm.visitor')->group(function () {
     Route::get('/', [UmkmHomeController::class, 'index'])->name('home');
     Route::get('/product', [UmkmProductController::class, 'index'])->name('product');
     Route::get('/product/{id}', [UmkmProductController::class, 'show'])->name('product.show');
@@ -287,5 +287,50 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::get('/contact', [SupportController::class, 'contact'])->name('contact');
         Route::post('/contact', [SupportController::class, 'submitContact'])->name('contact.submit');
         Route::resource('articles', SupportArticleController::class)->except(['show']);
+    });
+
+    // UMKM Product Management (Admin UMKM Only)
+    Route::prefix('umkm')->name('umkm.')->middleware('admin:admin_umkm')->group(function () {
+        // Setup route (must be before products routes)
+        Route::get('/setup', [\App\Http\Controllers\Admin\UmkmProductController::class, 'setup'])->name('setup');
+        Route::post('/setup', [\App\Http\Controllers\Admin\UmkmProductController::class, 'createBusiness'])->name('setup.store');
+        
+        // Profile Management
+        Route::prefix('profile')->name('profile.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\UmkmProfileController::class, 'index'])->name('index');
+            Route::put('/', [\App\Http\Controllers\Admin\UmkmProfileController::class, 'update'])->name('update');
+        });
+        
+        Route::prefix('products')->name('products.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\UmkmProductController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Admin\UmkmProductController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\UmkmProductController::class, 'store'])->name('store');
+            Route::get('/{product}/edit', [\App\Http\Controllers\Admin\UmkmProductController::class, 'edit'])->name('edit');
+            Route::put('/{product}', [\App\Http\Controllers\Admin\UmkmProductController::class, 'update'])->name('update');
+            Route::delete('/{product}', [\App\Http\Controllers\Admin\UmkmProductController::class, 'destroy'])->name('destroy');
+            Route::post('/{product}/toggle-status', [\App\Http\Controllers\Admin\UmkmProductController::class, 'toggleStatus'])->name('toggle-status');
+            Route::get('/stock', [\App\Http\Controllers\Admin\UmkmProductController::class, 'stock'])->name('stock');
+            Route::put('/{product}/stock', [\App\Http\Controllers\Admin\UmkmProductController::class, 'updateStock'])->name('update-stock');
+            Route::get('/categories', [\App\Http\Controllers\Admin\UmkmProductController::class, 'categories'])->name('categories');
+            Route::post('/categories', [\App\Http\Controllers\Admin\UmkmProductController::class, 'storeCategory'])->name('categories.store');
+            Route::put('/categories/{category}', [\App\Http\Controllers\Admin\UmkmProductController::class, 'updateCategory'])->name('categories.update');
+            Route::delete('/categories/{category}', [\App\Http\Controllers\Admin\UmkmProductController::class, 'destroyCategory'])->name('categories.destroy');
+        });
+
+        // Statistics & Analytics
+        Route::prefix('statistics')->name('statistics.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\UmkmStatisticsController::class, 'index'])->name('index');
+            Route::get('/visitor-statistics', [\App\Http\Controllers\Admin\UmkmStatisticsController::class, 'visitorStatistics'])->name('visitor-statistics');
+            Route::get('/popular-products', [\App\Http\Controllers\Admin\UmkmStatisticsController::class, 'popularProducts'])->name('popular-products');
+            Route::get('/visitor-sources', [\App\Http\Controllers\Admin\UmkmStatisticsController::class, 'visitorSources'])->name('visitor-sources');
+        });
+
+        // Reports
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\UmkmReportsController::class, 'index'])->name('index');
+            Route::get('/product-reports', [\App\Http\Controllers\Admin\UmkmReportsController::class, 'productReports'])->name('product-reports');
+            Route::get('/activity-reports', [\App\Http\Controllers\Admin\UmkmReportsController::class, 'activityReports'])->name('activity-reports');
+            Route::get('/export', [\App\Http\Controllers\Admin\UmkmReportsController::class, 'exportReport'])->name('export');
+        });
     });
 });

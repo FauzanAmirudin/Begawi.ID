@@ -39,9 +39,14 @@
                                 {{ $produk['nama'] }}
                             </h3>
                             <p class="text-primary font-bold mt-2 text-md md:text-lg dark:text-primary-light">
-                                Rp. {{ number_format(intval(str_replace(['Rp', '.', ','], '', $produk['harga'])), 2, ',', '.') }}
+                                @if(isset($produk['harga_diskon']) && $produk['harga_diskon'] > 0)
+                                    <span class="line-through text-gray-400 text-sm">Rp. {{ number_format($produk['harga'], 0, ',', '.') }}</span>
+                                    <span class="ml-2">Rp. {{ number_format($produk['harga_diskon'], 0, ',', '.') }}</span>
+                                @else
+                                    Rp. {{ number_format($produk['harga'], 0, ',', '.') }}
+                                @endif
                             </p>
-                            <a href="{{ route('umkm.product.show', $produk['id'] ?? '#') }}"
+                            <a href="{{ route('umkm.product.show', $produk['slug'] ?? $produk['id'] ?? '#') }}"
                                class="w-full block bg-accent mt-4 text-xs md:text-md text-dark p-2 md:p-2 text-center rounded hover:opacity-80 font-medium transition">
                                 Lihat Detail
                             </a>
@@ -77,9 +82,17 @@
                         class="w-full dark:bg-dark-light dark:text-white rounded-lg border-gray-300 dark:border-gray-600 shadow-sm px-3 py-2
                                focus:border-accent focus:ring-accent dark:focus:border-accent dark:focus:ring-accent">
                         <option value="">Semua Kategori</option>
-                        <option value="kat1" @selected(request('kategori') == 'kat1')>Kategori 1</option>
-                        <option value="kat2" @selected(request('kategori') == 'kat2')>Kategori 2</option>
-                        <option value="kat3" @selected(request('kategori') == 'kat3')>Kategori 3</option>
+                        @if(isset($kategories) && $kategories->count() > 0)
+                            @foreach($kategories as $kategori)
+                                <option value="{{ $kategori->slug }}" @selected(request('kategori') == $kategori->slug)>
+                                    {{ $kategori->name }}
+                                </option>
+                            @endforeach
+                        @else
+                            <option value="kat1" @selected(request('kategori') == 'kat1')>Kategori 1</option>
+                            <option value="kat2" @selected(request('kategori') == 'kat2')>Kategori 2</option>
+                            <option value="kat3" @selected(request('kategori') == 'kat3')>Kategori 3</option>
+                        @endif
                     </select>
                 </div>
 
@@ -105,9 +118,14 @@
                                 {{ $produk['nama'] }}
                             </h3>
                             <p class="text-primary font-bold mt-2 text-md md:text-lg dark:text-primary-light">
-                                Rp. {{ number_format(intval(str_replace(['Rp', '.', ','], '', $produk['harga'])), 2, ',', '.') }}
+                                @if(isset($produk['harga_diskon']) && $produk['harga_diskon'] > 0)
+                                    <span class="line-through text-gray-400 text-sm">Rp. {{ number_format($produk['harga'], 0, ',', '.') }}</span>
+                                    <span class="ml-2">Rp. {{ number_format($produk['harga_diskon'], 0, ',', '.') }}</span>
+                                @else
+                                    Rp. {{ number_format($produk['harga'], 0, ',', '.') }}
+                                @endif
                             </p>
-                            <a href="{{ route('umkm.product.show', $produk['id']) }}"
+                            <a href="{{ route('umkm.product.show', $produk['slug'] ?? $produk['id'] ?? '#') }}"
                                class="w-full block bg-accent mt-4 text-xs md:text-md text-dark p-2 md:p-2 text-center rounded hover:opacity-80 font-medium transition">
                                 Lihat Detail
                             </a>

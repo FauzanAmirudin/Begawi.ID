@@ -53,11 +53,16 @@
                         <div class="p-3 md:p-6">
                             <h3 class="text-md md:text-lg font-semibold text-dark dark:text-white truncate">{{ $produk['nama'] }}</h3>
                             <p class="text-md md:text-lg text-dark dark:text-white font-bold mt-1">
-                                {{ 'Rp ' . number_format($produk['harga'], 0, ',', '.') }}
+                                @if(isset($produk['harga_diskon']) && $produk['harga_diskon'] > 0)
+                                    <span class="line-through text-gray-400 text-sm">Rp. {{ number_format($produk['harga'], 0, ',', '.') }}</span>
+                                    <span class="ml-2">Rp. {{ number_format($produk['harga_diskon'], 0, ',', '.') }}</span>
+                                @else
+                                    Rp. {{ number_format($produk['harga'], 0, ',', '.') }}
+                                @endif
                             </p>
 
                             {{-- Tombol lihat detail --}}
-                            <a href="{{ route('umkm.product.show', $produk['id']) }}" 
+                            <a href="{{ route('umkm.product.show', $produk['slug'] ?? $produk['id'] ?? '#') }}" 
                                class="w-full block bg-accent mt-4 text-xs md:text-md text-dark p-2 md:p-2 text-center rounded hover:opacity-80 font-medium transition">
                                 Lihat Detail
                             </a>
@@ -86,11 +91,16 @@
                         <div class="p-3 md:p-6">
                             <h3 class="text-md md:text-lg font-semibold text-dark dark:text-white truncate">{{ $produk['nama'] }}</h3>
                             <p class="text-md md:text-lg text-dark dark:text-white font-bold mt-1">
-                                {{ 'Rp ' . number_format($produk['harga'], 0, ',', '.') }}
+                                @if(isset($produk['harga_diskon']) && $produk['harga_diskon'] > 0)
+                                    <span class="line-through text-gray-400 text-sm">Rp. {{ number_format($produk['harga'], 0, ',', '.') }}</span>
+                                    <span class="ml-2">Rp. {{ number_format($produk['harga_diskon'], 0, ',', '.') }}</span>
+                                @else
+                                    Rp. {{ number_format($produk['harga'], 0, ',', '.') }}
+                                @endif
                             </p>
 
                             {{-- Tombol lihat detail --}}
-                            <a href="{{ route('umkm.product.show', $produk['id']) }}" 
+                            <a href="{{ route('umkm.product.show', $produk['slug'] ?? $produk['id'] ?? '#') }}" 
                                class="w-full block bg-accent mt-4 text-xs md:text-md text-dark p-2 md:p-2 text-center rounded hover:opacity-80 font-medium transition">
                                 Lihat Detail
                             </a>
