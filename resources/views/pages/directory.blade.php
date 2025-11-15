@@ -42,7 +42,7 @@
                         <!-- Item Desa -->
                         <div class="relative flex flex-col rounded-2xl bg-white bg-clip-border text-gray-700 shadow-md hover:shadow-xl transition-all">
                             <div class="relative mx-4 -mt-8 h-44 overflow-hidden rounded-3xl shadow-lg shadow-emerald-500/40">
-                                <img src="{{ asset('images/web1.png') }}" alt="Desa Sukamaju" class="h-full w-full object-cover" loading="lazy">
+                                <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&h=600&fit=crop" alt="Desa Sukamaju" class="h-full w-full object-cover" loading="lazy">
                             </div>
                             <div class="p-6 pt-8 space-y-3">
                                 <span class="inline-block text-xs font-semibold uppercase tracking-wide text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">Desa Digital Unggulan</span>
@@ -63,7 +63,7 @@
                         </div>
                         <div class="relative flex flex-col rounded-2xl bg-white bg-clip-border text-gray-700 shadow-md hover:shadow-xl transition-all">
                             <div class="relative mx-4 -mt-8 h-44 overflow-hidden rounded-3xl shadow-lg shadow-amber-500/40">
-                                <img src="{{ asset('images/directory/desa-harapan-jaya.jpg') }}" alt="Desa Harapan Jaya" class="h-full w-full object-cover" loading="lazy">
+                                <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=600&fit=crop" alt="Desa Harapan Jaya" class="h-full w-full object-cover" loading="lazy">
                             </div>
                             <div class="p-6 pt-8 space-y-3">
                                 <span class="inline-block text-xs font-semibold uppercase tracking-wide text-orange-600 bg-orange-50 px-3 py-1 rounded-full">Smart Village</span>
@@ -84,7 +84,7 @@
                         </div>
                         <div class="relative flex flex-col rounded-2xl bg-white bg-clip-border text-gray-700 shadow-md hover:shadow-xl transition-all">
                             <div class="relative mx-4 -mt-8 h-44 overflow-hidden rounded-3xl shadow-lg shadow-sky-500/40">
-                                <img src="{{ asset('images/directory/desa-tunas-mekar.jpg') }}" alt="Desa Tunas Mekar" class="h-full w-full object-cover" loading="lazy">
+                                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop" alt="Desa Tunas Mekar" class="h-full w-full object-cover" loading="lazy">
                             </div>
                             <div class="p-6 pt-8 space-y-3">
                                 <span class="inline-block text-xs font-semibold uppercase tracking-wide text-sky-600 bg-sky-50 px-3 py-1 rounded-full">Ekowisata & UMKM</span>
@@ -148,7 +148,7 @@
                         <!-- Card UMKM -->
                         <div class="umkm-card relative flex flex-col rounded-2xl bg-white bg-clip-border text-gray-700 shadow-md hover:shadow-xl transition-all" data-category="kuliner">
                             <div class="relative mx-4 -mt-8 h-44 overflow-hidden rounded-3xl shadow-lg shadow-orange-500/40">
-                                <img src="{{ asset('images/directory/umkm-keripik-singkong-rempah.jpg') }}" alt="Keripik Singkong Rempah" class="h-full w-full object-cover" loading="lazy">
+                                <img src="https://images.unsplash.com/photo-1615367423057-4dab1be5b44b?w=800&h=600&fit=crop" alt="Keripik Singkong Rempah" class="h-full w-full object-cover" loading="lazy">
                             </div>
                             <div class="p-6 pt-8 space-y-3">
                                 <span class="inline-block text-xs font-semibold uppercase tracking-wide text-orange-600 bg-orange-50 px-3 py-1 rounded-full">Kategori Kuliner</span>
@@ -170,7 +170,7 @@
                         </div>
                         <div class="umkm-card relative flex flex-col rounded-2xl bg-white bg-clip-border text-gray-700 shadow-md hover:shadow-xl transition-all" data-category="kerajinan">
                             <div class="relative mx-4 -mt-8 h-44 overflow-hidden rounded-3xl shadow-lg shadow-emerald-500/40">
-                                <img src="{{ asset('images/directory/umkm-anyaman-bambu-prakarsa.jpg') }}" alt="Anyaman Bambu Prakarsa" class="h-full w-full object-cover" loading="lazy">
+                                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop" alt="Anyaman Bambu Prakarsa" class="h-full w-full object-cover" loading="lazy">
                             </div>
                             <div class="p-6 pt-8 space-y-3">
                                 <span class="inline-block text-xs font-semibold uppercase tracking-wide text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">Kategori Kerajinan</span>
@@ -192,7 +192,7 @@
                         </div>
                         <div class="umkm-card relative flex flex-col rounded-2xl bg-white bg-clip-border text-gray-700 shadow-md hover:shadow-xl transition-all" data-category="jasa">
                             <div class="relative mx-4 -mt-8 h-44 overflow-hidden rounded-3xl shadow-lg shadow-purple-500/40">
-                                <img src="{{ asset('images/web1.png') }}" alt="Studio Desain Kemasan" class="h-full w-full object-cover" loading="lazy">
+                                <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=600&fit=crop" alt="Studio Desain Kemasan" class="h-full w-full object-cover" loading="lazy">
                             </div>
                             <div class="p-6 pt-8 space-y-3">
                                 <span class="inline-block text-xs font-semibold uppercase tracking-wide text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Kategori Jasa</span>

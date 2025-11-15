@@ -37,7 +37,7 @@
             <div class="col-span-12 lg:col-span-5">
                 <div class="relative rounded-2xl overflow-hidden shadow-2xl">
                     <div class="aspect-[4/3] bg-gradient-to-br from-primary-700/20 to-transparent relative">
-                        <img src="{{ asset('images/awan.jpeg') }}" alt="Kegiatan Desa" class="w-full h-full object-cover">
+                        <img src="{{ asset('images/gotong-royong.jpeg') }}" alt="Kegiatan Desa" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-navy-900/30 to-transparent"></div>
                         <div class="absolute bottom-4 left-4 text-white">
                             <h3 class="font-semibold text-lg">Gotong Royong Membangun Desa</h3>

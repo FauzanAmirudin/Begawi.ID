@@ -51,9 +51,14 @@ class ProductController extends Controller
             }
         }
         
-        // Jika tidak ada, ambil UMKM business pertama yang aktif (untuk development)
+        // Jika tidak ada, ambil UMKM business pertama yang aktif dan memiliki produk aktif (untuk development)
         // Di production, bisa return null atau redirect
-        return UmkmBusiness::where('status', 'active')->first();
+        return UmkmBusiness::where('status', 'active')
+            ->whereHas('products', function($query) {
+                $query->where('is_active', true);
+            })
+            ->first() 
+            ?? UmkmBusiness::where('status', 'active')->first();
     }
 
     /**

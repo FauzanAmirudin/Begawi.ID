@@ -45,9 +45,13 @@ Route::get('/directory/detail/{id}', [DirectoryController::class, 'show'])->name
 
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/education', [EducationController::class, 'index'])->name('education');
-Route::get('/education/{category}', [EducationController::class, 'category'])->name('education.category');
+// Specific routes must be defined before parameterized routes
+Route::get('/education/tutorial-penggunaan', [EducationController::class, 'tutorialDetail'])->name('education.tutorial-detail');
+Route::get('/education/artikel-inspiratif', [EducationController::class, 'inspiratifDetail'])->name('education.inspiratif-detail');
+Route::get('/education/tips-pemasaran-digital', [EducationController::class, 'tipsDetail'])->name('education.tips-detail');
 Route::get('/education/article/{slug}', [EducationController::class, 'article'])->name('education.article');
 Route::get('/education/video/{slug}', [EducationController::class, 'video'])->name('education.video');
+Route::get('/education/{category}', [EducationController::class, 'category'])->name('education.category');
 
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');

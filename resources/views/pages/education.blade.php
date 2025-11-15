@@ -50,7 +50,7 @@
                     <p class="text-gray-600 leading-relaxed">
                         Panduan praktis pembuatan website untuk pengguna baru agar dapat memulai tanpa kebingungan.
                     </p>
-                    <a href="#" class="inline-flex items-center mt-6 text-emerald-600 font-semibold hover:text-emerald-700 transition-all">
+                    <a href="{{ route('education.tutorial-detail') }}" class="inline-flex items-center mt-6 text-emerald-600 font-semibold hover:text-emerald-700 transition-all">
                         Pelajari Lebih Lanjut
                         <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
@@ -66,7 +66,7 @@
                     <p class="text-gray-600 leading-relaxed">
                         Kisah sukses digitalisasi desa dan UMKM di berbagai daerah sebagai sumber motivasi dan ide baru.
                     </p>
-                    <a href="#" class="inline-flex items-center mt-6 text-purple-600 font-semibold hover:text-purple-700 transition-all">
+                    <a href="{{ route('education.inspiratif-detail') }}" class="inline-flex items-center mt-6 text-purple-600 font-semibold hover:text-purple-700 transition-all">
                         Baca Ceritanya
                         <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
@@ -82,7 +82,7 @@
                     <p class="text-gray-600 leading-relaxed">
                         Konten edukatif mengenai promosi efektif, strategi branding, dan pemasaran online yang relevan.
                     </p>
-                    <a href="#" class="inline-flex items-center mt-6 text-pink-600 font-semibold hover:text-pink-700 transition-all">
+                    <a href="{{ route('education.tips-detail') }}" class="inline-flex items-center mt-6 text-pink-600 font-semibold hover:text-pink-700 transition-all">
                         Lihat Tipsnya
                         <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>

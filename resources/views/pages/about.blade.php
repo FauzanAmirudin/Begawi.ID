@@ -213,10 +213,10 @@
                 </p>
             </div>
             
-            <div class="max-w-6xl mx-auto overflow-x-auto">
-                <div class="flex flex-nowrap gap-8 min-w-max pb-4">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
                     <!-- Team Member 1 -->
-                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all hover-tilt text-center w-72">
+                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all hover-tilt text-center">
                         <div class="relative mb-6">
                             <img src="{{ asset('images/team/ceo.jpg') }}" alt="Andi Prasetyo" class="w-24 h-24 rounded-full mx-auto object-cover">
                             <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-emerald-600 rounded-full flex items-center justify-center">
@@ -245,7 +245,7 @@
                     </div>
                     
                     <!-- Team Member 2 -->
-                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all hover-tilt text-center w-72">
+                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all hover-tilt text-center">
                         <div class="relative mb-6">
                             <img src="{{ asset('images/team/cto.jpg') }}" alt="Sari Indrawati" class="w-24 h-24 rounded-full mx-auto object-cover">
                             <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-emerald-600 rounded-full flex items-center justify-center">
@@ -274,7 +274,7 @@
                     </div>
                     
                     <!-- Team Member 3 -->
-                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all hover-tilt text-center w-72">
+                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all hover-tilt text-center">
                         <div class="relative mb-6">
                             <img src="{{ asset('images/team/cmo.jpg') }}" alt="Budi Hartono" class="w-24 h-24 rounded-full mx-auto object-cover">
                             <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
@@ -303,7 +303,7 @@
                     </div>
                     
                     <!-- Team Member 4 -->
-                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all hover-tilt text-center w-72">
+                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all hover-tilt text-center">
                         <div class="relative mb-6">
                             <img src="{{ asset('images/team/cso.jpg') }}" alt="Rina Wulandari" class="w-24 h-24 rounded-full mx-auto object-cover">
                             <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center">
@@ -332,7 +332,7 @@
                     </div>
                     
                     <!-- Team Member 5 -->
-                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all hover-tilt text-center w-72">
+                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all hover-tilt text-center">
                         <div class="relative mb-6">
                             <img src="{{ asset('images/team/ops.jpg') }}" alt="Dimas Adjie" class="w-24 h-24 rounded-full mx-auto object-cover">
                             <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">

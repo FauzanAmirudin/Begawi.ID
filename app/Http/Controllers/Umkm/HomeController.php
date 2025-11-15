@@ -49,8 +49,13 @@ class HomeController extends Controller
             }
         }
         
-        // Jika tidak ada, ambil UMKM business pertama yang aktif (untuk development)
-        return UmkmBusiness::where('status', 'active')->first();
+        // Jika tidak ada, ambil UMKM business pertama yang aktif dan memiliki produk aktif (untuk development)
+        return UmkmBusiness::where('status', 'active')
+            ->whereHas('products', function($query) {
+                $query->where('is_active', true);
+            })
+            ->first() 
+            ?? UmkmBusiness::where('status', 'active')->first();
     }
 
     /**

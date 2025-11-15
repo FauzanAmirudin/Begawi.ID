@@ -175,6 +175,78 @@ class EducationController extends Controller
         
         return view('pages.education-category', compact('category', 'categoryData', 'tutorials'));
     }
+
+    public function tutorialDetail()
+    {
+        $tutorials = Article::where('is_published', true)
+            ->where('category', 'Tutorial')
+            ->with('creator')
+            ->orderBy('views', 'desc')
+            ->orderBy('published_at', 'desc')
+            ->get()
+            ->map(function ($article) {
+                return [
+                    'id' => $article->id,
+                    'title' => $article->title,
+                    'slug' => $article->slug,
+                    'category' => $article->category,
+                    'duration' => $this->estimateReadingTime($article->content),
+                    'views' => $article->views,
+                    'excerpt' => $article->excerpt ?? Str::limit(strip_tags($article->content), 150),
+                    'image' => $article->featured_image ? Storage::url($article->featured_image) : null,
+                ];
+            });
+        
+        return view('pages.education-tutorial-detail', compact('tutorials'));
+    }
+
+    public function inspiratifDetail()
+    {
+        $articles = Article::where('is_published', true)
+            ->where('category', 'Update')
+            ->with('creator')
+            ->orderBy('views', 'desc')
+            ->orderBy('published_at', 'desc')
+            ->get()
+            ->map(function ($article) {
+                return [
+                    'id' => $article->id,
+                    'title' => $article->title,
+                    'slug' => $article->slug,
+                    'category' => $article->category,
+                    'duration' => $this->estimateReadingTime($article->content),
+                    'views' => $article->views,
+                    'excerpt' => $article->excerpt ?? Str::limit(strip_tags($article->content), 150),
+                    'image' => $article->featured_image ? Storage::url($article->featured_image) : null,
+                ];
+            });
+        
+        return view('pages.education-inspiratif-detail', compact('articles'));
+    }
+
+    public function tipsDetail()
+    {
+        $tips = Article::where('is_published', true)
+            ->where('category', 'Tips')
+            ->with('creator')
+            ->orderBy('views', 'desc')
+            ->orderBy('published_at', 'desc')
+            ->get()
+            ->map(function ($article) {
+                return [
+                    'id' => $article->id,
+                    'title' => $article->title,
+                    'slug' => $article->slug,
+                    'category' => $article->category,
+                    'duration' => $this->estimateReadingTime($article->content),
+                    'views' => $article->views,
+                    'excerpt' => $article->excerpt ?? Str::limit(strip_tags($article->content), 150),
+                    'image' => $article->featured_image ? Storage::url($article->featured_image) : null,
+                ];
+            });
+        
+        return view('pages.education-tips-detail', compact('tips'));
+    }
     
     public function article($slug)
     {
