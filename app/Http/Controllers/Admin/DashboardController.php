@@ -10,6 +10,8 @@ use App\Models\SubscriptionPackage;
 use App\Models\Transaction;
 use App\Models\UmkmBusiness;
 use App\Models\UmkmContentValidation;
+use App\Models\UmkmProduct;
+use App\Models\UmkmVisitor;
 use App\Models\User;
 use App\Models\VideoDocumentation;
 use App\Models\Website;
@@ -334,35 +336,30 @@ class DashboardController extends Controller
             return $this->renderUmkmAdminDashboardEmpty('UMKM business tidak ditemukan untuk akun Anda. Silakan hubungi administrator untuk mendaftarkan UMKM business Anda.');
         }
 
-        // Total produk aktif (approved products)
-        $totalActiveProducts = UmkmContentValidation::where('umkm_business_id', $umkmBusiness->id)
-            ->where('content_type', 'product')
-            ->where('status', 'approved')
+        // Total produk aktif dari tabel umkm_products
+        $totalActiveProducts = UmkmProduct::where('umkm_business_id', $umkmBusiness->id)
+            ->where('is_active', true)
             ->count();
 
-        // Jumlah pengunjung website UMKM
-        $totalVisitors = $umkmBusiness->visits_count ?? 0;
+        // Jumlah pengunjung website UMKM dari tabel umkm_visitors
+        $totalVisitors = UmkmVisitor::where('umkm_business_id', $umkmBusiness->id)->count();
 
-        // Produk paling banyak dilihat (using content_data or placeholder)
-        $topProducts = UmkmContentValidation::where('umkm_business_id', $umkmBusiness->id)
-            ->where('content_type', 'product')
-            ->where('status', 'approved')
-            ->latest('updated_at')
-            ->take(5)
+        // Produk paling banyak dilihat dari tabel umkm_products dengan view_count
+        $topProducts = UmkmProduct::where('umkm_business_id', $umkmBusiness->id)
+            ->where('is_active', true)
+            ->with('primaryImage')
+            ->orderBy('view_count', 'desc')
+            ->take(3)
             ->get()
             ->map(function ($product) {
-                $views = $product->content_data['views'] ?? rand(10, 500);
                 return [
                     'title' => $product->title,
-                    'views' => $views,
-                    'image' => $product->content_data['image'] ?? null,
+                    'views' => $product->view_count ?? 0,
+                    'image' => $product->primaryImage ? $product->primaryImage->image_path : null,
                 ];
-            })
-            ->sortByDesc('views')
-            ->take(3)
-            ->values();
+            });
 
-        // Notifikasi: produk menunggu verifikasi
+        // Notifikasi: produk menunggu verifikasi dari UmkmContentValidation
         $pendingProducts = UmkmContentValidation::where('umkm_business_id', $umkmBusiness->id)
             ->where('content_type', 'product')
             ->whereIn('status', ['review', 'verification'])
@@ -370,6 +367,9 @@ class DashboardController extends Controller
 
         // Template update notifications (placeholder - can be enhanced later)
         $templateUpdateNeeded = false; // Can be enhanced with actual template version checking
+
+        // Get visitor summary for use in cards
+        $visitorSummary = $this->getVisitorSummary($umkmBusiness);
 
         // Aktivitas terakhir
         $recentActivities = UmkmContentValidation::where('umkm_business_id', $umkmBusiness->id)
@@ -426,7 +426,7 @@ class DashboardController extends Controller
                 'link' => $umkmBusiness->website ? 'https://' . $umkmBusiness->subdomain : '#',
                 'link_label' => 'Lihat Website',
                 'badge' => [
-                    'label' => '+12%',
+                    'label' => ($visitorSummary['growth'] > 0 ? '+' : '') . $visitorSummary['growth'] . '%',
                     'text' => 'Bulan ini',
                 ],
             ],
@@ -497,9 +497,10 @@ class DashboardController extends Controller
             ],
         ];
 
-        // Charts data (placeholder for now)
+        // Charts data
+        $visitorStats = $this->umkmVisitorStats($umkmBusiness);
         $charts = [
-            'visitors' => $this->umkmVisitorStats($umkmBusiness),
+            'visitors' => $visitorStats,
             'products' => $this->umkmProductsChart($umkmBusiness),
         ];
 
@@ -534,11 +535,7 @@ class DashboardController extends Controller
                 ->toArray(),
             'quickActions' => $quickActions,
             'sidebarHighlights' => $sidebarHighlights,
-            'visitorSummary' => [
-                'total' => number_format($totalVisitors),
-                'average' => number_format($totalVisitors > 0 ? $totalVisitors / 30 : 0),
-                'growth' => 12, // Placeholder
-            ],
+            'visitorSummary' => $this->getVisitorSummary($umkmBusiness),
             'umkmBusiness' => $umkmBusiness,
         ]);
     }
@@ -657,7 +654,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get UMKM visitor stats
+     * Get UMKM visitor stats from UmkmVisitor table
      */
     protected function umkmVisitorStats($umkmBusiness): array
     {
@@ -665,23 +662,32 @@ class DashboardController extends Controller
             return Carbon::now()->subMonths($offset);
         });
 
-        // Placeholder data - can be enhanced with actual visitor tracking
-        $baseVisitors = $umkmBusiness->visits_count ?? 0;
         $dataset = [];
-        foreach (range(0, 5) as $i) {
-            $dataset[] = (int) ($baseVisitors / 6) + rand(0, 50);
+        foreach ($months as $month) {
+            $count = UmkmVisitor::where('umkm_business_id', $umkmBusiness->id)
+                ->whereYear('visited_at', $month->year)
+                ->whereMonth('visited_at', $month->month)
+                ->count();
+            $dataset[] = $count;
         }
+
+        // Calculate growth percentage (current month vs previous month)
+        $currentMonth = $dataset[count($dataset) - 1] ?? 0;
+        $previousMonth = $dataset[count($dataset) - 2] ?? 0;
+        $growth = $previousMonth > 0 
+            ? round((($currentMonth - $previousMonth) / $previousMonth) * 100, 1)
+            : ($currentMonth > 0 ? 100 : 0);
 
         return [
             'labels' => $months->map(fn (Carbon $month) => $month->translatedFormat('M'))->all(),
             'dataset' => $dataset,
-            'growth' => 12,
+            'growth' => $growth,
             'average' => (int) round(array_sum($dataset) / max(count($dataset), 1)),
         ];
     }
 
     /**
-     * Get UMKM products chart data
+     * Get UMKM products chart data from UmkmProduct table
      */
     protected function umkmProductsChart($umkmBusiness): array
     {
@@ -690,12 +696,11 @@ class DashboardController extends Controller
         });
 
         $dataset = [];
-        foreach (range(0, 5) as $i) {
-            $count = UmkmContentValidation::where('umkm_business_id', $umkmBusiness->id)
-                ->where('content_type', 'product')
-                ->where('status', 'approved')
-                ->whereMonth('created_at', Carbon::now()->subMonths(5 - $i)->month)
-                ->whereYear('created_at', Carbon::now()->subMonths(5 - $i)->year)
+        foreach ($months as $month) {
+            $count = UmkmProduct::where('umkm_business_id', $umkmBusiness->id)
+                ->where('is_active', true)
+                ->whereYear('created_at', $month->year)
+                ->whereMonth('created_at', $month->month)
                 ->count();
             $dataset[] = $count;
         }
@@ -703,6 +708,41 @@ class DashboardController extends Controller
         return [
             'labels' => $months->map(fn (Carbon $month) => $month->translatedFormat('M'))->all(),
             'dataset' => $dataset,
+        ];
+    }
+
+    /**
+     * Get visitor summary with real data from UmkmVisitor
+     */
+    protected function getVisitorSummary($umkmBusiness): array
+    {
+        $totalVisitors = UmkmVisitor::where('umkm_business_id', $umkmBusiness->id)->count();
+        
+        // Calculate average daily visitors (last 30 days)
+        $last30Days = UmkmVisitor::where('umkm_business_id', $umkmBusiness->id)
+            ->where('visited_at', '>=', Carbon::now()->subDays(30))
+            ->count();
+        $averageDaily = round($last30Days / 30, 1);
+
+        // Calculate growth (current month vs previous month)
+        $currentMonth = UmkmVisitor::where('umkm_business_id', $umkmBusiness->id)
+            ->whereYear('visited_at', Carbon::now()->year)
+            ->whereMonth('visited_at', Carbon::now()->month)
+            ->count();
+        
+        $previousMonth = UmkmVisitor::where('umkm_business_id', $umkmBusiness->id)
+            ->whereYear('visited_at', Carbon::now()->subMonth()->year)
+            ->whereMonth('visited_at', Carbon::now()->subMonth()->month)
+            ->count();
+        
+        $growth = $previousMonth > 0 
+            ? round((($currentMonth - $previousMonth) / $previousMonth) * 100, 1)
+            : ($currentMonth > 0 ? 100 : 0);
+
+        return [
+            'total' => number_format($totalVisitors),
+            'average' => number_format($averageDaily),
+            'growth' => $growth,
         ];
     }
 
