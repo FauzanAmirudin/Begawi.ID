@@ -28,7 +28,7 @@
                         Galeri
                     </h2>
 
-                    <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="flex flex-col sm:flex-row gap-4">   
                         <!-- Button Lihat Semua Foto -->
                         <a href="{{ route('desa.galeri-wisata.galeri-foto') }}" 
                            class="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-2 rounded-xl transition-colors duration-300 flex items-center gap-2 whitespace-nowrap">

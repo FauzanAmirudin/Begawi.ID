@@ -2,6 +2,10 @@
 
 @section('title', 'Laporan Produk')
 
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
+
 @push('styles')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 @endpush
@@ -177,7 +181,7 @@
                         <td class="py-4 px-4">
                             <div class="flex items-center gap-3">
                                 @if($product->primaryImage)
-                                    <img src="{{ asset('storage/' . $product->primaryImage->image_path) }}" alt="{{ $product->title }}" class="w-12 h-12 rounded-lg object-cover">
+                                    <img src="{{ Storage::url($product->primaryImage->image_path) }}" alt="{{ $product->title }}" class="w-12 h-12 rounded-lg object-cover">
                                 @else
                                     <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
                                         <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

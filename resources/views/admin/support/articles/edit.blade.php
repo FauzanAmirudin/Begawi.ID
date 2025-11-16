@@ -2,6 +2,10 @@
 
 @section('title', 'Edit Artikel')
 
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
+
 @section('content')
 <div class="p-6">
     <div class="flex flex-col gap-6">
@@ -105,7 +109,7 @@
                             @if($article->featured_image)
                             <div class="mt-3">
                                 <p class="text-xs text-gray-500 mb-2">Pratinjau saat ini</p>
-                                <img src="{{ asset('storage/' . $article->featured_image) }}" alt="Featured image" class="rounded-lg border border-gray-100">
+                                <img src="{{ Storage::url($article->featured_image) }}" alt="Featured image" class="rounded-lg border border-gray-100">
                             </div>
                             @endif
                         </div>

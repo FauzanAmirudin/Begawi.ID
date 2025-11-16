@@ -2,8 +2,8 @@
 
 @section('title', $article->title)
 
-@section('content')
 @php
+    use Illuminate\Support\Facades\Storage;
     $statusChip = $article->is_published
         ? ['label' => 'Published', 'classes' => 'bg-emerald-100 text-emerald-600']
         : ['label' => 'Draft', 'classes' => 'bg-gray-100 text-gray-600'];
@@ -39,7 +39,7 @@
 
         @if($article->featured_image)
         <div class="rounded-2xl overflow-hidden border border-gray-100">
-            <img src="{{ asset('storage/' . $article->featured_image) }}" alt="{{ $article->title }}" class="w-full object-cover max-h-[420px]">
+            <img src="{{ Storage::url($article->featured_image) }}" alt="{{ $article->title }}" class="w-full object-cover max-h-[420px]">
         </div>
         @endif
 

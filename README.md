@@ -274,13 +274,21 @@ Begawi-Id/
     php artisan db:seed
     ```
 
-7. **Build Assets**
+7. **Buat Symbolic Link Storage** ⚠️ **PENTING!**
+
+    ```bash
+    php artisan storage:link
+    ```
+
+    > **Catatan:** Langkah ini WAJIB dilakukan agar gambar yang diupload bisa diakses di web. Tanpa symbolic link ini, file akan tersimpan tapi tidak bisa ditampilkan di browser.
+
+8. **Build Assets**
 
     ```bash
     npm run build
     ```
 
-8. **Jalankan Development Server**
+9. **Jalankan Development Server**
 
     ```bash
     php artisan serve
@@ -292,9 +300,11 @@ Begawi-Id/
     composer run dev
     ```
 
-9. **Akses Aplikasi**
+10. **Akses Aplikasi**
     - Frontend: http://localhost:8000
     - Admin: http://localhost:8000/admin/dashboard
+
+> ⚠️ **Troubleshooting:** Jika gambar tidak muncul setelah upload, lihat file [TROUBLESHOOTING.md](TROUBLESHOOTING.md) untuk solusi lengkap.
 
 ### 🔐 Default Login
 
