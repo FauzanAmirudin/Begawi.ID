@@ -1,11 +1,11 @@
 @php
   // Desktop
-  $baseDesktop = 'block py-2 px-3 md:p-0 rounded md:bg-transparent liquid-underline font-bold';
+  $baseDesktop = 'block py-2 px-3 md:p-0 rounded md:bg-transparent liquid-underline font-semibold';
   $activeDesktop = 'text-emerald-600 transition-colors liquid-underline-active';
   $inactiveDesktop = 'text-charcoal-grey hover:text-primary md:hover:text-primary';
 
   // Mobile
-  $baseMobile = 'block py-2 px-3 rounded font-bold';
+  $baseMobile = 'block py-2 px-3 rounded font-semibold';
   $activeMobile = 'text-emerald-600 transition-colors bg-gray-100';
   $inactiveMobile = 'text-charcoal-grey hover:bg-gray-100';
 @endphp
@@ -52,7 +52,7 @@
           class="relative inline-flex items-center justify-center p-1 w-10 h-10 text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
           <img src="/images/Icon-Keranjang.png" alt="icon keranjang" srcset="" class="w-7">
           <span x-show="$store.cart.totalCount()> 0" x-text="$store.cart.totalCount()"
-            class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-primary-darker rounded-full"></span>
+            class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-semibold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-primary-darker rounded-full"></span>
         </a>
       </div>
 

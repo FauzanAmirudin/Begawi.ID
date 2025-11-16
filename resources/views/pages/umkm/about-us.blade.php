@@ -7,7 +7,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
             <div class="lg:col-span-2 space-y-12">
                 <section class="bg-white shadow-lg rounded-2xl p-8 hover:shadow-xl transition">
-                    <h2 class="text-3xl font-bold text-dark mb-6 border-b-2 border-primary pb-3">
+                    <h2 class="text-3xl font-semibold text-dark mb-6 border-b-2 border-primary pb-3">
                         Profil Usaha
                     </h2>
 
@@ -41,7 +41,7 @@
                 </section>
 
                 <section class="bg-white shadow-lg rounded-2xl p-8 hover:shadow-xl transition">
-                    <h2 class="text-3xl font-bold text-dark mb-4 border-b-2 border-primary pb-3">
+                    <h2 class="text-3xl font-semibold text-dark mb-4 border-b-2 border-primary pb-3">
                         Ikuti Kami
                     </h2>
                     <p class="text-lg text-gray-700 mb-6">
@@ -83,7 +83,7 @@
 
             <div class="lg:col-span-1">
                 <section class="bg-white shadow-lg rounded-2xl p-8 sticky top-24 hover:shadow-xl transition">
-                    <h2 class="text-3xl font-bold text-dark mb-6 border-b-2 border-primary pb-3">
+                    <h2 class="text-3xl font-semibold text-dark mb-6 border-b-2 border-primary pb-3">
                         Lokasi Kami
                     </h2>
 
