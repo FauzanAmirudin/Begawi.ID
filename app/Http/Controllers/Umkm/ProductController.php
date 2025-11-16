@@ -65,103 +65,132 @@ class ProductController extends Controller
      * Menampilkan halaman katalog (semua produk & unggulan).
      */
     public function index(Request $request)
-    {
-        $umkmBusiness = $this->getUmkmBusiness($request);
+{
+    $umkmBusiness = $this->getUmkmBusiness($request);
+    
+    if (!$umkmBusiness) {
+        // Fallback ke data dummy jika tidak ada UMKM business
+        return $this->getDummyData($request);
+    }
+
+    // ===========================
+    // Query dasar untuk semua produk
+    // ===========================
+    $allProductsQuery = UmkmProduct::where('umkm_business_id', $umkmBusiness->id)
+        ->where('is_active', true)
+        ->with(['category', 'images'])
+        ->orderBy('is_featured', 'desc')
+        ->orderBy('created_at', 'desc');
+
+    // ===========================
+    // Produk Unggulan (ambil sebelum filter search/kategori)
+    // ===========================
+    $produkUnggulanQuery = clone $allProductsQuery;
+    $produkUnggulanProducts = $produkUnggulanQuery->where('is_featured', true)->get();
+
+    $produkUnggulan = $produkUnggulanProducts->map(function($product) {
+        $primaryImage = $product->primaryImage;
+        $imagePath = $primaryImage ? Storage::url($primaryImage->image_path) : '/assets/Sneaker.png';
         
-        if (!$umkmBusiness) {
-            // Fallback ke data dummy jika tidak ada UMKM business
-            return $this->getDummyData($request);
-        }
+        return [
+            'id' => $product->id,
+            'slug' => $product->slug,
+            'nama' => $product->title,
+            'harga' => $product->price,
+            'harga_diskon' => $product->discount_price,
+            'diskon' => $product->discount_percentage > 0 ? (string) $product->discount_percentage : null,
+            'gambar' => $imagePath,
+            'unggulan' => true,
+        ];
+    })->toArray();
 
-        // Ambil produk dari database
-        $query = UmkmProduct::where('umkm_business_id', $umkmBusiness->id)
-            ->where('is_active', true)
-            ->with(['category', 'images'])
-            ->orderBy('is_featured', 'desc')
-            ->orderBy('created_at', 'desc');
+    // ===========================
+    // Filter search & kategori untuk semua produk
+    // ===========================
+    $query = $allProductsQuery;
 
-        // Filter search
-        if ($request->search) {
-            $query->where('title', 'like', '%' . $request->search . '%');
-        }
+    if ($request->search) {
+        $query->where('title', 'like', '%' . $request->search . '%');
+    }
 
-        // Filter kategori
-        if ($request->kategori) {
-            $query->whereHas('category', function($q) use ($request) {
-                $q->where('slug', $request->kategori);
-            });
-        }
+    if ($request->kategori) {
+        $query->whereHas('category', function($q) use ($request) {
+            $q->where('slug', $request->kategori);
+        });
+    }
 
-        $allProducts = $query->get();
+    $allProducts = $query->get();
+
+    // Konversi ke array untuk view
+    $produkArray = $allProducts->map(function($product) {
+        $primaryImage = $product->primaryImage;
+        $imagePath = $primaryImage ? Storage::url($primaryImage->image_path) : '/assets/Sneaker.png';
         
-        // Konversi ke format array untuk kompatibilitas dengan view
-        $produkArray = $allProducts->map(function($product) {
-            $primaryImage = $product->primaryImage;
-            $imagePath = $primaryImage ? Storage::url($primaryImage->image_path) : '/assets/Sneaker.png';
-            
-            $galleryImages = $product->images->map(function($img) {
-                return Storage::url($img->image_path);
-            })->toArray();
-            
-            if (empty($galleryImages)) {
-                $galleryImages = [$imagePath];
-            }
-
-            return [
-                'id' => $product->id,
-                'slug' => $product->slug,
-                'nama' => $product->title,
-                'harga' => $product->price,
-                'harga_diskon' => $product->discount_price,
-                'diskon' => $product->discount_percentage > 0 ? (string) $product->discount_percentage : null,
-                'gambar' => $imagePath,
-                'unggulan' => $product->is_featured,
-                'label' => $this->getLabelName($product->labels),
-                'label_color' => $this->getLabelColor($product->labels),
-                'stok' => $product->stock,
-                'kategori' => $product->category ? $product->category->slug : null,
-                'kategori_nama' => $product->category ? $product->category->name : 'Uncategorized',
-                'deskripsi' => $product->description ?? '<p>Produk berkualitas dari UMKM lokal.</p>',
-                'galeri_gambar' => $galleryImages,
-            ];
+        $galleryImages = $product->images->map(function($img) {
+            return Storage::url($img->image_path);
         })->toArray();
 
-        // Produk unggulan
-        $produkUnggulan = array_values(array_filter($produkArray, fn($p) => $p['unggulan'] ?? false));
+        if (empty($galleryImages)) {
+            $galleryImages = [$imagePath];
+        }
 
-        // Pagination
-        $page = $request->get('page', 1);
-        $perPage = 8;
-        $collection = collect($produkArray);
-        $paginatedProduk = new LengthAwarePaginator(
-            $collection->forPage($page, $perPage),
-            $collection->count(),
-            $perPage,
-            $page,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
-
-        // Ambil kategori untuk filter
-        $kategories = UmkmProductCategory::where('umkm_business_id', $umkmBusiness->id)
-            ->where('is_active', true)
-            ->orderBy('sort_order')
-            ->get();
-
-        $linkWA = $this->getLinkWA($umkmBusiness);
-        $socials = [
-            'instagram' => 'https://instagram.com/umkm',
-            'facebook' => 'https://facebook.com/umkm',
-            'tiktok' => 'https://tiktok.com/@umkm',
+        return [
+            'id' => $product->id,
+            'slug' => $product->slug,
+            'nama' => $product->title,
+            'harga' => $product->price,
+            'harga_diskon' => $product->discount_price,
+            'diskon' => $product->discount_percentage > 0 ? (string) $product->discount_percentage : null,
+            'gambar' => $imagePath,
+            'unggulan' => $product->is_featured,
+            'label' => $this->getLabelName($product->labels),
+            'label_color' => $this->getLabelColor($product->labels),
+            'stok' => $product->stock,
+            'kategori' => $product->category ? $product->category->slug : null,
+            'kategori_nama' => $product->category ? $product->category->name : 'Uncategorized',
+            'deskripsi' => $product->description ?? '<p>Produk berkualitas dari UMKM lokal.</p>',
+            'galeri_gambar' => $galleryImages,
         ];
+    })->toArray();
 
-        return view('pages.umkm.product', [
-            'produkUnggulan' => $produkUnggulan,
-            'semuaProduk' => $paginatedProduk,
-            'kategories' => $kategories,
-            'linkWA' => $linkWA,
-            'socials' => $socials
-        ]);
-    }
+    // ===========================
+    // Pagination
+    // ===========================
+    $page = $request->get('page', 1);
+    $perPage = 8;
+    $collection = collect($produkArray);
+    $paginatedProduk = new LengthAwarePaginator(
+        $collection->forPage($page, $perPage),
+        $collection->count(),
+        $perPage,
+        $page,
+        ['path' => $request->url(), 'query' => $request->query()]
+    );
+
+    // ===========================
+    // Ambil kategori untuk filter
+    // ===========================
+    $kategories = UmkmProductCategory::where('umkm_business_id', $umkmBusiness->id)
+        ->where('is_active', true)
+        ->orderBy('sort_order')
+        ->get();
+
+    $linkWA = $this->getLinkWA($umkmBusiness);
+    $socials = [
+        'instagram' => 'https://instagram.com/umkm',
+        'facebook' => 'https://facebook.com/umkm',
+        'tiktok' => 'https://tiktok.com/@umkm',
+    ];
+
+    return view('pages.umkm.product', [
+        'produkUnggulan' => $produkUnggulan,
+        'semuaProduk' => $paginatedProduk,
+        'kategories' => $kategories,
+        'linkWA' => $linkWA,
+        'socials' => $socials
+    ]);
+}
+
 
     /**
      * Menampilkan halaman detail satu produk.

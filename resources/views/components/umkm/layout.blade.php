@@ -7,6 +7,7 @@
 
   {{-- Judul halaman dinamis --}}
   <title>{{ $title ?? 'Selamat Datang' }}</title>
+  <link rel="shortcut icon" href="/images/Logo-Begawi.png" type="image/x-icon">
 
   {{-- Memuat CSS/JS (Tailwind + Alpine.js) --}}
   @vite(['resources/css/umkm.css', 'resources/js/app.js'])
@@ -14,7 +15,7 @@
 
 </head>
 
-<body class="bg-gray-100 dark:bg-dark font-sans antialiased">
+<body class="bg-warm-ivory font-sans antialiased">
 
   {{-- Navbar persisten --}}
   <x-umkm.navbar :linkWA="$linkWA"/>

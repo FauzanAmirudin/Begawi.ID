@@ -4,55 +4,392 @@
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+@source '../../app/**/*.php';
+@source '../../routes/**/*.php';
 
 @theme {
-    --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif,
+    /* Font Families */
+    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
         "Noto Color Emoji";
+    --font-manrope: "Manrope", ui-sans-serif, system-ui, sans-serif;
+    --font-poppins: "Poppins", ui-sans-serif, system-ui, sans-serif;
 
-    --color-primary: #1e93ab; /* Biru kehijauan */
-    --color-primary-light: #57b4c7; /* Hover / highlight */
-    --color-primary-dark: #166d7d; /* Dark mode / hover gelap */
+    /* Primary Green Palette (Brand Color) */
+    --color-primary: #83cd20;
+    --color-primary-light: #a5d85a;
+    --color-primary-lighter: #c7e394;
+    --color-primary-dark: #6ba41a;
+    --color-primary-darker: #1a723d;
+    --color-primary-50: #f1f5eb;
+    --color-primary-100: #e8f0d8;
+    --color-primary-200: #d1e1b1;
+    --color-primary-300: #bad28a;
+    --color-primary-400: #a3c363;
+    --color-primary-500: #83cd20;
+    --color-primary-600: #6ba41a;
+    --color-primary-700: #1a723d;
+    --color-primary-800: #14552e;
+    --color-primary-900: #0e381f;
 
-    --color-secondary: #dcdcdc; /* Abu-abu netral */
-    --color-secondary-light: #f0f0f0; /* Background terang / hover */
-    --color-secondary-dark: #b0b0b0; /* Dark mode / hover gelap */
+    /* Dark Navy (Text & Dark Backgrounds) */
+    --color-navy: #0c1724;
+    --color-navy-light: #1a2a3d;
+    --color-navy-lighter: #283d56;
+    --color-navy-50: #f0f2f5;
+    --color-navy-100: #d9dee5;
+    --color-navy-200: #b3bdcb;
+    --color-navy-300: #8d9cb1;
+    --color-navy-400: #677b97;
+    --color-navy-500: #415a7d;
+    --color-navy-600: #344763;
+    --color-navy-700: #273549;
+    --color-navy-800: #1a222f;
+    --color-navy-900: #0c1724;
 
-    --color-accent: #ffd700; /* Emas / aksen */
-    --color-accent-light: #ffeb70; /* Hover / highlight */
-    --color-accent-dark: #ccaa00; /* Dark mode / aksen gelap */
+    /* Legacy support (mapping to new colors) */
+    --color-emerald-green: #83cd20;
+    --color-emerald-dark: #1a723d;
+    --color-emerald-light: #a5d85a;
+    --color-emerald-50: #f1f5eb;
+    --color-emerald-100: #e8f0d8;
+    --color-emerald-200: #d1e1b1;
+    --color-emerald-300: #bad28a;
+    --color-emerald-400: #a3c363;
+    --color-emerald-500: #83cd20;
+    --color-emerald-600: #6ba41a;
+    --color-emerald-700: #1a723d;
+    --color-emerald-800: #14552e;
+    --color-emerald-900: #0e381f;
 
-    --color-light: #f3f2ec; /* Background utama terang */
-    --color-dark: #2a3335; /* Teks utama gelap */
+    /* Custom Brand Colors */
+    --color-warm-ivory: #f1f5eb;
+    --color-charcoal-grey: #0c1724;
 
-    /* =======================
-       VARIASI TEKS
-       ======================= */
-    --color-dark-light: #4c4c4c; /* Teks gelap lembut */
-    --color-gray: #888888; /* Teks abu-abu sedang */
-    --color-gray-light: #bbbbbb; /* Teks / border ringan */
-    --color-gray-dark: #e0e0e0; /* Teks / border terang untuk dark mode */
+    /* Custom Spacing */
+    --spacing-18: 4.5rem;
+    --spacing-88: 22rem;
+    --spacing-128: 32rem;
 
-    /* =======================
-       BACKGROUND
-       ======================= */
-    --color-bg-card: #ffffff; /* Card / konten */
-    --color-bg-card-dark: #1f1f2e; /* Card dark mode */
-    --color-bg-section: #f8f8f8; /* Section page */
-    --color-bg-section-dark: #12121a; /* Section dark mode */
+    /* Custom Border Radius */
+    --radius-4xl: 2rem;
 
-    /* =======================
-       STATUS / NOTIFIKASI
-       ======================= */
-    --color-success: #28a745; /* Sukses / berhasil */
-    --color-warning: #ffc107; /* Peringatan */
-    --color-error: #dc3545; /* Error / gagal */
+    /* Custom Backdrop Blur */
+    --blur-xs: 2px;
 
-    /* =======================
-       BORDER & SHADOW
-       ======================= */
-    --color-border: #e0e0e0; /* Border / subtle */
-    --color-border-dark: #2a2a3d; /* Border dark mode */
-    --color-shadow: rgba(0, 0, 0, 0.1); /* Shadow ringan */
-    --color-shadow-dark: rgba(0, 0, 0, 0.5); /* Shadow dark mode */
+    /* Custom Z-Index */
+    --z-index-60: 60;
+    --z-index-70: 70;
+    --z-index-80: 80;
+    --z-index-90: 90;
+    --z-index-100: 100;
+
+    /* Custom Animations */
+    --animate-float: float 3s ease-in-out infinite;
+    --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+    --animate-fadeInUp: fadeInUp 0.8s ease-out forwards;
+    --animate-bounceIn: bounceIn 0.6s ease-out forwards;
+    --animate-liquid-underline: liquid-underline 0.3s ease forwards;
+
+    /* Custom Box Shadows */
+    --shadow-glow-emerald: 0 10px 40px rgba(131, 205, 32, 0.3);
+    --shadow-glow-emerald-lg: 0 20px 60px rgba(131, 205, 32, 0.4);
+    --shadow-glow-primary: 0 10px 40px rgba(131, 205, 32, 0.3);
+    --shadow-glow-primary-lg: 0 20px 60px rgba(131, 205, 32, 0.4);
+
+    /* Custom Background Images (Gradients) */
+    --bg-gradient-accent: linear-gradient(135deg, #1a723d, #83cd20);
+    --bg-gradient-emerald: linear-gradient(135deg, #1a723d, #83cd20);
+    --bg-gradient-hero: linear-gradient(
+        135deg,
+        rgba(26, 114, 61, 0.9),
+        rgba(131, 205, 32, 0.8)
+    );
+    --bg-gradient-primary: linear-gradient(135deg, #83cd20, #a5d85a);
+    --bg-gradient-dark: linear-gradient(135deg, #0c1724, #1a723d);
+    --bg-gradient-light: linear-gradient(135deg, #f1f5eb, #ffffff);
+}
+
+/* Custom CSS Variables (untuk kompatibilitas dengan custom classes) */
+:root {
+    /* Primary Colors */
+    --primary-green: #83cd20;
+    --primary-dark: #1a723d;
+    --primary-light: #a5d85a;
+    --primary-lighter: #c7e394;
+
+    /* Background Colors */
+    --warm-ivory: #f1f5eb;
+    --charcoal-grey: #0c1724;
+    --navy-dark: #0c1724;
+
+    /* Legacy Support */
+    --emerald-green: #83cd20;
+    --emerald-dark: #1a723d;
+    --emerald-light: #a5d85a;
+
+    /* Gradients */
+    --accent-gradient: linear-gradient(135deg, #1a723d, #83cd20);
+    --gradient-primary: linear-gradient(135deg, #83cd20, #a5d85a);
+    --gradient-dark: linear-gradient(135deg, #0c1724, #1a723d);
+    --gradient-light: linear-gradient(135deg, #f1f5eb, #ffffff);
+}
+
+/* Base Styles */
+* {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Inter", sans-serif;
+    line-height: 1.6;
+}
+
+.font-manrope {
+    font-family: "Manrope", sans-serif;
+}
+
+.font-poppins {
+    font-family: "Poppins", sans-serif;
+}
+
+/* Custom Utilities */
+.text-gradient {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.bg-gradient-accent {
+    background: var(--accent-gradient);
+}
+
+.glassmorphism {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.glassmorphism-dark {
+    background: rgba(28, 28, 30, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Animations */
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes pulse-glow {
+    0%,
+    100% {
+        box-shadow: 0 0 20px rgba(131, 205, 32, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(131, 205, 32, 0.6);
+    }
+}
+
+@keyframes liquid-underline {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+@keyframes typewriter {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-fadeInUp {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-bounceIn {
+    animation: bounceIn 0.6s ease-out forwards;
+}
+
+/* Testimonial card visibility */
+.testimonial-card .glassmorphism-dark {
+    box-shadow: 0 14px 40px rgba(131, 205, 32, 0.28),
+        0 10px 20px rgba(0, 0, 0, 0.45);
+}
+
+/* Marquee (auto-scrolling carousel) */
+@keyframes marquee-scroll-x {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.marquee {
+    position: relative;
+}
+
+.marquee-track {
+    will-change: transform;
+    animation: marquee-scroll-x 35s linear infinite;
+}
+
+/* Pause animation for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+        animation: none;
+    }
+}
+
+/* Hover Effects */
+.hover-tilt {
+    transition: transform 0.3s ease;
+}
+
+.hover-tilt:hover {
+    transform: perspective(1000px) rotateX(5deg) rotateY(5deg) scale(1.02);
+}
+
+.hover-glow {
+    transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+    box-shadow: 0 10px 40px rgba(131, 205, 32, 0.3);
+    transform: translateY(-2px);
+}
+
+.liquid-underline {
+    position: relative;
+}
+
+.liquid-underline::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background: var(--accent-gradient);
+    transition: width 0.3s ease;
+}
+
+.liquid-underline:hover::after {
+    width: 100%;
+}
+.liquid-underline-active::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background: var(--accent-gradient);
+    transition: width 0.3s ease;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-gradient);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #1a723d;
+}
+
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.6) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(148, 163, 184, 0.6);
+    border-radius: 9999px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .mobile-hidden {
+        display: none;
+    }
+
+    .mobile-bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 50;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
 }
