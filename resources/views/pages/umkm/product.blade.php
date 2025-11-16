@@ -9,7 +9,7 @@
         <section class="mb-16">
             <div class="flex items-center gap-4">
                 <div class="bg-primary-dark w-2 h-10 rounded-full"></div>
-                <h2 class="text-3xl font-bold text-charcoal-grey flex items-center gap-3">
+                <h2 class="text-3xl font-semibold text-charcoal-grey flex items-center gap-3">
                     Produk Unggulan <span class="text-2xl"><img src="/images/Icon-Produk-Unggulan.png" alt="icon produk unggulan umk" class="inline-block w-10 ml-2"></span>
                 </h2>
             </div>
@@ -37,7 +37,7 @@
                             <h3 class="text-md md:text-lg font-semibold text-[var(--color-navy)] truncate">
                                 {{ $produk['nama'] }}
                             </h3>
-                            <p class="text-[var(--color-navy)] font-bold mt-2 text-md md:text-lg">
+                            <p class="text-[var(--color-navy)] font-semibold mt-2 text-md md:text-lg">
                                 @if(isset($produk['harga_diskon']) && $produk['harga_diskon'] > 0)
                                     <span class="line-through text-gray-400 text-sm">Rp. {{ number_format($produk['harga'], 0, ',', '.') }}</span>
                                     <span class="ml-2">Rp. {{ number_format($produk['harga_diskon'], 0, ',', '.') }}</span>
@@ -59,7 +59,7 @@
         <section class="mt-20">
             <div class="flex items-center gap-4">
                 <div class="bg-primary-dark w-2 h-10 rounded-full"></div>
-                <h2 class="text-3xl font-bold text-charcoal-grey flex items-center gap-3">
+                <h2 class="text-3xl font-semibold text-charcoal-grey flex items-center gap-3">
                     Galeri Produk <span class="text-2xl"><img src="/images/Icon-Galeri-Produk.png" alt="icon produk unggulan umk" class="inline-block w-10 ml-2"></span>
                 </h2>
             </div>
@@ -115,7 +115,7 @@
                             <h3 class="text-md md:text-lg font-semibold text-[var(--color-navy)] truncate">
                                 {{ $produk['nama'] }}
                             </h3>
-                            <p class="text-[var(--color-navy)] font-bold mt-2 text-md md:text-lg">
+                            <p class="text-[var(--color-navy)] font-semibold mt-2 text-md md:text-lg">
                                 @if(isset($produk['harga_diskon']) && $produk['harga_diskon'] > 0)
                                     <span class="line-through text-gray-400 text-sm">Rp. {{ number_format($produk['harga'], 0, ',', '.') }}</span>
                                     <span class="ml-2">Rp. {{ number_format($produk['harga_diskon'], 0, ',', '.') }}</span>

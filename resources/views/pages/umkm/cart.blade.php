@@ -4,7 +4,7 @@
     </x-slot:title>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 class="text-3xl font-bold text-dark mb-8">
+        <h1 class="text-3xl font-semibold text-dark mb-8">
             Keranjang Anda
         </h1>
 
@@ -32,7 +32,7 @@
 
                             <div class="flex-grow">
                                 <h3 class="text-lg font-semibold text-charcoal-grey" x-text="item.name"></h3>
-                                <p class="text-md font-bold text-primary-dark" x-text="new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(item.price)"></p>
+                                <p class="text-md font-semibold text-primary-dark" x-text="new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(item.price)"></p>
                             </div>
 
                             <div class="flex items-center gap-3">
@@ -41,7 +41,7 @@
                                     <span class="font-medium text-dark">Jumlah:</span>
                                     <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
                                         <button type="button" @click="$store.cart.updateQuantity(item.id, Math.max(1, item.quantity - 1))"
-                                            class="px-4 py-2 bg-gray-200 text-dark font-bold">-</button>
+                                            class="px-4 py-2 bg-gray-200 text-dark font-semibold">-</button>
 
                                         <input type="number" :value="item.quantity"
                                             @change="$store.cart.updateQuantity(item.id, parseInt($event.target.value))"
@@ -49,7 +49,7 @@
                                             class="w-16 text-center border-l border-r border-gray-300 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
 
                                         <button type="button" @click="$store.cart.updateQuantity(item.id, item.quantity + 1)"
-                                            class="px-4 py-2 bg-gray-200 text-dark font-bold">+</button>
+                                            class="px-4 py-2 bg-gray-200 text-dark font-semibold">+</button>
                                     </div>
                                 </div>
 
@@ -72,12 +72,12 @@
 
                         <div class="flex justify-between mb-2 text-gray-700">
                             <span>Total Item</span>
-                            <span class="font-bold" x-text="$store.cart.totalCount()"></span>
+                            <span class="font-semibold" x-text="$store.cart.totalCount()"></span>
                         </div>
 
                         <div class="flex justify-between mb-4 text-gray-700">
                             <span>Estimasi Harga</span>
-                            <span class="font-bold" x-text="new Intl.NumberFormat('id-ID', { 
+                            <span class="font-semibold" x-text="new Intl.NumberFormat('id-ID', { 
                                       style: 'currency', 
                                       currency: 'IDR', 
                                       minimumFractionDigits: 0 
@@ -88,7 +88,7 @@
                         {{-- Tombol Checkout WhatsApp --}}
                         <a :href="$store.cart.generateWhatsAppLink()" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center px-6 py-3 
                                   bg-gradient-accent hover:bg-green-600 
-                                  text-white text-lg font-bold rounded-full 
+                                  text-white text-lg font-semibold rounded-full 
                                   shadow-md transition-transform transform hover:scale-105">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="currentColor"
                                 viewBox="0 0 24 24">
