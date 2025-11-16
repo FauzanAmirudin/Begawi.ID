@@ -280,7 +280,13 @@ Begawi-Id/
     php artisan storage:link
     ```
 
-    > **Catatan:** Langkah ini WAJIB dilakukan agar gambar yang diupload bisa diakses di web. Tanpa symbolic link ini, file akan tersimpan tapi tidak bisa ditampilkan di browser.
+    > **⚠️ CATATAN PENTING:**
+    >
+    > - Langkah ini **WAJIB** dilakukan di setiap komputer baru yang menjalankan project
+    > - Tanpa symbolic link ini, gambar yang di-upload akan tersimpan di `storage/app/public/` tapi **TIDAK BISA** ditampilkan di browser
+    > - Jika gambar tidak muncul setelah upload, jalankan command ini lagi
+    > - Di Windows, mungkin perlu menjalankan sebagai Administrator
+    > - Lihat [TROUBLESHOOTING.md](TROUBLESHOOTING.md) untuk solusi lengkap masalah gambar tidak tampil
 
 8. **Build Assets**
 
