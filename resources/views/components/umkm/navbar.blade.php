@@ -1,13 +1,13 @@
 @php
-  // Desktop
-  $baseDesktop = 'block py-2 px-3 md:p-0 rounded md:bg-transparent liquid-underline font-semibold';
-  $activeDesktop = 'text-emerald-600 transition-colors liquid-underline-active';
-  $inactiveDesktop = 'text-charcoal-grey hover:text-primary md:hover:text-primary';
+// Desktop
+$baseDesktop = 'block py-2 px-3 md:p-0 rounded md:bg-transparent liquid-underline font-medium';
+$activeDesktop = 'text-emerald-600 transition-colors liquid-underline-active';
+$inactiveDesktop = 'text-charcoal-grey hover:text-primary md:hover:text-primary';
 
-  // Mobile
-  $baseMobile = 'block py-2 px-3 rounded font-semibold';
-  $activeMobile = 'text-emerald-600 transition-colors bg-gray-100';
-  $inactiveMobile = 'text-charcoal-grey hover:bg-gray-100';
+// Mobile
+$baseMobile = 'block py-2 px-3 rounded font-medium';
+$activeMobile = 'text-emerald-600 transition-colors bg-gray-100';
+$inactiveMobile = 'text-charcoal-grey hover:bg-gray-100';
 @endphp
 
 
@@ -28,17 +28,17 @@
       <div class="flex items-center gap-2">
         {{-- Dashboard Admin UMKM (Desktop) --}}
         @auth
-          @if(auth()->user()->role === \App\Models\User::ROLE_ADMIN_UMKM)
-            <a href="{{ route('admin.dashboard.index') }}"
-              class="hidden md:inline-flex items-center gap-2 text-white bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2 text-center transition-all shadow-md hover:shadow-lg">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
-                </path>
-              </svg>
-              Dashboard
-            </a>
-          @endif
+        @if(auth()->user()->role === \App\Models\User::ROLE_ADMIN_UMKM)
+        <a href="{{ route('admin.dashboard.index') }}"
+          class="hidden md:inline-flex items-center gap-2 text-white bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2 text-center transition-all shadow-md hover:shadow-lg">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+            </path>
+          </svg>
+          Dashboard
+        </a>
+        @endif
         @endauth
 
         {{-- Hubungi Kami (Desktop) --}}
@@ -52,7 +52,7 @@
           class="relative inline-flex items-center justify-center p-1 w-10 h-10 text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
           <img src="/images/Icon-Keranjang.png" alt="icon keranjang" srcset="" class="w-7">
           <span x-show="$store.cart.totalCount()> 0" x-text="$store.cart.totalCount()"
-            class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-semibold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-primary-darker rounded-full"></span>
+            class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-medium leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-primary-darker rounded-full"></span>
         </a>
       </div>
 
@@ -121,19 +121,19 @@
       </li>
       {{-- Dashboard Admin UMKM (Mobile) --}}
       @auth
-        @if(auth()->user()->role === \App\Models\User::ROLE_ADMIN_UMKM)
-          <li>
-            <a href="{{ route('admin.dashboard.index') }}"
-              class="flex items-center gap-2 w-full mt-2 text-white justify-center bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2 text-center transition-all shadow-md hover:shadow-lg">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
-                </path>
-              </svg>
-              Dashboard Admin
-            </a>
-          </li>
-        @endif
+      @if(auth()->user()->role === \App\Models\User::ROLE_ADMIN_UMKM)
+      <li>
+        <a href="{{ route('admin.dashboard.index') }}"
+          class="flex items-center gap-2 w-full mt-2 text-white justify-center bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2 text-center transition-all shadow-md hover:shadow-lg">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+            </path>
+          </svg>
+          Dashboard Admin
+        </a>
+      </li>
+      @endif
       @endauth
 
       <li><a href="{{ $linkWA ?? '#' }}" target="_blank"
