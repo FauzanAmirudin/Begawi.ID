@@ -6,29 +6,33 @@
     </x-slot:title>
 
     {{-- Banner / Hero --}}
-    <section class="mb-8 md:mb-12 w-full bg-gradient-to-t from-primary-darker to-primary-dark">
-        <div class="max-w-7xl px-4 py-12 md:py-20 mx-auto flex flex-col items-center overflow-hidden h-100vh relative">
+<section class="mb-8 md:mb-12 w-full relative overflow-hidden">
+    <div class="h-[500px] md:h-[700px] relative" 
+         x-data="{
+            images: ['/images/banner1.png', '/images/banner2.png', '/images/banner3.png'],
+            current: 0,
+            next() { this.current = (this.current + 1) % this.images.length; },
+            init() { setInterval(() => this.next(), 3000); }
+         }"
+         x-init="init()"
+    >
+        <template x-for="(img, index) in images" :key="index">
+            <img 
+                :src="img"
+                x-show="current === index"
+                x-transition:enter="transition transform duration-1000"
+                x-transition:enter-start="translate-x-full opacity-0"
+                x-transition:enter-end="translate-x-0 opacity-100"
+                x-transition:leave="transition transform duration-1000 absolute inset-0"
+                x-transition:leave-start="translate-x-0 opacity-100"
+                x-transition:leave-end="-translate-x-full opacity-0"
+                class="absolute inset-0 w-full h-full object-cover"
+                alt="slideshow image">
+        </template>
+    </div>
+</section>
 
-            {{-- Heading belakang --}}
-            <h1 class="text-6xl lg:text-8xl font-extrabold text-white mb-12 text-center z-0 absolute mt-20">
-                Kick Your Day <br> Sneak Your Way.
-            </h1>
 
-            {{-- Gambar banner --}}
-            <img src="/assets/Sneaker.png" alt="sneakers-banner" class="absolute h-96 z-1">
-
-            {{-- Heading depan --}}
-            <h1 class="text-6xl lg:text-8xl mt-20 font-extrabold mb-12 md:mb-24 text-center z-2 text-transparent [-webkit-text-stroke:2px_white]">
-                Kick Your Day <br> Sneak Your Way.
-            </h1>
-
-            {{-- Deskripsi --}}
-            <p class="text-md md:text-xl text-white text-center">
-                Sneaky adalah rumahnya sneaker streetwear dengan desain yang fresh dan kekinian. <br>
-                Cocok buat anak muda yang ingin tampil beda tanpa ribet.
-            </p>
-        </div>
-    </section>
 
     {{-- Konten utama --}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
