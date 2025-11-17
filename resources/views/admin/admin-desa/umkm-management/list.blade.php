@@ -82,19 +82,22 @@
                         </td>
                         <td class="px-6 py-4 text-right">
                             <div class="inline-flex items-center gap-2 flex-wrap">
-                                <a href="{{ route('admin.desa-management.umkm-management.edit', $umkm['id']) }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-700">
-                                    Edit
-                                </a>
-                                <a href="{{ route('admin.desa-management.umkm-management.monitoring') }}" class="text-xs font-semibold text-slate-400 hover:text-emerald-600">
-                                    Monitor
+                                <a href="{{ route('admin.desa-management.umkm-management.edit', $umkm['id']) }}" class="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-indigo-100 text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 transition" title="Edit UMKM">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.414 1.414a2 2 0 010 2.828l-9.193 9.193-4.243 1.414 1.414-4.243 9.193-9.193a2 2 0 012.828 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5"></path>
+                                    </svg>
                                 </a>
                                 @if($umkm['status'] === 'onboarding')
                                 <form action="{{ route('admin.desa-management.umkm-management.update-status', $umkm['id']) }}" method="POST" class="inline" onsubmit="return confirm('Aktifkan UMKM ini?')">
                                     @csrf
                                     @method('POST')
                                     <input type="hidden" name="status" value="active">
-                                    <button type="submit" class="text-xs font-semibold text-emerald-600 hover:text-emerald-700">
-                                        Aktifkan
+                                    <button type="submit" class="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-emerald-100 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 transition" title="Aktifkan UMKM">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <span class="sr-only">Aktifkan</span>
                                     </button>
                                 </form>
                                 @elseif($umkm['status'] === 'active')
@@ -102,8 +105,11 @@
                                     @csrf
                                     @method('POST')
                                     <input type="hidden" name="status" value="suspended">
-                                    <button type="submit" class="text-xs font-semibold text-rose-500 hover:text-rose-600">
-                                        Suspend
+                                    <button type="submit" class="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-rose-100 text-rose-500 hover:text-rose-600 hover:bg-rose-50 transition" title="Suspend UMKM">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                        <span class="sr-only">Suspend</span>
                                     </button>
                                 </form>
                                 @elseif($umkm['status'] === 'suspended')
@@ -111,13 +117,19 @@
                                     @csrf
                                     @method('POST')
                                     <input type="hidden" name="status" value="active">
-                                    <button type="submit" class="text-xs font-semibold text-emerald-600 hover:text-emerald-700">
-                                        Aktifkan
+                                    <button type="submit" class="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-emerald-100 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 transition" title="Aktifkan UMKM">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <span class="sr-only">Aktifkan</span>
                                     </button>
                                 </form>
                                 @endif
-                                <button onclick="openAddProductModal({{ $umkm['id'] }}, '{{ $umkm['name'] }}')" class="text-xs font-semibold text-indigo-600 hover:text-indigo-700">
-                                    Tambah Produk
+                                <button onclick="openAddProductModal({{ $umkm['id'] }}, '{{ $umkm['name'] }}')" class="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-indigo-100 text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 transition" title="Tambah Produk">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6"></path>
+                                    </svg>
+                                    <span class="sr-only">Tambah Produk</span>
                                 </button>
                             </div>
                         </td>
