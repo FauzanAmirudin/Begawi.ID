@@ -347,27 +347,39 @@ class LayananController extends Controller
     }
     
     private function getStatistikPengaduan()
-    {
-        $village = $this->village();
-        
-        $total = CitizenComplaint::where('village_id', $village->id)->count();
-        $bulanIni = CitizenComplaint::where('village_id', $village->id)
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->count();
-        $selesai = CitizenComplaint::where('village_id', $village->id)
-            ->where('status', 'resolved')
-            ->count();
-        $proses = CitizenComplaint::where('village_id', $village->id)
-            ->whereIn('status', ['reviewed', 'in_progress'])
-            ->count();
-        
-        return [
-            'total' => $total > 0 ? $total : 28,
-            'bulan_ini' => $bulanIni > 0 ? $bulanIni : 12,
-            'selesai' => $selesai > 0 ? $selesai : 20,
-            'proses' => $proses > 0 ? $proses : 8
-        ];
+{
+    $village = $this->village();
+
+    $selesai = CitizenComplaint::where('village_id', $village->id)
+        ->where('status', 'resolved')
+        ->count();
+
+    $proses = CitizenComplaint::where('village_id', $village->id)
+        ->whereIn('status', ['reviewed', 'in_progress'])
+        ->count();
+
+    $bulanIni = CitizenComplaint::where('village_id', $village->id)
+        ->whereMonth('created_at', now()->month)
+        ->whereYear('created_at', now()->year)
+        ->count();
+
+    // Total dihitung dari selesai + proses (paling akurat)
+    $total = $selesai + $proses;
+
+    // Jika total 0, gunakan dummy saja untuk tampilan awal
+    if ($total === 0) {
+        $total = 28;
+        $selesai = 20;
+        $proses = 8;
+        $bulanIni = 12;
+    }
+
+    return [
+        'total' => $total,
+        'bulan_ini' => $bulanIni,
+        'selesai' => $selesai,
+        'proses' => $proses
+    ];
     }
     
     private function getStatistikLayanan()

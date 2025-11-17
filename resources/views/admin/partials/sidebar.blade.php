@@ -1,10 +1,8 @@
 <div class="p-6 flex flex-col h-full">
     <!-- Logo -->
     <div class="flex items-center gap-3 mb-8">
-        <div class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
-            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
-            </svg>
+        <div class="w-8 h-8 flex items-center justify-center">
+            <img src="{{ asset('images/Logo-Begawi.png') }}" alt="Begawi.id" class="w-8 h-8 object-contain">
         </div>
         <span class="text-xl font-semibold text-gray-800">Begawi.id</span>
     </div>
@@ -341,7 +339,7 @@
         </div>
 
         <!-- Konten Desa Dropdown -->
-        
+
 
         <!-- Manajemen Pengguna Lokal -->
         <div class="space-y-1">
@@ -612,170 +610,170 @@
 </div>
 
 <script>
-function toggleDropdown(dropdownId) {
-    const dropdown = document.getElementById(dropdownId);
-    const icon = document.getElementById(dropdownId + '-icon');
-    
-    // List of all dropdown IDs
-    const allDropdowns = ['website-dropdown', 'finance-dropdown', 'content-dropdown', 'logs-dropdown', 'support-dropdown', 'village-content-dropdown', 'umkm-management-dropdown', 'reports-dropdown', 'local-users-dropdown', 'umkm-products-dropdown', 'umkm-statistics-dropdown', 'umkm-reports-dropdown'];
-    
-    // Close all other dropdowns
-    allDropdowns.forEach(id => {
-        if (id !== dropdownId) {
-            const otherDropdown = document.getElementById(id);
-            const otherIcon = document.getElementById(id + '-icon');
-            if (otherDropdown) {
-                // Check if dropdown is currently open (has max-h-96 or doesn't have max-h-0)
-                const isOpen = otherDropdown.classList.contains('max-h-96') || 
-                              (!otherDropdown.classList.contains('max-h-0') && !otherDropdown.classList.contains('hidden'));
-                if (isOpen) {
-                    otherDropdown.classList.remove('max-h-96', 'opacity-100', 'hidden');
-                    otherDropdown.classList.add('max-h-0', 'opacity-0', 'pointer-events-none');
-                    if (otherIcon) otherIcon.classList.remove('rotate-180');
+    function toggleDropdown(dropdownId) {
+        const dropdown = document.getElementById(dropdownId);
+        const icon = document.getElementById(dropdownId + '-icon');
+
+        // List of all dropdown IDs
+        const allDropdowns = ['website-dropdown', 'finance-dropdown', 'content-dropdown', 'logs-dropdown', 'support-dropdown', 'village-content-dropdown', 'umkm-management-dropdown', 'reports-dropdown', 'local-users-dropdown', 'umkm-products-dropdown', 'umkm-statistics-dropdown', 'umkm-reports-dropdown'];
+
+        // Close all other dropdowns
+        allDropdowns.forEach(id => {
+            if (id !== dropdownId) {
+                const otherDropdown = document.getElementById(id);
+                const otherIcon = document.getElementById(id + '-icon');
+                if (otherDropdown) {
+                    // Check if dropdown is currently open (has max-h-96 or doesn't have max-h-0)
+                    const isOpen = otherDropdown.classList.contains('max-h-96') ||
+                        (!otherDropdown.classList.contains('max-h-0') && !otherDropdown.classList.contains('hidden'));
+                    if (isOpen) {
+                        otherDropdown.classList.remove('max-h-96', 'opacity-100', 'hidden');
+                        otherDropdown.classList.add('max-h-0', 'opacity-0', 'pointer-events-none');
+                        if (otherIcon) otherIcon.classList.remove('rotate-180');
+                    }
                 }
             }
+        });
+
+        // Toggle current dropdown
+        if (!dropdown) return;
+
+        const isCurrentlyOpen = dropdown.classList.contains('max-h-96') &&
+            dropdown.classList.contains('opacity-100');
+
+        if (isCurrentlyOpen) {
+            // Collapse
+            dropdown.classList.remove('max-h-96', 'opacity-100');
+            dropdown.classList.add('max-h-0', 'opacity-0', 'pointer-events-none');
+            if (icon) icon.classList.remove('rotate-180');
+        } else {
+            // Expand
+            dropdown.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none', 'hidden');
+            dropdown.classList.add('max-h-96', 'opacity-100');
+            if (icon) icon.classList.add('rotate-180');
         }
+    }
+
+    // Auto-expand dropdown if current route matches
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(request()->routeIs('admin.websites.*'))
+        const dropdown = document.getElementById('website-dropdown');
+        const icon = document.getElementById('website-dropdown-icon');
+        if (dropdown && !dropdown.classList.contains('max-h-96')) {
+            dropdown.classList.remove('max-h-0', 'opacity-0');
+            dropdown.classList.add('max-h-96', 'opacity-100');
+            if (icon) icon.classList.add('rotate-180');
+        }
+        @endif
+
+        @if(request()->routeIs('admin.finance.*'))
+        const financeDropdown = document.getElementById('finance-dropdown');
+        const financeIcon = document.getElementById('finance-dropdown-icon');
+        if (financeDropdown && !financeDropdown.classList.contains('max-h-96')) {
+            financeDropdown.classList.remove('max-h-0', 'opacity-0');
+            financeDropdown.classList.add('max-h-96', 'opacity-100');
+            if (financeIcon) financeIcon.classList.add('rotate-180');
+        }
+        @endif
+
+        @if(request()->routeIs('admin.content.*'))
+        const contentDropdown = document.getElementById('content-dropdown');
+        const contentIcon = document.getElementById('content-dropdown-icon');
+        if (contentDropdown && !contentDropdown.classList.contains('max-h-96')) {
+            contentDropdown.classList.remove('max-h-0', 'opacity-0');
+            contentDropdown.classList.add('max-h-96', 'opacity-100');
+            if (contentIcon) contentIcon.classList.add('rotate-180');
+        }
+        @endif
+
+        @if(request()->routeIs('admin.logs.*'))
+        const logsDropdown = document.getElementById('logs-dropdown');
+        const logsIcon = document.getElementById('logs-dropdown-icon');
+        if (logsDropdown && !logsDropdown.classList.contains('max-h-96')) {
+            logsDropdown.classList.remove('max-h-0', 'opacity-0');
+            logsDropdown.classList.add('max-h-96', 'opacity-100');
+            if (logsIcon) logsIcon.classList.add('rotate-180');
+        }
+        @endif
+
+        @if(request()->routeIs('admin.support.*'))
+        const supportDropdown = document.getElementById('support-dropdown');
+        const supportIcon = document.getElementById('support-dropdown-icon');
+        if (supportDropdown && !supportDropdown.classList.contains('max-h-96')) {
+            supportDropdown.classList.remove('max-h-0', 'opacity-0');
+            supportDropdown.classList.add('max-h-96', 'opacity-100');
+            if (supportIcon) supportIcon.classList.add('rotate-180');
+        }
+        @endif
+
+        @if(request()->routeIs('admin.desa-management.reports.*'))
+        const reportsDropdown = document.getElementById('reports-dropdown');
+        const reportsIcon = document.getElementById('reports-dropdown-icon');
+        if (reportsDropdown && !reportsDropdown.classList.contains('max-h-96')) {
+            reportsDropdown.classList.remove('max-h-0', 'opacity-0');
+            reportsDropdown.classList.add('max-h-96', 'opacity-100');
+            if (reportsIcon) reportsIcon.classList.add('rotate-180');
+        }
+        @endif
+
+        @if(request()->routeIs('admin.desa-management.index') || request()->routeIs('admin.desa-management.profile') || request()->routeIs('admin.desa-management.news') || request()->routeIs('admin.desa-management.gallery') || request()->routeIs('admin.desa-management.potentials') || request()->routeIs('admin.desa-management.achievements'))
+        const villageContentDropdown = document.getElementById('village-content-dropdown');
+        const villageContentIcon = document.getElementById('village-content-dropdown-icon');
+        if (villageContentDropdown && !villageContentDropdown.classList.contains('max-h-96')) {
+            villageContentDropdown.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none');
+            villageContentDropdown.classList.add('max-h-96', 'opacity-100');
+            if (villageContentIcon) villageContentIcon.classList.add('rotate-180');
+        }
+        @endif
+
+        @if(request()->routeIs('admin.desa-management.umkm-management.*'))
+        const umkmManagementDropdown = document.getElementById('umkm-management-dropdown');
+        const umkmManagementIcon = document.getElementById('umkm-management-dropdown-icon');
+        if (umkmManagementDropdown && !umkmManagementDropdown.classList.contains('max-h-96')) {
+            umkmManagementDropdown.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none', 'hidden');
+            umkmManagementDropdown.classList.add('max-h-96', 'opacity-100');
+            if (umkmManagementIcon) umkmManagementIcon.classList.add('rotate-180');
+        }
+        @endif
+
+        @if(request()->routeIs('admin.desa-management.local-users.*'))
+        const localUsersDropdown = document.getElementById('local-users-dropdown');
+        const localUsersIcon = document.getElementById('local-users-dropdown-icon');
+        if (localUsersDropdown && !localUsersDropdown.classList.contains('max-h-96')) {
+            localUsersDropdown.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none');
+            localUsersDropdown.classList.add('max-h-96', 'opacity-100');
+            if (localUsersIcon) localUsersIcon.classList.add('rotate-180');
+        }
+        @endif
+
+        @if(request()->routeIs('admin.umkm.products.*'))
+        const umkmProductsDropdown = document.getElementById('umkm-products-dropdown');
+        const umkmProductsIcon = document.getElementById('umkm-products-dropdown-icon');
+        if (umkmProductsDropdown && !umkmProductsDropdown.classList.contains('max-h-96')) {
+            umkmProductsDropdown.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none', 'hidden');
+            umkmProductsDropdown.classList.add('max-h-96', 'opacity-100');
+            if (umkmProductsIcon) umkmProductsIcon.classList.add('rotate-180');
+        }
+        @endif
+
+        @if(request()->routeIs('admin.umkm.statistics.*'))
+        const umkmStatisticsDropdown = document.getElementById('umkm-statistics-dropdown');
+        const umkmStatisticsIcon = document.getElementById('umkm-statistics-dropdown-icon');
+        if (umkmStatisticsDropdown && !umkmStatisticsDropdown.classList.contains('max-h-96')) {
+            umkmStatisticsDropdown.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none', 'hidden');
+            umkmStatisticsDropdown.classList.add('max-h-96', 'opacity-100');
+            if (umkmStatisticsIcon) umkmStatisticsIcon.classList.add('rotate-180');
+        }
+        @endif
+
+        @if(request()->routeIs('admin.umkm.reports.*'))
+        const umkmReportsDropdown = document.getElementById('umkm-reports-dropdown');
+        const umkmReportsIcon = document.getElementById('umkm-reports-dropdown-icon');
+        if (umkmReportsDropdown && !umkmReportsDropdown.classList.contains('max-h-96')) {
+            umkmReportsDropdown.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none', 'hidden');
+            umkmReportsDropdown.classList.add('max-h-96', 'opacity-100');
+            if (umkmReportsIcon) umkmReportsIcon.classList.add('rotate-180');
+        }
+        @endif
     });
-    
-    // Toggle current dropdown
-    if (!dropdown) return;
-    
-    const isCurrentlyOpen = dropdown.classList.contains('max-h-96') && 
-                           dropdown.classList.contains('opacity-100');
-    
-    if (isCurrentlyOpen) {
-        // Collapse
-        dropdown.classList.remove('max-h-96', 'opacity-100');
-        dropdown.classList.add('max-h-0', 'opacity-0', 'pointer-events-none');
-        if (icon) icon.classList.remove('rotate-180');
-    } else {
-        // Expand
-        dropdown.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none', 'hidden');
-        dropdown.classList.add('max-h-96', 'opacity-100');
-        if (icon) icon.classList.add('rotate-180');
-    }
-}
-
-// Auto-expand dropdown if current route matches
-document.addEventListener('DOMContentLoaded', function() {
-    @if(request()->routeIs('admin.websites.*'))
-    const dropdown = document.getElementById('website-dropdown');
-    const icon = document.getElementById('website-dropdown-icon');
-    if (dropdown && !dropdown.classList.contains('max-h-96')) {
-        dropdown.classList.remove('max-h-0', 'opacity-0');
-        dropdown.classList.add('max-h-96', 'opacity-100');
-        if (icon) icon.classList.add('rotate-180');
-    }
-    @endif
-    
-    @if(request()->routeIs('admin.finance.*'))
-    const financeDropdown = document.getElementById('finance-dropdown');
-    const financeIcon = document.getElementById('finance-dropdown-icon');
-    if (financeDropdown && !financeDropdown.classList.contains('max-h-96')) {
-        financeDropdown.classList.remove('max-h-0', 'opacity-0');
-        financeDropdown.classList.add('max-h-96', 'opacity-100');
-        if (financeIcon) financeIcon.classList.add('rotate-180');
-    }
-    @endif
-    
-    @if(request()->routeIs('admin.content.*'))
-    const contentDropdown = document.getElementById('content-dropdown');
-    const contentIcon = document.getElementById('content-dropdown-icon');
-    if (contentDropdown && !contentDropdown.classList.contains('max-h-96')) {
-        contentDropdown.classList.remove('max-h-0', 'opacity-0');
-        contentDropdown.classList.add('max-h-96', 'opacity-100');
-        if (contentIcon) contentIcon.classList.add('rotate-180');
-    }
-    @endif
-
-    @if(request()->routeIs('admin.logs.*'))
-    const logsDropdown = document.getElementById('logs-dropdown');
-    const logsIcon = document.getElementById('logs-dropdown-icon');
-    if (logsDropdown && !logsDropdown.classList.contains('max-h-96')) {
-        logsDropdown.classList.remove('max-h-0', 'opacity-0');
-        logsDropdown.classList.add('max-h-96', 'opacity-100');
-        if (logsIcon) logsIcon.classList.add('rotate-180');
-    }
-    @endif
-
-    @if(request()->routeIs('admin.support.*'))
-    const supportDropdown = document.getElementById('support-dropdown');
-    const supportIcon = document.getElementById('support-dropdown-icon');
-    if (supportDropdown && !supportDropdown.classList.contains('max-h-96')) {
-        supportDropdown.classList.remove('max-h-0', 'opacity-0');
-        supportDropdown.classList.add('max-h-96', 'opacity-100');
-        if (supportIcon) supportIcon.classList.add('rotate-180');
-    }
-    @endif
-
-    @if(request()->routeIs('admin.desa-management.reports.*'))
-    const reportsDropdown = document.getElementById('reports-dropdown');
-    const reportsIcon = document.getElementById('reports-dropdown-icon');
-    if (reportsDropdown && !reportsDropdown.classList.contains('max-h-96')) {
-        reportsDropdown.classList.remove('max-h-0', 'opacity-0');
-        reportsDropdown.classList.add('max-h-96', 'opacity-100');
-        if (reportsIcon) reportsIcon.classList.add('rotate-180');
-    }
-    @endif
-
-    @if(request()->routeIs('admin.desa-management.index') || request()->routeIs('admin.desa-management.profile') || request()->routeIs('admin.desa-management.news') || request()->routeIs('admin.desa-management.gallery') || request()->routeIs('admin.desa-management.potentials') || request()->routeIs('admin.desa-management.achievements'))
-    const villageContentDropdown = document.getElementById('village-content-dropdown');
-    const villageContentIcon = document.getElementById('village-content-dropdown-icon');
-    if (villageContentDropdown && !villageContentDropdown.classList.contains('max-h-96')) {
-        villageContentDropdown.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none');
-        villageContentDropdown.classList.add('max-h-96', 'opacity-100');
-        if (villageContentIcon) villageContentIcon.classList.add('rotate-180');
-    }
-    @endif
-
-    @if(request()->routeIs('admin.desa-management.umkm-management.*'))
-    const umkmManagementDropdown = document.getElementById('umkm-management-dropdown');
-    const umkmManagementIcon = document.getElementById('umkm-management-dropdown-icon');
-    if (umkmManagementDropdown && !umkmManagementDropdown.classList.contains('max-h-96')) {
-        umkmManagementDropdown.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none', 'hidden');
-        umkmManagementDropdown.classList.add('max-h-96', 'opacity-100');
-        if (umkmManagementIcon) umkmManagementIcon.classList.add('rotate-180');
-    }
-    @endif
-
-    @if(request()->routeIs('admin.desa-management.local-users.*'))
-    const localUsersDropdown = document.getElementById('local-users-dropdown');
-    const localUsersIcon = document.getElementById('local-users-dropdown-icon');
-    if (localUsersDropdown && !localUsersDropdown.classList.contains('max-h-96')) {
-        localUsersDropdown.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none');
-        localUsersDropdown.classList.add('max-h-96', 'opacity-100');
-        if (localUsersIcon) localUsersIcon.classList.add('rotate-180');
-    }
-    @endif
-
-    @if(request()->routeIs('admin.umkm.products.*'))
-    const umkmProductsDropdown = document.getElementById('umkm-products-dropdown');
-    const umkmProductsIcon = document.getElementById('umkm-products-dropdown-icon');
-    if (umkmProductsDropdown && !umkmProductsDropdown.classList.contains('max-h-96')) {
-        umkmProductsDropdown.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none', 'hidden');
-        umkmProductsDropdown.classList.add('max-h-96', 'opacity-100');
-        if (umkmProductsIcon) umkmProductsIcon.classList.add('rotate-180');
-    }
-    @endif
-
-    @if(request()->routeIs('admin.umkm.statistics.*'))
-    const umkmStatisticsDropdown = document.getElementById('umkm-statistics-dropdown');
-    const umkmStatisticsIcon = document.getElementById('umkm-statistics-dropdown-icon');
-    if (umkmStatisticsDropdown && !umkmStatisticsDropdown.classList.contains('max-h-96')) {
-        umkmStatisticsDropdown.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none', 'hidden');
-        umkmStatisticsDropdown.classList.add('max-h-96', 'opacity-100');
-        if (umkmStatisticsIcon) umkmStatisticsIcon.classList.add('rotate-180');
-    }
-    @endif
-
-    @if(request()->routeIs('admin.umkm.reports.*'))
-    const umkmReportsDropdown = document.getElementById('umkm-reports-dropdown');
-    const umkmReportsIcon = document.getElementById('umkm-reports-dropdown-icon');
-    if (umkmReportsDropdown && !umkmReportsDropdown.classList.contains('max-h-96')) {
-        umkmReportsDropdown.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none', 'hidden');
-        umkmReportsDropdown.classList.add('max-h-96', 'opacity-100');
-        if (umkmReportsIcon) umkmReportsIcon.classList.add('rotate-180');
-    }
-    @endif
-});
 </script>

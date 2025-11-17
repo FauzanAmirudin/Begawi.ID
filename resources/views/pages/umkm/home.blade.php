@@ -6,31 +6,30 @@
     </x-slot:title>
 
     {{-- Banner / Hero --}}
-<section class="mb-8 md:mb-12 w-full relative overflow-hidden">
-    <div class="h-[500px] md:h-[700px] relative" 
-         x-data="{
-            images: ['/images/banner1.png', '/images/banner2.png', '/images/banner3.png'],
+    <section class="mb-8 md:mb-12 w-full relative overflow-hidden">
+        <div class="h-[500px] md:h-[700px] relative"
+            x-data="{
+            images: ['/images/banner-1.png', '/images/banner-2.png', '/images/banner-3.png'],
             current: 0,
             next() { this.current = (this.current + 1) % this.images.length; },
             init() { setInterval(() => this.next(), 3000); }
          }"
-         x-init="init()"
-    >
-        <template x-for="(img, index) in images" :key="index">
-            <img 
-                :src="img"
-                x-show="current === index"
-                x-transition:enter="transition transform duration-1000"
-                x-transition:enter-start="translate-x-full opacity-0"
-                x-transition:enter-end="translate-x-0 opacity-100"
-                x-transition:leave="transition transform duration-1000 absolute inset-0"
-                x-transition:leave-start="translate-x-0 opacity-100"
-                x-transition:leave-end="-translate-x-full opacity-0"
-                class="absolute inset-0 w-full h-full object-cover"
-                alt="slideshow image">
-        </template>
-    </div>
-</section>
+            x-init="init()">
+            <template x-for="(img, index) in images" :key="index">
+                <img
+                    :src="img"
+                    x-show="current === index"
+                    x-transition:enter="transition transform duration-1000"
+                    x-transition:enter-start="translate-x-full opacity-0"
+                    x-transition:enter-end="translate-x-0 opacity-100"
+                    x-transition:leave="transition transform duration-1000 absolute inset-0"
+                    x-transition:leave-start="translate-x-0 opacity-100"
+                    x-transition:leave-end="-translate-x-full opacity-0"
+                    class="absolute inset-0 w-full h-full object-cover"
+                    alt="slideshow image">
+            </template>
+        </div>
+    </section>
 
 
 

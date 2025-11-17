@@ -36,6 +36,7 @@ class Village extends Model
         'contacts',
         'structures',
         'history',
+        'image',
     ];
 
     /**

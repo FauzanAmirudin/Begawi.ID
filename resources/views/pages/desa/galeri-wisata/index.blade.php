@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="min-h-screen bg-slate-50">
-    
+
     <!-- ============================================ -->
     <!-- SECTION 1: GALERI DESA -->
     <!-- ============================================ -->
@@ -12,7 +12,10 @@
         <div class="max-w-7xl mx-auto px-4 md:px-8">
             <!-- Header Galeri -->
             <div class="text-center mb-12">
-                <h1 class="text-4xl font-bold text-slate-800 mb-4">🖼️ Galeri Desa</h1>
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <img src="{{ asset('images/galeri-wisata/galeri-desa.png') }}" alt="Galeri Desa" class="w-10 h-10 object-cover rounded-lg">
+                    <h1 class="text-4xl font-bold text-slate-800">Galeri Desa</h1>
+                </div>
                 <p class="text-slate-600 text-lg max-w-2xl mx-auto">
                     Dokumentasi kegiatan dan keindahan desa dalam bentuk foto dan video
                 </p>
@@ -28,10 +31,10 @@
                         Galeri
                     </h2>
 
-                    <div class="flex flex-col sm:flex-row gap-4">   
+                    <div class="flex flex-col sm:flex-row gap-4">
                         <!-- Button Lihat Semua Foto -->
-                        <a href="{{ route('desa.galeri-wisata.galeri-foto') }}" 
-                           class="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-2 rounded-xl transition-colors duration-300 flex items-center gap-2 whitespace-nowrap">
+                        <a href="{{ route('desa.galeri-wisata.galeri-foto') }}"
+                            class="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-2 rounded-xl transition-colors duration-300 flex items-center gap-2 whitespace-nowrap">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
@@ -53,9 +56,9 @@
                                 </svg>
                             </div>
                             @endif
-                            <img src="{{ $item['gambar'] }}" 
-                                 alt="{{ $item['judul'] }}" 
-                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <img src="{{ $item['gambar'] }}"
+                                alt="{{ $item['judul'] }}"
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             @if($item['type'] === 'video')
                             <div class="absolute top-3 right-3 bg-black/60 text-white px-2 py-1 rounded-full text-xs font-semibold">
                                 Video
@@ -102,7 +105,10 @@
         <div class="max-w-7xl mx-auto px-4 md:px-8">
             <!-- Header Wisata -->
             <div class="text-center mb-12">
-                <h1 class="text-4xl font-bold text-slate-800 mb-4">🏕️ Potensi Wisata Desa</h1>
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <img src="{{ asset('images/galeri-wisata/potensi-wisata-desa.png') }}" alt="Galeri Desa" class="w-10 h-10 object-cover rounded-lg">
+                    <h1 class="text-4xl font-bold text-slate-800">Potensi Wisata Desa</h1>
+                </div>
                 <p class="text-slate-600 text-lg max-w-3xl mx-auto">
                     Jelajahi keindahan alam dan budaya desa yang mempesona. Temukan destinasi wisata terbaik untuk pengalaman yang tak terlupakan.
                 </p>
@@ -126,17 +132,17 @@
                     @foreach($wisataItems as $item)
                     <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group cursor-pointer border border-slate-100">
                         <div class="relative aspect-[4/3] overflow-hidden">
-                            <img src="{{ $item['gambar'] }}" 
-                                 alt="{{ $item['judul'] }}" 
-                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <img src="{{ $item['gambar'] }}"
+                                alt="{{ $item['judul'] }}"
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             <div class="absolute top-4 left-4">
                                 @php
-                                    $categoryColors = [
-                                        'Wisata Alam' => 'bg-primary-600',
-                                        'Wisata Budaya' => 'bg-amber-600',
-                                        'Wisata Ekonomi' => 'bg-green-600',
-                                    ];
-                                    $colorClass = $categoryColors[$item['kategori']] ?? 'bg-primary-600';
+                                $categoryColors = [
+                                'Wisata Alam' => 'bg-primary-600',
+                                'Wisata Budaya' => 'bg-amber-600',
+                                'Wisata Ekonomi' => 'bg-green-600',
+                                ];
+                                $colorClass = $categoryColors[$item['kategori']] ?? 'bg-primary-600';
                                 @endphp
                                 <span class="{{ $colorClass }} text-white px-3 py-1 rounded-full text-sm font-medium">{{ $item['kategori'] }}</span>
                             </div>
@@ -180,9 +186,7 @@
             <div class="mb-16">
                 <div class="bg-slate-50 rounded-2xl p-8">
                     <h2 class="text-2xl font-bold text-slate-800 mb-8 flex items-center gap-3">
-                        <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H9m0 0H5m0 0h2M7 7h10M7 11h10M7 15h10"></path>
-                        </svg>
+                        <img src="{{ asset('images/galeri-wisata/fasilitas-pendukung.png') }}" alt="Galeri Desa" class="w-10 h-10 object-cover rounded-lg">
                         Fasilitas Pendukung
                     </h2>
 
@@ -266,9 +270,7 @@
             <!-- Sub-section: Peta Wisata -->
             <div>
                 <h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
-                    <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m0 0L9 7"></path>
-                    </svg>
+                    <img src="{{ asset('images/galeri-wisata/peta-wisata.png') }}" alt="Galeri Desa" class="w-10 h-10 object-cover rounded-lg">
                     Peta Wisata
                 </h2>
 
@@ -295,25 +297,25 @@
                     <!-- Map Embed -->
                     <div class="aspect-[16/9] bg-slate-100 flex items-center justify-center">
                         <!-- Placeholder untuk Google Maps -->
-                        <div class="text-center">
+                        <!-- <div class="text-center">
                             <svg class="w-16 h-16 text-slate-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m0 0L9 7"></path>
                             </svg>
                             <p class="text-slate-500 text-lg font-medium">Peta Interaktif Wisata Desa</p>
                             <p class="text-slate-400 text-sm">Google Maps akan dimuat di sini</p>
-                        </div>
-                        <!-- 
-                        Untuk implementasi sesungguhnya, ganti dengan:
-                        <iframe 
-                            src="https://www.google.com/maps/embed?pb=..." 
-                            width="100%" 
-                            height="100%" 
-                            style="border:0;" 
-                            allowfullscreen="" 
-                            loading="lazy" 
+                        </div> -->
+
+                        <!-- Untuk implementasi sesungguhnya, ganti dengan: -->
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=..."
+                            width="100%"
+                            height="100%"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy"
                             referrerpolicy="no-referrer-when-downgrade">
                         </iframe>
-                        -->
+
                     </div>
                 </div>
             </div>
