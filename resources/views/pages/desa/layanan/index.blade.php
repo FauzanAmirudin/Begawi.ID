@@ -1,4 +1,5 @@
 {{-- resources/views/pages/desa/layanan/index.blade.php --}}
+@php use Illuminate\Support\Str; @endphp
 
 @extends('layouts.desa')
 
@@ -70,10 +71,15 @@
                             <div class="surat-card {{ $index === 0 ? 'active' : '' }} bg-white rounded-2xl shadow-md p-6 cursor-pointer transition-all duration-300 hover:shadow-lg border-2 border-transparent"
                                 onclick="selectSurat('{{ $surat['id'] }}', this)">
                                 <div class="flex items-start gap-4">
-                                    <div
-                                        class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                        <x-desa.icon :name="$surat['icon']" class="w-6 h-6 text-teal-600" />
+                                    <div class="w-12 h-12 flex items-center justify-center flex-shrink-0">
+                                        @if (Str::endsWith($surat['icon'], ['.png', '.jpg', '.jpeg', '.svg']))
+                                            <img src="{{ asset('images/layanan/' . $surat['icon']) }}"
+                                                class="w-12 h-12 object-contain" alt="icon">
+                                        @else
+                                            <x-desa.icon :name="$surat['icon']" class="w-6 h-6 text-teal-600" />
+                                        @endif
                                     </div>
+
                                     <div class="flex-1">
                                         <h4 class="font-semibold text-slate-800 mb-1">{{ $surat['nama'] }}</h4>
                                         <p class="text-sm text-slate-600 mb-2">{{ $surat['deskripsi'] }}</p>
@@ -441,10 +447,13 @@
                 @foreach ($kategoriPengaduan as $kategori)
                     <div class="kategori-card bg-{{ $kategori['color'] }}-50 hover:bg-{{ $kategori['color'] }}-100 rounded-2xl p-6 text-center cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg border border-{{ $kategori['color'] }}-100"
                         onclick="selectKategori('{{ $kategori['id'] }}', this)">
-                        <div
-                            class="w-16 h-16 bg-{{ $kategori['color'] }}-100 hover:bg-{{ $kategori['color'] }}-600 rounded-2xl flex items-center justify-center mx-auto mb-4 transition-colors duration-300 group">
-                            <x-desa.icon :name="$kategori['icon']"
-                                class="w-8 h-8 text-{{ $kategori['color'] }}-600 group-hover:text-white transition-colors duration-300" />
+                        <div class="w-16 h-16 flex items-center justify-center flex-shrink-0 mb-4 mx-auto">
+                            @if (Str::endsWith($kategori['icon'], ['.png', '.jpg', '.jpeg', '.svg']))
+                                <img src="{{ asset('images/layanan/' . $kategori['icon']) }}"
+                                    class="w-16 h-16 object-contain" alt="icon">
+                            @else
+                                <x-desa.icon :name="$kategori['icon']" class="w-6 h-6 text-teal-600" />
+                            @endif
                         </div>
                         <h3 class="text-lg font-semibold text-slate-800 mb-2">{{ $kategori['nama'] }}</h3>
                         <p class="text-sm text-slate-600 mb-3 leading-relaxed">{{ $kategori['deskripsi'] }}</p>

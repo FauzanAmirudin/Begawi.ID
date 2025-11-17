@@ -208,7 +208,7 @@ class LayananController extends Controller
                 'id' => 'ktp',
                 'nama' => 'Surat Pengantar KTP',
                 'deskripsi' => 'Surat pengantar untuk pembuatan atau perpanjangan KTP',
-                'icon' => 'identification',
+                'icon' => 'ktp.png',
                 'persyaratan' => ['Fotocopy KK', 'Pas foto 3x4', 'Surat RT/RW'],
                 'estimasi' => '1-2 hari kerja'
             ],
@@ -216,7 +216,7 @@ class LayananController extends Controller
                 'id' => 'domisili',
                 'nama' => 'Surat Keterangan Domisili',
                 'deskripsi' => 'Surat keterangan tempat tinggal untuk keperluan administrasi',
-                'icon' => 'home',
+                'icon' => 'skd.png',
                 'persyaratan' => ['Fotocopy KTP', 'Fotocopy KK', 'Surat RT/RW'],
                 'estimasi' => '1 hari kerja'
             ],
@@ -224,7 +224,7 @@ class LayananController extends Controller
                 'id' => 'usaha',
                 'nama' => 'Surat Keterangan Usaha',
                 'deskripsi' => 'Surat keterangan untuk keperluan izin usaha atau UMKM',
-                'icon' => 'briefcase',
+                'icon' => 'sku.png',
                 'persyaratan' => ['Fotocopy KTP', 'Foto tempat usaha', 'Surat RT/RW'],
                 'estimasi' => '2-3 hari kerja'
             ],
@@ -232,7 +232,7 @@ class LayananController extends Controller
                 'id' => 'tidak-mampu',
                 'nama' => 'Surat Keterangan Tidak Mampu',
                 'deskripsi' => 'Surat keterangan untuk bantuan sosial atau pendidikan',
-                'icon' => 'heart',
+                'icon' => 'sktm.png',
                 'persyaratan' => ['Fotocopy KTP', 'Fotocopy KK', 'Surat RT/RW', 'Foto rumah'],
                 'estimasi' => '1-2 hari kerja'
             ],
@@ -240,7 +240,7 @@ class LayananController extends Controller
                 'id' => 'belum-menikah',
                 'nama' => 'Surat Keterangan Belum Menikah',
                 'deskripsi' => 'Surat keterangan status belum menikah',
-                'icon' => 'user',
+                'icon' => 'pelayanan-umum.png',
                 'persyaratan' => ['Fotocopy KTP', 'Fotocopy KK', 'Pas foto 3x4'],
                 'estimasi' => '1 hari kerja'
             ],
@@ -248,7 +248,7 @@ class LayananController extends Controller
                 'id' => 'kelahiran',
                 'nama' => 'Surat Keterangan Kelahiran',
                 'deskripsi' => 'Surat keterangan untuk pengurusan akta kelahiran',
-                'icon' => 'cake',
+                'icon' => 'surat-online.png',
                 'persyaratan' => ['Fotocopy KTP orang tua', 'Fotocopy KK', 'Surat keterangan lahir dari bidan/dokter'],
                 'estimasi' => '1 hari kerja'
             ]
@@ -310,28 +310,28 @@ class LayananController extends Controller
                 'id' => 'pelayanan-umum',
                 'nama' => 'Pelayanan Umum',
                 'deskripsi' => 'Keluhan terkait pelayanan administrasi dan birokrasi',
-                'icon' => 'clipboard-document-list',
+                'icon' => 'pelayanan-umum.png',
                 'color' => 'sky',
             ],
             [
                 'id' => 'infrastruktur',
                 'nama' => 'Infrastruktur',
                 'deskripsi' => 'Laporan kerusakan jalan, jembatan, dan fasilitas umum',
-                'icon' => 'wrench-screwdriver',
+                'icon' => 'infrastruktur.png',
                 'color' => 'amber',
             ],
             [
                 'id' => 'sosial',
                 'nama' => 'Sosial Kemasyarakatan',
                 'deskripsi' => 'Masalah sosial, bantuan masyarakat, dan program desa',
-                'icon' => 'users',
+                'icon' => 'soskem.png',
                 'color' => 'pink',
             ],
             [
                 'id' => 'keamanan',
                 'nama' => 'Keamanan & Ketertiban',
                 'deskripsi' => 'Laporan gangguan keamanan dan ketertiban lingkungan',
-                'icon' => 'shield-check',
+                'icon' => 'kdk.png',
                 'color' => 'indigo',
             ]
         ];
