@@ -10,12 +10,14 @@ use App\Models\User;
 use App\Models\Village;
 use App\Models\Website;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class UmkmManagementController extends Controller
 {
@@ -224,6 +226,22 @@ class UmkmManagementController extends Controller
             'village' => $village,
             'categoryFilters' => $categoryFilters,
             'domainSuffix' => 'desa.begawi.id',
+        ]);
+    }
+
+    /**
+     * Edit UMKM form
+     */
+    public function edit(UmkmBusiness $umkm): View
+    {
+        $village = $this->getVillage();
+        $categoryFilters = $this->getCategoryPool();
+        $umkm->load(['user', 'website']);
+
+        return view('admin.admin-desa.umkm-management.edit', [
+            'village' => $village,
+            'categoryFilters' => $categoryFilters,
+            'umkm' => $umkm,
         ]);
     }
 
@@ -525,6 +543,84 @@ class UmkmManagementController extends Controller
             DB::rollBack();
             return back()->withErrors(['error' => 'Gagal mendaftarkan UMKM: ' . $e->getMessage()]);
         }
+    }
+
+    /**
+     * Update UMKM profile
+     */
+    public function update(Request $request, UmkmBusiness $umkm): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'owner_name' => ['required', 'string', 'max:255'],
+            'owner_email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($umkm->user_id)],
+            'owner_phone' => ['required', 'string', 'max:20'],
+            'category' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'about_business' => ['nullable', 'string'],
+            'address' => ['nullable', 'string'],
+            'maps_embed_url' => ['nullable', 'string'],
+            'branding_color' => ['nullable', 'string', 'max:20'],
+            'whatsapp_number' => ['nullable', 'string', 'max:20'],
+            'status' => ['required', 'in:onboarding,active,suspended,inactive'],
+            'logo' => ['nullable', 'image', 'max:2048'],
+            'legal_document' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+        ]);
+
+        $umkm->fill([
+            'name' => $validated['name'],
+            'owner_name' => $validated['owner_name'],
+            'owner_email' => $validated['owner_email'],
+            'owner_phone' => $validated['owner_phone'],
+            'whatsapp_number' => $validated['whatsapp_number'] ?? $validated['owner_phone'],
+            'category' => $validated['category'],
+            'description' => $validated['description'] ?? null,
+            'about_business' => $validated['about_business'] ?? null,
+            'address' => $validated['address'] ?? null,
+            'maps_embed_url' => $validated['maps_embed_url'] ?? null,
+            'branding_color' => $validated['branding_color'] ?? null,
+            'status' => $validated['status'],
+        ]);
+
+        if ($request->hasFile('logo')) {
+            if ($umkm->logo_path) {
+                Storage::disk('public')->delete($umkm->logo_path);
+            }
+            $umkm->logo_path = $request->file('logo')->store('umkm/logos', 'public');
+        }
+
+        if ($request->hasFile('legal_document')) {
+            if ($umkm->legal_document_path) {
+                Storage::disk('public')->delete($umkm->legal_document_path);
+            }
+            $umkm->legal_document_path = $request->file('legal_document')->store('umkm/documents', 'public');
+        }
+
+        $umkm->save();
+
+        if ($umkm->user) {
+            $umkm->user->update([
+                'name' => $validated['owner_name'],
+                'email' => $validated['owner_email'],
+            ]);
+        }
+
+        if ($umkm->website) {
+            $websiteStatus = match($validated['status']) {
+                'active' => 'active',
+                'suspended', 'inactive' => 'suspended',
+                default => 'pending',
+            };
+
+            $umkm->website->update([
+                'name' => $validated['name'],
+                'status' => $websiteStatus,
+            ]);
+        }
+
+        return redirect()
+            ->route('admin.desa-management.umkm-management.list')
+            ->with('success', 'Data UMKM berhasil diperbarui.');
     }
 
     /**

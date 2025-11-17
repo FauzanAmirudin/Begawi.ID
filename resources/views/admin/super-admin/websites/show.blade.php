@@ -176,6 +176,15 @@
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Aksi</h3>
                 <div class="space-y-2">
+                    @if($website->type === 'desa')
+                    <a href="{{ route('admin.websites.village-profile.edit', $website) }}" class="block w-full px-4 py-2 bg-indigo-600 text-white text-center rounded-lg font-medium hover:bg-indigo-700 transition">
+                        Edit Profil Desa
+                    </a>
+                    @elseif($website->type === 'umkm')
+                    <a href="{{ route('admin.websites.umkm-profile.edit', $website) }}" class="block w-full px-4 py-2 bg-orange-500 text-white text-center rounded-lg font-medium hover:bg-orange-600 transition">
+                        Edit Profil UMKM
+                    </a>
+                    @endif
                     <a href="{{ route('admin.websites.edit', $website) }}" class="block w-full px-4 py-2 bg-emerald-600 text-white text-center rounded-lg font-medium hover:bg-emerald-700 transition">
                         Edit Website
                     </a>

@@ -10,6 +10,13 @@
             <h1 class="text-2xl font-semibold text-gray-800">Website UMKM</h1>
             <p class="text-sm text-gray-500 mt-1">Kelola semua website UMKM yang terdaftar di platform</p>
         </div>
+        <a href="{{ route('admin.websites.create', ['type' => 'umkm']) }}"
+           class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl font-medium shadow hover:shadow-lg transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Tambah Website UMKM
+        </a>
     </div>
 
     @if (session('success'))

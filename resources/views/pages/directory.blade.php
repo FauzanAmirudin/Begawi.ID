@@ -41,8 +41,12 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @forelse($allVillages ?? [] as $desa)
                     <div class="relative flex flex-col rounded-2xl bg-white bg-clip-border text-gray-700 shadow-md hover:shadow-xl transition-all">
-                        <div class="relative mx-4 -mt-8 h-44 overflow-hidden rounded-3xl shadow-lg shadow-emerald-500/40">
-                            <img src="/images/preview-desa.png" alt="{{ $desa['name'] }}" class="h-full w-full object-cover" loading="lazy">
+                        <div class="relative mx-4 -mt-8 h-44 overflow-hidden rounded-3xl shadow-lg shadow-emerald-500/40 bg-gray-100">
+                            <img src="{{ $desa['image'] ?? asset('images/directory/default-desa.png') }}"
+                                 alt="{{ $desa['name'] }}"
+                                 class="h-full w-full object-cover"
+                                 loading="lazy"
+                                 onerror="this.onerror=null;this.src='{{ asset('images/directory/default-desa.png') }}';">
                         </div>
                         <div class="p-6 pt-8 space-y-3">
                             <span class="inline-block text-xs font-semibold uppercase tracking-wide text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">Desa Digital</span>
@@ -139,8 +143,12 @@
                 <div id="umkmGallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @forelse($allUmkm ?? [] as $umkm)
                     <div class="umkm-card relative flex flex-col rounded-2xl bg-white bg-clip-border text-gray-700 shadow-md hover:shadow-xl transition-all" data-category="{{ Str::slug($umkm['category'] ?? 'umum') }}">
-                        <div class="relative mx-4 -mt-8 h-44 overflow-hidden rounded-3xl shadow-lg shadow-orange-500/40">
-                            <img src="/images/preview-umkm.png" alt="{{ $umkm['name'] }}" class="h-full w-full object-cover" loading="lazy">
+                        <div class="relative mx-4 -mt-8 h-44 overflow-hidden rounded-3xl shadow-lg shadow-orange-500/40 bg-gray-100">
+                            <img src="{{ $umkm['image'] ?? asset('images/directory/default-umkm.png') }}"
+                                 alt="{{ $umkm['name'] }}"
+                                 class="h-full w-full object-cover"
+                                 loading="lazy"
+                                 onerror="this.onerror=null;this.src='{{ asset('images/directory/default-umkm.png') }}';">
                         </div>
                         <div class="p-6 pt-8 space-y-3">
                             <span class="inline-block text-xs font-semibold uppercase tracking-wide text-orange-600 bg-orange-50 px-3 py-1 rounded-full">{{ $umkm['category'] ?? 'UMKM' }}</span>

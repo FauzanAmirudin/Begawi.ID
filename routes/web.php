@@ -168,12 +168,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
             Route::get('/', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'index'])->name('index');
             Route::get('/list', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'list'])->name('list');
             Route::get('/create', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'create'])->name('create');
+            Route::get('/{umkm}/edit', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'edit'])->name('edit');
             Route::get('/monitoring', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'monitoring'])->name('monitoring');
             Route::get('/validation', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'validation'])->name('validation');
             Route::get('/guides', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'guides'])->name('guides');
             
             // Actions
             Route::post('/', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'store'])->name('store');
+            Route::put('/{umkm}', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'update'])->name('update');
             Route::post('/{umkm}/status', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'updateStatus'])->name('update-status');
             Route::post('/products', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'storeProduct'])->name('products.store');
             Route::post('/content/{validation}/approve', [\App\Http\Controllers\Admin\UmkmManagementController::class, 'approveContent'])->name('content.approve');
@@ -263,10 +265,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::prefix('websites')->name('websites.')->group(function () {
         Route::get('/desa', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'desa'])->name('desa');
         Route::get('/umkm', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'umkm'])->name('umkm');
+        Route::get('/create', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'store'])->name('store');
         Route::get('/domain', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'domain'])->name('domain');
         Route::get('/template', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'template'])->name('template');
         Route::post('/template', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'updateTemplate'])->name('template.update');
         Route::get('/{website}/village-detail', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'villageDetail'])->name('village-detail');
+        Route::get('/{website}/village-profile', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'editVillageProfile'])->name('village-profile.edit');
+        Route::put('/{website}/village-profile', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'updateVillageProfile'])->name('village-profile.update');
+        Route::get('/{website}/umkm-profile', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'editUmkmProfile'])->name('umkm-profile.edit');
+        Route::put('/{website}/umkm-profile', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'updateUmkmProfile'])->name('umkm-profile.update');
         Route::get('/{website}', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'show'])->name('show');
         Route::get('/{website}/edit', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'edit'])->name('edit');
         Route::put('/{website}', [\App\Http\Controllers\Admin\WebsiteManagementController::class, 'update'])->name('update');

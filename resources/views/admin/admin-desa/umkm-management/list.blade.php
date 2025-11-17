@@ -9,7 +9,7 @@
 @endpush
 
 @section('content')
-<div class="p-6 space-y-6" x-cloak>
+<div class="p-6 space-y-6" x-data="{}" x-cloak>
     @if (session('success'))
     <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-2xl flex items-center justify-between">
         <div class="flex items-center gap-3">
@@ -82,6 +82,9 @@
                         </td>
                         <td class="px-6 py-4 text-right">
                             <div class="inline-flex items-center gap-2 flex-wrap">
+                                <a href="{{ route('admin.desa-management.umkm-management.edit', $umkm['id']) }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-700">
+                                    Edit
+                                </a>
                                 <a href="{{ route('admin.desa-management.umkm-management.monitoring') }}" class="text-xs font-semibold text-slate-400 hover:text-emerald-600">
                                     Monitor
                                 </a>

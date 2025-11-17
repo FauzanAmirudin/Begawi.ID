@@ -9,7 +9,7 @@
 @endpush
 
 @section('content')
-<div class="p-6 space-y-6" x-cloak>
+<div class="p-6 space-y-6" x-data="{}" x-cloak>
     @if (session('success'))
     <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-2xl flex items-center justify-between">
         <div class="flex items-center gap-3">
