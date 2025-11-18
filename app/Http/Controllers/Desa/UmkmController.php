@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Desa;
 use App\Http\Controllers\Controller;
 use App\Models\UmkmBusiness;
 use App\Models\UmkmContentValidation;
+use App\Models\UmkmProduct;
+use App\Models\UmkmProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -64,25 +66,33 @@ class UmkmController extends Controller
     // Helper methods untuk data UMKM
     private function getAllProdukUmkm()
     {
-        // Ambil produk yang sudah disetujui dari database
-        $validations = UmkmContentValidation::query()
-            ->where('content_type', 'product')
-            ->where('status', 'approved')
-            ->with(['umkmBusiness.website'])
+        $produk = [];
+
+        // Ambil produk dari tabel UmkmProduct (tabel utama)
+        $products = UmkmProduct::query()
+            ->where('is_active', true)
+            ->with(['umkmBusiness.website', 'primaryImage', 'images', 'category'])
+            ->whereHas('umkmBusiness', function($query) {
+                $query->where('status', 'active');
+            })
             ->orderByDesc('created_at')
             ->get();
 
-        $produk = [];
-
-        foreach ($validations as $validation) {
-            $umkm = $validation->umkmBusiness;
+        foreach ($products as $product) {
+            $umkm = $product->umkmBusiness;
             if (!$umkm || $umkm->status !== 'active') {
-                continue; // Skip jika UMKM tidak aktif
+                continue;
             }
 
-            $contentData = $validation->content_data ?? [];
-            $gambar = $contentData['image'] ?? $contentData['gambar'] ?? null;
-            $galeri = $contentData['gallery'] ?? $contentData['galeri'] ?? [];
+            // Ambil gambar utama
+            $primaryImage = $product->primaryImage;
+            $gambar = null;
+            
+            if ($primaryImage) {
+                $gambar = $primaryImage->image_path;
+            } elseif ($product->images->count() > 0) {
+                $gambar = $product->images->first()->image_path;
+            }
             
             // Handle image paths
             if ($gambar && !filter_var($gambar, FILTER_VALIDATE_URL)) {
@@ -95,12 +105,15 @@ class UmkmController extends Controller
 
             // Format gallery images
             $galeriFormatted = [];
-            if (is_array($galeri) && !empty($galeri)) {
-                foreach ($galeri as $img) {
-                    if (!filter_var($img, FILTER_VALIDATE_URL)) {
-                        $img = Storage::url($img);
+            if ($product->images->count() > 0) {
+                foreach ($product->images as $img) {
+                    $imgPath = $img->image_path;
+                    if ($imgPath && !filter_var($imgPath, FILTER_VALIDATE_URL)) {
+                        $imgPath = Storage::url($imgPath);
                     }
-                    $galeriFormatted[] = $img;
+                    if ($imgPath) {
+                        $galeriFormatted[] = $imgPath;
+                    }
                 }
             }
             
@@ -108,21 +121,24 @@ class UmkmController extends Controller
                 $galeriFormatted = [$gambar];
             }
 
-            $harga = $contentData['price'] ?? $contentData['harga'] ?? 0;
-            $stok = $contentData['stock'] ?? $contentData['stok'] ?? 0;
-            $rating = $contentData['rating'] ?? 4.5;
-            $terjual = $contentData['sold'] ?? $contentData['terjual'] ?? 0;
-            $berat = $contentData['weight'] ?? $contentData['berat'] ?? '-';
-            $unggulan = $contentData['featured'] ?? $contentData['unggulan'] ?? false;
+            // Ambil kategori dari product category atau fallback ke UMKM category
+            $kategori = $product->category ? $product->category->name : ($umkm->category ?? 'Umum');
+
+            $harga = $product->discount_price ?? $product->price;
+            $stok = $product->stock ?? 0;
+            $rating = $product->rating ?? 4.5;
+            $terjual = $product->sold_count ?? 0;
+            $berat = $product->weight ?? '-';
+            $unggulan = $product->is_featured ?? false;
 
             $produk[] = [
-                'id' => $validation->id,
-                'nama' => $validation->title,
-                'slug' => Str::slug($validation->title) . '-' . $validation->id,
-                'kategori' => $umkm->category,
+                'id' => $product->id,
+                'nama' => $product->title,
+                'slug' => $product->slug,
+                'kategori' => $kategori,
                 'harga' => (int) $harga,
-                'harga_format' => 'Rp ' . number_format($harga, 0, ',', '.'),
-                'deskripsi' => $validation->description ?? $contentData['description'] ?? '',
+                'harga_format' => 'Rp ' . number_format((float) $harga, 0, ',', '.'),
+                'deskripsi' => $product->description ?? '',
                 'gambar' => $gambar,
                 'galeri' => $galeriFormatted,
                 'umkm' => [
@@ -130,7 +146,7 @@ class UmkmController extends Controller
                     'slug' => $umkm->slug,
                     'pemilik' => $umkm->owner_name,
                     'kontak' => $umkm->owner_phone,
-                    'alamat' => $umkm->address ?? $contentData['address'] ?? '-',
+                    'alamat' => $umkm->address ?? '-',
                     'deskripsi' => $umkm->description ?? '',
                     'website_url' => $umkm->website 
                         ? ($umkm->website->custom_domain ? 'http://' . $umkm->website->custom_domain : 'http://' . $umkm->website->url)
@@ -144,29 +160,107 @@ class UmkmController extends Controller
             ];
         }
 
-        // Jika tidak ada produk dari database, return empty array atau fallback ke dummy data
+        // Jika tidak ada produk dari UmkmProduct, coba ambil dari UmkmContentValidation sebagai fallback
         if (empty($produk)) {
-            return $this->getDummyProduk();
+            $validations = UmkmContentValidation::query()
+                ->where('content_type', 'product')
+                ->where('status', 'approved')
+                ->with(['umkmBusiness.website'])
+                ->orderByDesc('created_at')
+                ->get();
+
+            foreach ($validations as $validation) {
+                $umkm = $validation->umkmBusiness;
+                if (!$umkm || $umkm->status !== 'active') {
+                    continue;
+                }
+
+                $contentData = $validation->content_data ?? [];
+                $gambar = $contentData['image'] ?? $contentData['gambar'] ?? null;
+                $galeri = $contentData['gallery'] ?? $contentData['galeri'] ?? [];
+                
+                if ($gambar && !filter_var($gambar, FILTER_VALIDATE_URL)) {
+                    $gambar = Storage::url($gambar);
+                }
+                
+                if (empty($gambar)) {
+                    $gambar = 'https://via.placeholder.com/400x400?text=Produk+UMKM';
+                }
+
+                $galeriFormatted = [];
+                if (is_array($galeri) && !empty($galeri)) {
+                    foreach ($galeri as $img) {
+                        if (!filter_var($img, FILTER_VALIDATE_URL)) {
+                            $img = Storage::url($img);
+                        }
+                        $galeriFormatted[] = $img;
+                    }
+                }
+                
+                if (empty($galeriFormatted)) {
+                    $galeriFormatted = [$gambar];
+                }
+
+                $harga = $contentData['price'] ?? $contentData['harga'] ?? 0;
+                $stok = $contentData['stock'] ?? $contentData['stok'] ?? 0;
+                $rating = $contentData['rating'] ?? 4.5;
+                $terjual = $contentData['sold'] ?? $contentData['terjual'] ?? 0;
+                $berat = $contentData['weight'] ?? $contentData['berat'] ?? '-';
+                $unggulan = $contentData['featured'] ?? $contentData['unggulan'] ?? false;
+
+                $produk[] = [
+                    'id' => $validation->id,
+                    'nama' => $validation->title,
+                    'slug' => Str::slug($validation->title) . '-' . $validation->id,
+                    'kategori' => $umkm->category,
+                    'harga' => (int) $harga,
+                    'harga_format' => 'Rp ' . number_format($harga, 0, ',', '.'),
+                    'deskripsi' => $validation->description ?? $contentData['description'] ?? '',
+                    'gambar' => $gambar,
+                    'galeri' => $galeriFormatted,
+                    'umkm' => [
+                        'nama' => $umkm->name,
+                        'slug' => $umkm->slug,
+                        'pemilik' => $umkm->owner_name,
+                        'kontak' => $umkm->owner_phone,
+                        'alamat' => $umkm->address ?? $contentData['address'] ?? '-',
+                        'deskripsi' => $umkm->description ?? '',
+                        'website_url' => $umkm->website 
+                            ? ($umkm->website->custom_domain ? 'http://' . $umkm->website->custom_domain : 'http://' . $umkm->website->url)
+                            : ($umkm->subdomain ? 'http://' . $umkm->subdomain : route('umkm.home'))
+                    ],
+                    'rating' => (float) $rating,
+                    'terjual' => (int) $terjual,
+                    'stok' => (int) $stok,
+                    'berat' => $berat,
+                    'unggulan' => (bool) $unggulan
+                ];
+            }
         }
 
         return $produk;
     }
 
-    private function getDummyProduk()
-    {
-        // Fallback dummy data jika belum ada produk di database
-        return [];
-    }
-
     private function getKategoriUmkm()
     {
+        // Ambil kategori dari product categories yang aktif
+        $productCategories = \App\Models\UmkmProductCategory::query()
+            ->where('is_active', true)
+            ->distinct()
+            ->pluck('name')
+            ->filter()
+            ->toArray();
+
         // Ambil kategori dari UMKM yang aktif
-        $kategori = UmkmBusiness::query()
+        $umkmCategories = UmkmBusiness::query()
             ->where('status', 'active')
             ->distinct()
             ->pluck('category')
             ->filter()
             ->toArray();
+
+        // Gabungkan semua kategori
+        $kategori = array_unique(array_merge($productCategories, $umkmCategories));
 
         // Tambahkan kategori default jika belum ada
         $defaultKategori = [
@@ -208,19 +302,34 @@ class UmkmController extends Controller
                 $logo = 'https://via.placeholder.com/100x100?text=' . urlencode(substr($umkm->name, 0, 2));
             }
 
-            // Hitung jumlah produk yang sudah disetujui
-            $produkCount = UmkmContentValidation::query()
+            // Hitung jumlah produk aktif dari tabel UmkmProduct
+            $produkCount = UmkmProduct::query()
                 ->where('umkm_business_id', $umkm->id)
-                ->where('content_type', 'product')
-                ->where('status', 'approved')
+                ->where('is_active', true)
                 ->count();
+
+            // Jika tidak ada produk dari UmkmProduct, hitung dari UmkmContentValidation sebagai fallback
+            if ($produkCount == 0) {
+                $produkCount = UmkmContentValidation::query()
+                    ->where('umkm_business_id', $umkm->id)
+                    ->where('content_type', 'product')
+                    ->where('status', 'approved')
+                    ->count();
+            }
+
+            // Hitung rating rata-rata dari produk
+            $avgRating = UmkmProduct::query()
+                ->where('umkm_business_id', $umkm->id)
+                ->where('is_active', true)
+                ->where('rating', '>', 0)
+                ->avg('rating');
 
             $umkmTerdaftar[] = [
                 'nama' => $umkm->name,
                 'slug' => $umkm->slug,
-                'kategori' => $umkm->category,
+                'kategori' => $umkm->category ?? 'Umum',
                 'produk_count' => $produkCount,
-                'rating' => 4.5, // Default rating, bisa diambil dari produk jika ada
+                'rating' => round($avgRating ?? 4.5, 1),
                 'logo' => $logo
             ];
         }
@@ -231,7 +340,96 @@ class UmkmController extends Controller
 
     private function getProdukBySlug($slug)
     {
-        // Extract ID from slug (format: nama-produk-123)
+        // Cari produk dari tabel UmkmProduct berdasarkan slug
+        $product = UmkmProduct::query()
+            ->where('slug', $slug)
+            ->where('is_active', true)
+            ->with(['umkmBusiness.website', 'primaryImage', 'images', 'category'])
+            ->whereHas('umkmBusiness', function($query) {
+                $query->where('status', 'active');
+            })
+            ->first();
+        
+        if ($product) {
+            $umkm = $product->umkmBusiness;
+            if ($umkm && $umkm->status === 'active') {
+                // Ambil gambar utama
+                $primaryImage = $product->primaryImage;
+                $gambar = null;
+                
+                if ($primaryImage) {
+                    $gambar = $primaryImage->image_path;
+                } elseif ($product->images->count() > 0) {
+                    $gambar = $product->images->first()->image_path;
+                }
+                
+                if ($gambar && !filter_var($gambar, FILTER_VALIDATE_URL)) {
+                    $gambar = Storage::url($gambar);
+                }
+                
+                if (empty($gambar)) {
+                    $gambar = 'https://via.placeholder.com/400x400?text=Produk+UMKM';
+                }
+
+                // Format gallery images
+                $galeriFormatted = [];
+                if ($product->images->count() > 0) {
+                    foreach ($product->images as $img) {
+                        $imgPath = $img->image_path;
+                        if ($imgPath && !filter_var($imgPath, FILTER_VALIDATE_URL)) {
+                            $imgPath = Storage::url($imgPath);
+                        }
+                        if ($imgPath) {
+                            $galeriFormatted[] = $imgPath;
+                        }
+                    }
+                }
+                
+                if (empty($galeriFormatted)) {
+                    $galeriFormatted = [$gambar];
+                }
+
+                // Ambil kategori dari product category atau fallback ke UMKM category
+                $kategori = $product->category ? $product->category->name : ($umkm->category ?? 'Umum');
+
+                $harga = $product->discount_price ?? $product->price;
+                $stok = $product->stock ?? 0;
+                $rating = $product->rating ?? 4.5;
+                $terjual = $product->sold_count ?? 0;
+                $berat = $product->weight ?? '-';
+                $unggulan = $product->is_featured ?? false;
+
+                return [
+                    'id' => $product->id,
+                    'nama' => $product->title,
+                    'slug' => $product->slug,
+                    'kategori' => $kategori,
+                    'harga' => (int) $harga,
+                    'harga_format' => 'Rp ' . number_format((float) $harga, 0, ',', '.'),
+                    'deskripsi' => $product->description ?? '',
+                    'gambar' => $gambar,
+                    'galeri' => $galeriFormatted,
+                    'umkm' => [
+                        'nama' => $umkm->name,
+                        'slug' => $umkm->slug,
+                        'pemilik' => $umkm->owner_name,
+                        'kontak' => $umkm->owner_phone,
+                        'alamat' => $umkm->address ?? '-',
+                        'deskripsi' => $umkm->description ?? '',
+                        'website_url' => $umkm->website 
+                            ? ($umkm->website->custom_domain ? 'http://' . $umkm->website->custom_domain : 'http://' . $umkm->website->url)
+                            : ($umkm->subdomain ? 'http://' . $umkm->subdomain : route('umkm.home'))
+                    ],
+                    'rating' => (float) $rating,
+                    'terjual' => (int) $terjual,
+                    'stok' => (int) $stok,
+                    'berat' => $berat,
+                    'unggulan' => (bool) $unggulan
+                ];
+            }
+        }
+        
+        // Fallback: cari dari UmkmContentValidation jika tidak ditemukan di UmkmProduct
         $parts = explode('-', $slug);
         $id = end($parts);
         
@@ -310,7 +508,7 @@ class UmkmController extends Controller
             }
         }
         
-        // Fallback ke method lama
+        // Fallback terakhir: cari dari array produk
         return collect($this->getAllProdukUmkm())->firstWhere('slug', $slug);
     }
 
@@ -407,18 +605,26 @@ class UmkmController extends Controller
             ->first();
         
         if ($umkm) {
-            $validations = UmkmContentValidation::query()
+            $produk = [];
+            
+            // Ambil produk dari tabel UmkmProduct
+            $products = UmkmProduct::query()
                 ->where('umkm_business_id', $umkm->id)
-                ->where('content_type', 'product')
-                ->where('status', 'approved')
+                ->where('is_active', true)
+                ->with(['primaryImage', 'images', 'category'])
                 ->orderByDesc('created_at')
                 ->get();
             
-            $produk = [];
-            
-            foreach ($validations as $validation) {
-                $contentData = $validation->content_data ?? [];
-                $gambar = $contentData['image'] ?? $contentData['gambar'] ?? null;
+            foreach ($products as $product) {
+                // Ambil gambar utama
+                $primaryImage = $product->primaryImage;
+                $gambar = null;
+                
+                if ($primaryImage) {
+                    $gambar = $primaryImage->image_path;
+                } elseif ($product->images->count() > 0) {
+                    $gambar = $product->images->first()->image_path;
+                }
                 
                 if ($gambar && !filter_var($gambar, FILTER_VALIDATE_URL)) {
                     $gambar = Storage::url($gambar);
@@ -427,22 +633,25 @@ class UmkmController extends Controller
                 if (empty($gambar)) {
                     $gambar = 'https://via.placeholder.com/400x400?text=Produk+UMKM';
                 }
-                
-                $harga = $contentData['price'] ?? $contentData['harga'] ?? 0;
-                $stok = $contentData['stock'] ?? $contentData['stok'] ?? 0;
-                $rating = $contentData['rating'] ?? 4.5;
-                $terjual = $contentData['sold'] ?? $contentData['terjual'] ?? 0;
-                $berat = $contentData['weight'] ?? $contentData['berat'] ?? '-';
-                $unggulan = $contentData['featured'] ?? $contentData['unggulan'] ?? false;
+
+                // Ambil kategori dari product category atau fallback ke UMKM category
+                $kategori = $product->category ? $product->category->name : ($umkm->category ?? 'Umum');
+
+                $harga = $product->discount_price ?? $product->price;
+                $stok = $product->stock ?? 0;
+                $rating = $product->rating ?? 4.5;
+                $terjual = $product->sold_count ?? 0;
+                $berat = $product->weight ?? '-';
+                $unggulan = $product->is_featured ?? false;
                 
                 $produk[] = [
-                    'id' => $validation->id,
-                    'nama' => $validation->title,
-                    'slug' => Str::slug($validation->title) . '-' . $validation->id,
-                    'kategori' => $umkm->category,
+                    'id' => $product->id,
+                    'nama' => $product->title,
+                    'slug' => $product->slug,
+                    'kategori' => $kategori,
                     'harga' => (int) $harga,
-                    'harga_format' => 'Rp ' . number_format($harga, 0, ',', '.'),
-                    'deskripsi' => $validation->description ?? $contentData['description'] ?? '',
+                    'harga_format' => 'Rp ' . number_format((float) $harga, 0, ',', '.'),
+                    'deskripsi' => $product->description ?? '',
                     'gambar' => $gambar,
                     'umkm' => [
                         'nama' => $umkm->name,
@@ -459,6 +668,61 @@ class UmkmController extends Controller
                     'berat' => $berat,
                     'unggulan' => (bool) $unggulan
                 ];
+            }
+            
+            // Jika tidak ada produk dari UmkmProduct, ambil dari UmkmContentValidation sebagai fallback
+            if (empty($produk)) {
+                $validations = UmkmContentValidation::query()
+                    ->where('umkm_business_id', $umkm->id)
+                    ->where('content_type', 'product')
+                    ->where('status', 'approved')
+                    ->orderByDesc('created_at')
+                    ->get();
+                
+                foreach ($validations as $validation) {
+                    $contentData = $validation->content_data ?? [];
+                    $gambar = $contentData['image'] ?? $contentData['gambar'] ?? null;
+                    
+                    if ($gambar && !filter_var($gambar, FILTER_VALIDATE_URL)) {
+                        $gambar = Storage::url($gambar);
+                    }
+                    
+                    if (empty($gambar)) {
+                        $gambar = 'https://via.placeholder.com/400x400?text=Produk+UMKM';
+                    }
+                    
+                    $harga = $contentData['price'] ?? $contentData['harga'] ?? 0;
+                    $stok = $contentData['stock'] ?? $contentData['stok'] ?? 0;
+                    $rating = $contentData['rating'] ?? 4.5;
+                    $terjual = $contentData['sold'] ?? $contentData['terjual'] ?? 0;
+                    $berat = $contentData['weight'] ?? $contentData['berat'] ?? '-';
+                    $unggulan = $contentData['featured'] ?? $contentData['unggulan'] ?? false;
+                    
+                    $produk[] = [
+                        'id' => $validation->id,
+                        'nama' => $validation->title,
+                        'slug' => Str::slug($validation->title) . '-' . $validation->id,
+                        'kategori' => $umkm->category,
+                        'harga' => (int) $harga,
+                        'harga_format' => 'Rp ' . number_format($harga, 0, ',', '.'),
+                        'deskripsi' => $validation->description ?? $contentData['description'] ?? '',
+                        'gambar' => $gambar,
+                        'umkm' => [
+                            'nama' => $umkm->name,
+                            'slug' => $umkm->slug,
+                            'pemilik' => $umkm->owner_name,
+                            'kontak' => $umkm->owner_phone,
+                            'website_url' => $umkm->website 
+                                ? ($umkm->website->custom_domain ? 'http://' . $umkm->website->custom_domain : 'http://' . $umkm->website->url)
+                                : ($umkm->subdomain ? 'http://' . $umkm->subdomain : route('umkm.home'))
+                        ],
+                        'rating' => (float) $rating,
+                        'terjual' => (int) $terjual,
+                        'stok' => (int) $stok,
+                        'berat' => $berat,
+                        'unggulan' => (bool) $unggulan
+                    ];
+                }
             }
             
             return $produk;

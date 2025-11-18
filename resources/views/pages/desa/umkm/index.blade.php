@@ -193,10 +193,6 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach(array_slice($produk_unggulan, 0, 4) as $item)
             <div class="product-card bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                <!-- Badge Unggulan -->
-                <div class="absolute top-3 left-3 bg-yellow-400 text-green-900 text-xs px-2 py-1 rounded-full font-bold z-10">
-                    ⭐ Unggulan
-                </div>
                 
                 <!-- Wishlist Button -->
                 <button class="absolute top-3 right-3 wishlist-btn p-2 bg-white/80 rounded-full hover:bg-white transition-colors z-10" 
@@ -326,12 +322,6 @@
                  data-price="{{ $item['harga'] }}" 
                  data-rating="{{ $item['rating'] }}" 
                  data-sales="{{ $item['terjual'] }}">
-                
-                @if($item['unggulan'])
-                <div class="absolute top-3 left-3 bg-yellow-400 text-green-900 text-xs px-2 py-1 rounded-full font-bold z-10">
-                    ⭐ Unggulan
-                </div>
-                @endif
                 
                 <button class="absolute top-3 right-3 wishlist-btn p-2 bg-white/80 rounded-full hover:bg-white transition-colors z-10" 
                         onclick="toggleWishlist(this)">

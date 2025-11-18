@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Desa;
 use App\Http\Controllers\Controller;
 use App\Models\UmkmBusiness;
 use App\Models\UmkmContentValidation;
+use App\Models\UmkmProduct;
 use App\Models\Village;
 use App\Models\VillageGalleryItem;
 use App\Models\VillageNews;
@@ -102,19 +103,13 @@ class DesaController extends Controller
 
     private function getUmkmTerbaru(): array
     {
-        $village = $this->village();
-        
-        // Ambil produk terbaru dari UMKM yang aktif di desa ini
-        $validations = UmkmContentValidation::query()
-            ->where('content_type', 'product')
-            ->where('status', 'approved')
-            ->with(['umkmBusiness' => function ($query) use ($village) {
-                $query->where('village_id', $village->id)
-                    ->where('status', 'active');
-            }])
-            ->whereHas('umkmBusiness', function ($query) use ($village) {
-                $query->where('village_id', $village->id)
-                    ->where('status', 'active');
+        // Ambil produk terbaru dari tabel UmkmProduct
+        // Ambil semua produk aktif dari UMKM aktif (tidak filter village_id agar lebih fleksibel)
+        $products = UmkmProduct::query()
+            ->where('is_active', true)
+            ->with(['umkmBusiness', 'primaryImage', 'images'])
+            ->whereHas('umkmBusiness', function ($query) {
+                $query->where('status', 'active');
             })
             ->orderByDesc('created_at')
             ->take(3)
@@ -122,74 +117,205 @@ class DesaController extends Controller
 
         $produk = [];
 
-        foreach ($validations as $validation) {
-            $umkm = $validation->umkmBusiness;
+        foreach ($products as $product) {
+            $umkm = $product->umkmBusiness;
             if (!$umkm) {
                 continue;
             }
 
-            $contentData = $validation->content_data ?? [];
-            $gambar = $contentData['image'] ?? $contentData['gambar'] ?? null;
+            // Ambil gambar utama
+            $primaryImage = $product->primaryImage;
+            $gambar = null;
             
+            if ($primaryImage) {
+                $gambar = $primaryImage->image_path;
+            } elseif ($product->images->count() > 0) {
+                $gambar = $product->images->first()->image_path;
+            }
+            
+            // Handle image paths
             if ($gambar && !filter_var($gambar, FILTER_VALIDATE_URL)) {
                 $gambar = Storage::url($gambar);
             }
             
             if (empty($gambar)) {
-                $gambar = 'https://via.placeholder.com/280x280?text=' . urlencode(substr($validation->title, 0, 10));
+                $gambar = 'https://via.placeholder.com/280x280?text=' . urlencode(substr($product->title, 0, 10));
             }
 
-            $harga = $contentData['price'] ?? $contentData['harga'] ?? 0;
+            $harga = $product->discount_price ?? $product->price;
 
             $produk[] = [
-                'nama' => $validation->title,
+                'nama' => $product->title,
                 'umkm' => $umkm->name,
-                'harga' => 'Rp ' . number_format($harga, 0, ',', '.'),
+                'harga' => 'Rp ' . number_format((float) $harga, 0, ',', '.'),
                 'gambar' => $gambar,
-                'slug' => Str::slug($validation->title) . '-' . $validation->id,
+                'slug' => $product->slug,
             ];
         }
 
-        // Jika tidak ada produk, return empty array
+        // Jika tidak ada produk dari UmkmProduct, coba ambil dari UmkmContentValidation sebagai fallback
+        if (empty($produk)) {
+            $validations = UmkmContentValidation::query()
+                ->where('content_type', 'product')
+                ->where('status', 'approved')
+                ->with(['umkmBusiness'])
+                ->whereHas('umkmBusiness', function ($query) {
+                    $query->where('status', 'active');
+                })
+                ->orderByDesc('created_at')
+                ->take(3)
+                ->get();
+
+            foreach ($validations as $validation) {
+                $umkm = $validation->umkmBusiness;
+                if (!$umkm) {
+                    continue;
+                }
+
+                $contentData = $validation->content_data ?? [];
+                $gambar = $contentData['image'] ?? $contentData['gambar'] ?? null;
+                
+                if ($gambar && !filter_var($gambar, FILTER_VALIDATE_URL)) {
+                    $gambar = Storage::url($gambar);
+                }
+                
+                if (empty($gambar)) {
+                    $gambar = 'https://via.placeholder.com/280x280?text=' . urlencode(substr($validation->title, 0, 10));
+                }
+
+                $harga = $contentData['price'] ?? $contentData['harga'] ?? 0;
+
+                $produk[] = [
+                    'nama' => $validation->title,
+                    'umkm' => $umkm->name,
+                    'harga' => 'Rp ' . number_format((float) $harga, 0, ',', '.'),
+                    'gambar' => $gambar,
+                    'slug' => Str::slug($validation->title) . '-' . $validation->id,
+                ];
+            }
+        }
+
         return $produk;
     }
 
     private function getUmkmPopuler(): array
     {
-        $village = $this->village();
+        // Ambil produk populer dari tabel UmkmProduct berdasarkan rating dan jumlah terjual
+        // Ambil semua produk aktif dari UMKM aktif (tidak filter village_id agar lebih fleksibel)
+        $products = UmkmProduct::query()
+            ->where('is_active', true)
+            ->with(['umkmBusiness', 'primaryImage', 'images'])
+            ->whereHas('umkmBusiness', function ($query) {
+                $query->where('status', 'active');
+            })
+            ->get();
         
-        // Ambil produk populer berdasarkan rating dan jumlah terjual
-        $validations = UmkmContentValidation::query()
+        // Jika tidak ada produk, coba ambil dari fallback
+        if ($products->isEmpty()) {
+            return $this->getUmkmPopulerFromValidation();
+        }
+        
+        $productsWithScore = $products->map(function ($product) {
+            $rating = $product->rating ?? 0;
+            $terjual = $product->sold_count ?? 0;
+            $isFeatured = $product->is_featured ? 100 : 0; // Bonus score untuk produk unggulan
+            $isNew = $product->created_at->isAfter(now()->subDays(30)) ? 20 : 0; // Bonus untuk produk baru
+            
+            return [
+                'product' => $product,
+                'score' => ($rating * 10) + $terjual + $isFeatured + $isNew, // Score berdasarkan rating, penjualan, featured, dan baru
+            ];
+        })
+        ->sortByDesc('score')
+        ->take(4)
+        ->pluck('product')
+        ->values();
+        
+        // Jika setelah sorting masih kurang dari 4 produk, tambahkan produk terbaru
+        if ($productsWithScore->count() < 4) {
+            $remaining = 4 - $productsWithScore->count();
+            $additionalProducts = $products->whereNotIn('id', $productsWithScore->pluck('id'))
+                ->sortByDesc('created_at')
+                ->take($remaining);
+            $productsWithScore = $productsWithScore->merge($additionalProducts)->take(4);
+        }
+
+        $produk = [];
+
+        foreach ($productsWithScore as $product) {
+            /** @var UmkmProduct $product */
+            $umkm = $product->umkmBusiness;
+            if (!$umkm) {
+                continue;
+            }
+
+            // Ambil gambar utama
+            $primaryImage = $product->primaryImage;
+            $gambar = null;
+            
+            if ($primaryImage) {
+                $gambar = $primaryImage->image_path;
+            } elseif ($product->images->count() > 0) {
+                $gambar = $product->images->first()->image_path;
+            }
+            
+            // Handle image paths
+            if ($gambar && !filter_var($gambar, FILTER_VALIDATE_URL)) {
+                $gambar = Storage::url($gambar);
+            }
+            
+            if (empty($gambar)) {
+                $gambar = 'https://via.placeholder.com/280x280?text=' . urlencode(substr($product->title, 0, 10));
+            }
+
+            $harga = $product->discount_price ?? $product->price;
+            $rating = $product->rating ?? 4.5;
+
+            $produk[] = [
+                'nama' => $product->title,
+                'umkm' => $umkm->name,
+                'harga' => 'Rp ' . number_format((float) $harga, 0, ',', '.'),
+                'rating' => (float) $rating,
+                'gambar' => $gambar,
+                'slug' => $product->slug,
+            ];
+        }
+
+        return $produk;
+    }
+
+    private function getUmkmPopulerFromValidation(): array
+    {
+        // Fallback: ambil dari UmkmContentValidation jika tidak ada produk di UmkmProduct
+        $validationsData = UmkmContentValidation::query()
             ->where('content_type', 'product')
             ->where('status', 'approved')
-            ->with(['umkmBusiness' => function ($query) use ($village) {
-                $query->where('village_id', $village->id)
-                    ->where('status', 'active');
-            }])
-            ->whereHas('umkmBusiness', function ($query) use ($village) {
-                $query->where('village_id', $village->id)
-                    ->where('status', 'active');
+            ->with(['umkmBusiness'])
+            ->whereHas('umkmBusiness', function ($query) {
+                $query->where('status', 'active');
             })
             ->get()
-            ->map(function ($validation) {
+            ->map(function (UmkmContentValidation $validation) {
                 $contentData = $validation->content_data ?? [];
                 $rating = $contentData['rating'] ?? 0;
                 $terjual = $contentData['sold'] ?? $contentData['terjual'] ?? 0;
+                $unggulan = $contentData['featured'] ?? $contentData['unggulan'] ?? false;
+                $isFeatured = $unggulan ? 100 : 0;
                 
                 return [
                     'validation' => $validation,
-                    'score' => ($rating * 10) + $terjual, // Score berdasarkan rating dan penjualan
+                    'score' => ($rating * 10) + $terjual + $isFeatured,
                 ];
             })
             ->sortByDesc('score')
             ->take(4)
-            ->pluck('validation')
             ->values();
 
         $produk = [];
 
-        foreach ($validations as $validation) {
+        foreach ($validationsData as $item) {
             /** @var UmkmContentValidation $validation */
+            $validation = $item['validation'];
             $umkm = $validation->umkmBusiness;
             if (!$umkm) {
                 continue;
@@ -212,14 +338,13 @@ class DesaController extends Controller
             $produk[] = [
                 'nama' => $validation->title,
                 'umkm' => $umkm->name,
-                'harga' => 'Rp ' . number_format($harga, 0, ',', '.'),
+                'harga' => 'Rp ' . number_format((float) $harga, 0, ',', '.'),
                 'rating' => (float) $rating,
                 'gambar' => $gambar,
                 'slug' => Str::slug($validation->title) . '-' . $validation->id,
             ];
         }
 
-        // Jika tidak ada produk, return empty array
         return $produk;
     }
 
