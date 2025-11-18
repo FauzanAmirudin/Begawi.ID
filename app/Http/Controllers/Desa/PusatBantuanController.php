@@ -229,7 +229,7 @@ class PusatBantuanController extends Controller
                 'penulis' => 'Tim Redaksi Desa',
                 'tanggal' => '2024-12-01',
                 'kategori' => 'Digitalisasi',
-                'gambar' => 'https://via.placeholder.com/600x400/0284C7/ffffff?text=Digital+Transformation',
+                'gambar' => 'artikel-1.jpg',
                 'tags' => ['#InovasiDesa', '#Digitalisasi', '#PelayananPublik'],
                 'waktu_baca' => '5 menit'
             ],
@@ -240,7 +240,7 @@ class PusatBantuanController extends Controller
                 'penulis' => 'Kepala Desa',
                 'tanggal' => '2024-11-28',
                 'kategori' => 'Partisipasi',
-                'gambar' => 'https://via.placeholder.com/600x400/10B981/ffffff?text=Citizen+Engagement',
+                'gambar' => 'artikel-2.jpg',
                 'tags' => ['#PartisipasiWarga', '#Komunikasi', '#Transparansi'],
                 'waktu_baca' => '4 menit'
             ],
@@ -251,7 +251,7 @@ class PusatBantuanController extends Controller
                 'penulis' => 'Koordinator UMKM',
                 'tanggal' => '2024-11-25',
                 'kategori' => 'UMKM',
-                'gambar' => 'https://via.placeholder.com/600x400/FACC15/ffffff?text=UMKM+Success',
+                'gambar' => 'artikel-3.jpg',
                 'tags' => ['#UMKM', '#ECommerce', '#InovasiDesa'],
                 'waktu_baca' => '6 menit'
             ],
@@ -262,7 +262,7 @@ class PusatBantuanController extends Controller
                 'penulis' => 'Tim IT Desa',
                 'tanggal' => '2024-11-22',
                 'kategori' => 'Keamanan',
-                'gambar' => 'https://via.placeholder.com/600x400/EF4444/ffffff?text=Digital+Security',
+                'gambar' => 'artikel-4.jpg',
                 'tags' => ['#Keamanan', '#PrivasiData', '#TipsDigital'],
                 'waktu_baca' => '7 menit'
             ]
