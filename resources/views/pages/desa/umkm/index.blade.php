@@ -163,7 +163,7 @@
     <!-- Stats Bar -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 fade-in-up">
         <div class="bg-white rounded-xl p-6 shadow-md text-center border-l-4 border-green-600">
-            <div class="text-3xl font-bold text-green-700 mb-2">{{ count($produk) }}</div>
+            <div class="text-3xl font-bold text-green-700 mb-2">{{ $produk_count }}</div>
             <div class="text-sm text-slate-600">Total Produk</div>
         </div>
         <div class="bg-white rounded-xl p-6 shadow-md text-center border-l-4 border-blue-600">
@@ -429,23 +429,40 @@
     </section>
 
     <!-- Pagination -->
+    @if($produk->hasPages())
     <div class="flex justify-center mt-12">
         <nav class="flex items-center space-x-2">
-            <button class="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
+            <a 
+                href="{{ $produk->previousPageUrl() }}" 
+                class="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors {{ $produk->onFirstPage() ? 'opacity-50 pointer-events-none' : '' }}"
+                aria-label="Halaman sebelumnya"
+            >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
-            </button>
-            <button class="px-4 py-2 bg-green-700 text-white rounded-lg">1</button>
-            <button class="px-4 py-2 border border-slate-300 rounded-lg hover:bg-green-700 hover:text-white transition-colors">2</button>
-            <button class="px-4 py-2 border border-slate-300 rounded-lg hover:bg-green-700 hover:text-white transition-colors">3</button>
-            <button class="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
+            </a>
+            
+            @foreach ($produk->getUrlRange(1, $produk->lastPage()) as $page => $url)
+                <a 
+                    href="{{ $url }}" 
+                    class="px-4 py-2 rounded-lg border border-slate-300 transition-colors {{ $page == $produk->currentPage() ? 'bg-green-700 text-white border-green-700' : 'hover:bg-green-700 hover:text-white' }}"
+                >
+                    {{ $page }}
+                </a>
+            @endforeach
+            
+            <a 
+                href="{{ $produk->nextPageUrl() }}" 
+                class="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors {{ $produk->currentPage() == $produk->lastPage() ? 'opacity-50 pointer-events-none' : '' }}"
+                aria-label="Halaman selanjutnya"
+            >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
-            </button>
+            </a>
         </nav>
     </div>
+    @endif
 </div>
 
 <!-- CTA Section -->

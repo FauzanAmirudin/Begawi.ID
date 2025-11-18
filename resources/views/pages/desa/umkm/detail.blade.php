@@ -12,6 +12,7 @@
     $firstImage = $galleryImages[0];
     $kategoriSlug = \Illuminate\Support\Str::slug($produk['kategori']);
     $nomorKontak = $produk['umkm']['kontak'] ?? ($produk['umkm']['telepon'] ?? '');
+    $relatedProducts = $produk_terkait ?? [];
 @endphp
 
 @section('content')
@@ -240,38 +241,52 @@
             </a>
         </div>
         
+        @if(count($relatedProducts) > 0)
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Related products akan diisi dengan data dari controller -->
-            @for($i = 1; $i <= 4; $i++)
-            <div class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+            @foreach($relatedProducts as $related)
+            <a 
+                href="{{ route('desa.umkm.detail', $related['slug']) }}"
+                class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden group"
+            >
                 <div class="relative">
                     <img 
-                        src="https://via.placeholder.com/300x300/166534/ffffff?text=Produk+{{ $i }}" 
-                        alt="Produk Serupa {{ $i }}"
-                        class="aspect-square object-cover w-full hover:scale-105 transition-transform duration-300"
+                        src="{{ $related['gambar'] ?? 'https://via.placeholder.com/300x300?text=Produk+UMKM' }}" 
+                        alt="Produk {{ $related['nama'] }}"
+                        class="aspect-square object-cover w-full group-hover:scale-105 transition-transform duration-300"
                     />
                     <div class="absolute top-3 left-3">
                         <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
-                            {{ $produk['kategori'] }}
+                            {{ $related['kategori'] ?? 'Umum' }}
                         </span>
                     </div>
                 </div>
-                <div class="p-4">
-                    <h3 class="font-semibold text-green-900 mb-1">Produk Serupa {{ $i }}</h3>
-                    <p class="text-sm text-slate-500 mb-2">UMKM Lainnya</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-green-700 font-bold">Rp {{ number_format(rand(10000, 50000), 0, ',', '.') }}</span>
+                <div class="p-4 space-y-2">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-green-700 font-bold text-lg">
+                            Rp {{ number_format($related['harga'], 0, ',', '.') }}
+                        </span>
                         <div class="flex items-center gap-1 text-xs text-slate-500">
-                            <svg class="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                            <svg class="w-3.5 h-3.5 text-yellow-400 fill-current" viewBox="0 0 20 20">
                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                             </svg>
-                            4.{{ $i }}
+                            <span>{{ number_format($related['rating'], 1) }}</span>
                         </div>
                     </div>
+                    <h3 class="font-semibold text-green-900 line-clamp-2">{{ $related['nama'] }}</h3>
+                    <p class="text-sm text-slate-500">{{ $related['umkm']['nama'] ?? 'UMKM Desa' }}</p>
+                    <div class="flex items-center justify-between text-xs text-slate-500 pt-1 border-t border-slate-100">
+                        <span>{{ $related['stok'] }} stok</span>
+                        <span>{{ $related['terjual'] }} terjual</span>
+                    </div>
                 </div>
-            </div>
-            @endfor
+            </a>
+            @endforeach
         </div>
+        @else
+        <div class="bg-white rounded-2xl border border-dashed border-slate-200 p-8 text-center text-slate-500">
+            Belum ada produk serupa di kategori ini.
+        </div>
+        @endif
     </div>
 </section>
 

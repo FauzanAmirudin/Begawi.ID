@@ -8,15 +8,19 @@ use App\Models\UmkmContentValidation;
 use App\Models\UmkmProduct;
 use App\Models\UmkmProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class UmkmController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $allProduk = $this->getAllProdukUmkm();
+
         $data = [
-            'produk' => $this->getAllProdukUmkm(),
+            'produk' => $this->paginateArray($allProduk, $request, 4),
+            'produk_count' => count($allProduk),
             'kategori' => $this->getKategoriUmkm(),
             'produk_unggulan' => $this->getProdukUnggulan(),
             'umkm_terdaftar' => $this->getUmkmTerdaftar()
@@ -730,6 +734,24 @@ class UmkmController extends Controller
         
         // Jika UMKM tidak ditemukan, return array kosong
         return [];
+    }
+
+    private function paginateArray(array $items, Request $request, int $perPage = 12): LengthAwarePaginator
+    {
+        $page = LengthAwarePaginator::resolveCurrentPage();
+        $itemsCollection = collect($items);
+        $currentItems = $itemsCollection->slice(($page - 1) * $perPage, $perPage)->values();
+
+        return new LengthAwarePaginator(
+            $currentItems,
+            $itemsCollection->count(),
+            $perPage,
+            $page,
+            [
+                'path' => $request->url(),
+                'query' => $request->query(),
+            ]
+        );
     }
 }
 
