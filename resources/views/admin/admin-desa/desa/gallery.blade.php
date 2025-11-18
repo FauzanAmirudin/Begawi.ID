@@ -128,6 +128,15 @@
                 this.thumbnailUploadInfo = { name: '', size: null };
                 this.galleryModal = true;
             },
+            deleteModal: false,
+    deleteActionUrl: '',
+    deleteUrlTemplate: '{{ route('admin.desa-management.gallery.destroy', 0) }}', // ID 0 dummy
+
+    openDeleteModal(id) {
+        // Ganti ID dummy 0 dengan ID asli item yang dipilih
+        this.deleteActionUrl = this.deleteUrlTemplate.replace('/0', '/' + id);
+        this.deleteModal = true;
+    },
 
             resetForm() {
                 this.formData = {
@@ -260,8 +269,13 @@
                                                 </path>
                                             </svg>
                                         </button>
+                                        <button type="button" 
+        @click="openDeleteModal({{ $item->id }})"
+        class="p-2 bg-white rounded-full text-gray-700 hover:text-rose-600 transition shadow-sm transform hover:scale-110"
+        title="Hapus Item">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+    </button>
                                     </div>
-
                                     <span
                                         class="absolute top-3 right-3 inline-flex items-center px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-white/90 text-gray-800 shadow-sm">
                                         {{ $item->type }}
@@ -653,5 +667,38 @@
                 </div>
             </div>
         </div>
+        <div x-show="deleteModal" x-trap="deleteModal" class="fixed inset-0 z-[60] flex items-center justify-center px-4 py-8" style="display: none;">
+        {{-- Backdrop --}}
+        <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" @click="deleteModal = false"></div>
+
+        {{-- Modal Panel --}}
+        <div class="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden p-6 text-center" @click.away="deleteModal = false">
+            
+            {{-- Ikon Sampah --}}
+            <div class="w-16 h-16 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            </div>
+
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Hapus Item Galeri?</h3>
+            <p class="text-sm text-gray-500 mb-6">
+                Apakah Anda yakin ingin menghapus item ini? <br>
+                Tindakan ini tidak dapat dibatalkan.
+            </p>
+
+            {{-- FORM DELETE SINGLE SHARED --}}
+            <form :action="deleteActionUrl" method="POST" class="flex gap-3 justify-center">
+                @csrf
+                @method('DELETE')
+                
+                <button type="button" @click="deleteModal = false" class="px-5 py-2.5 rounded-xl text-gray-600 bg-gray-100 font-semibold hover:bg-gray-200 transition">
+                    Batal
+                </button>
+                
+                <button type="submit" class="px-5 py-2.5 rounded-xl text-white bg-rose-600 font-semibold hover:bg-rose-700 transition shadow-lg shadow-rose-200">
+                    Ya, Hapus
+                </button>
+            </form>
+        </div>
+    </div>
     </div>
 @endsection
