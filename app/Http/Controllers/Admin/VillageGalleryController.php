@@ -145,6 +145,73 @@ class VillageGalleryController extends Controller
         }
     }
 
+    public function update(Request $request, $id)
+{
+    $gallery = VillageGalleryItem::findOrFail($id);
+    
+    // 1. Validasi Dasar
+    $data = $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'type' => 'required|in:photo,video',
+        // File boleh nullable karena user mungkin tidak mengubah gambar saat edit
+        'media_file' => 'nullable|image|max:5120', 
+        'media_url' => 'nullable|url',
+        'thumbnail_file' => 'nullable|image|max:5120',
+        'thumbnail_url' => 'nullable|url',
+        'category_id' => 'required|exists:village_gallery_categories,id',
+        'is_published' => 'nullable',
+        'taken_at' => 'nullable|date',
+    ]);
+
+    // 2. LOGIKA MEDIA UTAMA (Foto/Video)
+    if ($request->type === 'video') {
+        // Jika Video, ambil dari input video_url
+        $data['media_path'] = $request->video_url; 
+    } else {
+        // Jika Foto
+        if ($request->hasFile('media_file')) {
+            // Prioritas 1: Ada Upload File Baru
+            // Hapus file lama jika ada di storage (opsional)
+            if ($gallery->media_path && !Str::startsWith($gallery->media_path, 'http')) {
+                Storage::disk('public')->delete($gallery->media_path);
+            }
+            $data['media_path'] = $request->file('media_file')->store('gallery', 'public');
+            
+        } elseif ($request->filled('media_url')) {
+            // Prioritas 2: Tidak ada file, tapi ada URL baru
+            $data['media_path'] = $request->media_url;
+            
+        } else {
+            // Prioritas 3: Tidak ada perubahan, pakai data lama
+            // Hapus key media_path dari array $data agar tidak ternull-kan
+            unset($data['media_path']); 
+        }
+    }
+
+    // 3. LOGIKA THUMBNAIL
+    if ($request->hasFile('thumbnail_file')) {
+        // Prioritas 1: Upload File
+        if ($gallery->thumbnail_path && !Str::startsWith($gallery->thumbnail_path, 'http')) {
+            Storage::disk('public')->delete($gallery->thumbnail_path);
+        }
+        $data['thumbnail_path'] = $request->file('thumbnail_file')->store('gallery/thumbnails', 'public');
+        
+    } elseif ($request->filled('thumbnail_url')) {
+        // Prioritas 2: URL
+        $data['thumbnail_path'] = $request->thumbnail_url;
+        
+    } else {
+        // Prioritas 3: Tetap yang lama
+        unset($data['thumbnail_path']);
+    }
+
+    // 4. Update Database
+    $gallery->update($data);
+
+    return redirect()->back()->with('success', 'Konten galeri berhasil diperbarui.');
+}
+
     public function destroy(VillageGalleryItem $item): RedirectResponse
     {
         if ($item->media_path && ! str_starts_with($item->media_path, 'http')) {

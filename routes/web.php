@@ -216,6 +216,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::put('/agendas/{agenda}', [\App\Http\Controllers\Admin\VillageAgendaController::class, 'update'])->name('agendas.update');
         Route::delete('/agendas/{agenda}', [\App\Http\Controllers\Admin\VillageAgendaController::class, 'destroy'])->name('agendas.destroy');
 
+        Route::put('/gallery/{id}', [VillageGalleryController::class, 'update'])->name('gallery.update');
         Route::post('/gallery', [VillageGalleryController::class, 'store'])->name('gallery.store');
         Route::delete('/gallery/{item}', [VillageGalleryController::class, 'destroy'])->name('gallery.destroy');
 
