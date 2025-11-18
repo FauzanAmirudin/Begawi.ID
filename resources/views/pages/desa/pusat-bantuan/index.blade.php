@@ -301,7 +301,8 @@
                         data-kategori="{{ strtolower($article['kategori']) }}"
                         onclick="openArticle({{ $article['id'] }})">
                         <div class="relative overflow-hidden">
-                            <img src="{{ $article['gambar'] }}" alt="{{ $article['judul'] }}"
+                            <img src="{{ asset('images/articles/' . $article['gambar']) }}"
+                                alt="{{ $article['judul'] }}"
                                 class="w-full h-48 object-cover transition-transform duration-300 hover:scale-105" />
                             <div
                                 class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300">
@@ -518,15 +519,15 @@
             <h4 class="font-semibold text-slate-800">Langkah-langkah:</h4>
             <div class="space-y-3">
                 ${tutorial.langkah.map((step, index) => `
-                                                                                    <div class="flex items-start gap-3">
-                                                                                        <div class="w-8 h-8 bg-sky-600 text-white rounded-full flex items-center justify-center text-sm font-medium flex-shrink-0">
-                                                                                            ${index + 1}
-                                                                                        </div>
-                                                                                        <div class="flex-1 pt-1">
-                                                                                            <p class="text-slate-700">${step}</p>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                `).join('')}
+                                                                                                                    <div class="flex items-start gap-3">
+                                                                                                                        <div class="w-8 h-8 bg-sky-600 text-white rounded-full flex items-center justify-center text-sm font-medium flex-shrink-0">
+                                                                                                                            ${index + 1}
+                                                                                                                        </div>
+                                                                                                                        <div class="flex-1 pt-1">
+                                                                                                                            <p class="text-slate-700">${step}</p>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                `).join('')}
             </div>
         </div>
     `;
