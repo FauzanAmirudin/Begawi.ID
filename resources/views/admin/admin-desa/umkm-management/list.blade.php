@@ -92,15 +92,34 @@
                                 </td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="inline-flex items-center gap-2 flex-wrap">
+
+                                        {{-- Edit --}}
                                         <a href="{{ route('admin.desa-management.umkm-management.edit', $umkm['id']) }}"
-                                            class="text-xs font-semibold text-indigo-600 hover:text-indigo-700">
-                                            Edit
+                                            class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-100"
+                                            title="Edit UMKM">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M16.862 3.487a2.25 2.25 0 0 1 3.182 3.182L8.25 18.463 4.5 19.5l1.037-3.75 11.325-12.263z" />
+                                            </svg>
+                                            <span class="sr-only">Edit UMKM</span>
                                         </a>
+
+                                        {{-- Monitor --}}
                                         <a href="{{ route('admin.desa-management.umkm-management.monitoring') }}"
-                                            class="text-xs font-semibold text-slate-400 hover:text-emerald-600">
-                                            Monitor
+                                            class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-50 text-slate-500 hover:bg-emerald-50 hover:text-emerald-600"
+                                            title="Monitor UMKM">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M3 4.5h18M4.5 9h15l-2.25 10.5h-10.5L4.5 9zM9 13.5h1.5m3 0H15" />
+                                            </svg>
+                                            <span class="sr-only">Monitor UMKM</span>
                                         </a>
+
+                                        {{-- Status --}}
                                         @if ($umkm['status'] === 'onboarding')
+                                            {{-- onboarding → aktifkan --}}
                                             <form
                                                 action="{{ route('admin.desa-management.umkm-management.update-status', $umkm['id']) }}"
                                                 method="POST" class="inline"
@@ -109,11 +128,18 @@
                                                 @method('POST')
                                                 <input type="hidden" name="status" value="active">
                                                 <button type="submit"
-                                                    class="text-xs font-semibold text-emerald-600 hover:text-emerald-700">
-                                                    Aktifkan
+                                                    class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-100"
+                                                    title="Aktifkan UMKM">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M9.75 21.75 3 12l6.75-9.75M15 4.5h6M15 9h6M15 13.5h6M15 18h6" />
+                                                    </svg>
+                                                    <span class="sr-only">Aktifkan UMKM</span>
                                                 </button>
                                             </form>
-                                        @elseif($umkm['status'] === 'active')
+                                        @elseif ($umkm['status'] === 'active')
+                                            {{-- active → suspend --}}
                                             <form
                                                 action="{{ route('admin.desa-management.umkm-management.update-status', $umkm['id']) }}"
                                                 method="POST" class="inline"
@@ -122,11 +148,19 @@
                                                 @method('POST')
                                                 <input type="hidden" name="status" value="suspended">
                                                 <button type="submit"
-                                                    class="text-xs font-semibold text-rose-500 hover:text-rose-600">
-                                                    Suspend
+                                                    class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-100"
+                                                    title="Suspend UMKM">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4"
+                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                        stroke-width="1.8">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M6.75 5.25v13.5M17.25 5.25v13.5" />
+                                                    </svg>
+                                                    <span class="sr-only">Suspend UMKM</span>
                                                 </button>
                                             </form>
-                                        @elseif($umkm['status'] === 'suspended')
+                                        @elseif ($umkm['status'] === 'suspended')
+                                            {{-- suspended → aktifkan kembali --}}
                                             <form
                                                 action="{{ route('admin.desa-management.umkm-management.update-status', $umkm['id']) }}"
                                                 method="POST" class="inline"
@@ -135,15 +169,32 @@
                                                 @method('POST')
                                                 <input type="hidden" name="status" value="active">
                                                 <button type="submit"
-                                                    class="text-xs font-semibold text-emerald-600 hover:text-emerald-700">
-                                                    Aktifkan
+                                                    class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-100"
+                                                    title="Aktifkan kembali UMKM">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4"
+                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                        stroke-width="1.8">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M12 4.5v15m7.5-7.5h-15" />
+                                                    </svg>
+                                                    <span class="sr-only">Aktifkan kembali UMKM</span>
                                                 </button>
                                             </form>
                                         @endif
-                                        <button onclick="openAddProductModal({{ $umkm['id'] }}, '{{ $umkm['name'] }}')"
-                                            class="text-xs font-semibold text-indigo-600 hover:text-indigo-700">
-                                            Tambah Produk
+
+                                        {{-- Tambah Produk --}}
+                                        <button type="button"
+                                            onclick="openAddProductModal({{ $umkm['id'] }}, '{{ $umkm['name'] }}')"
+                                            class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-100"
+                                            title="Tambah Produk">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M12 4.5v15m7.5-7.5h-15" />
+                                            </svg>
+                                            <span class="sr-only">Tambah Produk</span>
                                         </button>
+
                                     </div>
                                 </td>
                             </tr>

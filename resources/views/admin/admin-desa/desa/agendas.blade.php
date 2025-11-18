@@ -107,21 +107,50 @@
                                 </td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="inline-flex items-center gap-2">
+
+                                        {{-- Lihat (detail publik) --}}
                                         <a href="{{ route('desa.berita.agenda-detail', $agenda->id) }}" target="_blank"
-                                            class="text-xs font-semibold text-slate-400 hover:text-indigo-500">
-                                            Lihat
+                                            class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-50 text-slate-500 hover:bg-indigo-50 hover:text-indigo-500"
+                                            title="Lihat agenda">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M12 5.25c-4.42 0-8.25 2.507-9.75 6.75 1.5 4.243 5.33 6.75 9.75 6.75s8.25-2.507 9.75-6.75C20.25 7.757 16.42 5.25 12 5.25z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M12 9.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5z" />
+                                            </svg>
+                                            <span class="sr-only">Lihat agenda</span>
                                         </a>
+
+                                        {{-- Edit --}}
                                         <a href="{{ route('admin.desa-management.agendas.edit', $agenda) }}"
-                                            class="text-xs font-semibold text-slate-400 hover:text-indigo-500">
-                                            Edit
+                                            class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-100"
+                                            title="Edit agenda">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M16.862 3.487a2.25 2.25 0 0 1 3.182 3.182L8.25 18.463 4.5 19.5l1.037-3.75 11.325-12.263z" />
+                                            </svg>
+                                            <span class="sr-only">Edit agenda</span>
                                         </a>
+
+                                        {{-- Hapus --}}
                                         <form action="{{ route('admin.desa-management.agendas.destroy', $agenda) }}"
                                             method="POST" onsubmit="return confirm('Hapus agenda ini?')" class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
-                                                class="text-xs font-semibold text-gray-400 hover:text-red-500">Hapus</button>
+                                                class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-100"
+                                                title="Hapus agenda">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M6 7.5h12M9.75 7.5v9.75M14.25 7.5v9.75M10.5 4.5h3l.75 3H9.75l.75-3zM6.75 7.5l.75 12h9l.75-12" />
+                                                </svg>
+                                                <span class="sr-only">Hapus agenda</span>
+                                            </button>
                                         </form>
+
                                     </div>
                                 </td>
                             </tr>
