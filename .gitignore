@@ -15,7 +15,7 @@
 /node_modules
 /public/build
 /public/hot
-/public/storage
+composer-setup.php
 /storage/*.key
 /storage/pail
 /vendor
