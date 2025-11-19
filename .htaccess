@@ -13,6 +13,13 @@
     RewriteCond %{HTTP:x-xsrf-token} .
     RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
 
+    # Serve static files from public/ directory directly
+    # This allows /build/, /images/, etc. to be accessed
+    RewriteCond %{REQUEST_URI} ^/(build|images|storage|favicon\.ico|robots\.txt) [NC]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ public/$1 [L]
+
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
