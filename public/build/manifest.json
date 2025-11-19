@@ -1,0 +1,26 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-rYv9yjmp.css",
+    "src": "resources/css/app.css",
+    "isEntry": true,
+    "name": "app",
+    "names": [
+      "app.css"
+    ]
+  },
+  "resources/css/umkm.css": {
+    "file": "assets/umkm-klAQtNtW.css",
+    "src": "resources/css/umkm.css",
+    "isEntry": true,
+    "name": "umkm",
+    "names": [
+      "umkm.css"
+    ]
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-DKvDqhyz.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  }
+}
