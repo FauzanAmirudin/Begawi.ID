@@ -11,11 +11,13 @@ use App\Models\VillageGalleryItem;
 use App\Models\VillageNews;
 use App\Models\VillagePotential;
 use App\Models\VillageProgram;
+use App\Support\Concerns\HandlesMediaUrls;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class DesaController extends Controller
 {
+    use HandlesMediaUrls;
     protected ?Village $villageModel = null;
 
     public function home()
@@ -567,20 +569,4 @@ class DesaController extends Controller
         );
     }
 
-    protected function mediaUrl(?string $path, string $fallback): string
-    {
-        if (blank($path)) {
-            return filter_var($fallback, FILTER_VALIDATE_URL) ? $fallback : asset($fallback);
-        }
-
-        if (filter_var($path, FILTER_VALIDATE_URL)) {
-            return $path;
-        }
-
-        if (Storage::disk('public')->exists($path)) {
-            return Storage::url($path);
-        }
-
-        return filter_var($fallback, FILTER_VALIDATE_URL) ? $fallback : asset($fallback);
-    }
 }
