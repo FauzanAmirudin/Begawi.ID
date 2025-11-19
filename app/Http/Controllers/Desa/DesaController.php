@@ -538,11 +538,7 @@ class DesaController extends Controller
                     'Wisata alam air terjun',
                 ],
             ],
-            'foto_wilayah' => [
-                'https://via.placeholder.com/600x400',
-                'https://via.placeholder.com/600x400',
-                'https://via.placeholder.com/600x400',
-            ],
+            'foto_wilayah' => 'geografi-desa.jpg',
         ];
     }
 

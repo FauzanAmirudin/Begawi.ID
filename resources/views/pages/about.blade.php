@@ -122,7 +122,8 @@
 
                     <!-- Vision Image -->
                     <div class="relative">
-                        <img src="{{ asset('images/web1.png') }}" alt="Mission" class="w-full rounded-2xl shadow-2xl">
+                        <img src="{{ asset('images/visi-tujuan.jpg') }}" alt="Mission"
+                            class="w-full rounded-2xl shadow-2xl">
                         <div class="absolute inset-0 bg-gradient-to-tr from-emerald-600/20 to-transparent rounded-2xl">
                         </div>
                         <!-- Floating Elements -->
