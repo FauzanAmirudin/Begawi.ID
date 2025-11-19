@@ -275,6 +275,7 @@ class BeritaController extends Controller
             'penulis' => $news->writer ?? 'Admin Desa',
             'tanggal' => $publishedAt->toDateString(),
             'views' => $news->views ?? 0,
+            'featured' => (bool) $news->is_featured,
         ];
     }
 
