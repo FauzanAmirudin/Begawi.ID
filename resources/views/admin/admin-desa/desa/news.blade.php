@@ -4,6 +4,8 @@
 
 @php
     $formContext = old('form_context');
+    $newsErrors = $errors->news ?? null;
+    $shouldReopenNewsModal = $formContext === 'news' && $newsErrors?->any();
 @endphp
 
 @push('styles')
@@ -14,7 +16,7 @@
 
 @section('content')
 <div class="p-6 space-y-6" x-data="{ 
-    newsModal: false, 
+    newsModal: {{ $shouldReopenNewsModal ? 'true' : 'false' }}, 
     editingNewsId: null,
     editingNews: null,
     openEditModal(news) {
@@ -45,15 +47,43 @@
     }
 }" x-cloak>
     @if (session('success'))
-    <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-2xl flex items-center justify-between">
-        <div class="flex items-center gap-3">
-            <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            <span class="text-sm font-semibold">{{ session('success') }}</span>
+        <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-2xl flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span class="text-sm font-semibold">{{ session('success') }}</span>
+            </div>
+            <button class="text-xs text-emerald-600 hover:text-emerald-500" @click="$el.parentElement.remove()">Tutup</button>
         </div>
-        <button class="text-xs text-emerald-600 hover:text-emerald-500" @click="$el.parentElement.remove()">Tutup</button>
-    </div>
+    @endif
+
+    @if (session('error'))
+        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+                <span class="text-sm font-semibold">{{ session('error') }}</span>
+            </div>
+            <button class="text-xs text-red-600 hover:text-red-500" @click="$el.parentElement.remove()">Tutup</button>
+        </div>
+    @endif
+
+    @if ($newsErrors?->any())
+        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-4 rounded-2xl">
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <p class="text-sm font-semibold">Gagal menyimpan berita. Periksa kembali isian Anda.</p>
+            </div>
+            <ul class="mt-3 text-sm list-disc list-inside space-y-1">
+                @foreach ($newsErrors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
     @endif
 
     <!-- Page Header -->
@@ -269,12 +299,12 @@
                     <input type="hidden" name="_method" :value="editingNewsId ? 'PUT' : 'POST'">
                     <input type="hidden" name="form_context" value="news">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <section class="space-y-5">
+                        <section class="space-y-5 border border-gray-200 rounded-2xl p-5 bg-gray-50/60">
                             <div>
                                 <p class="text-xs font-semibold uppercase tracking-[0.25em] text-indigo-500">Informasi Utama</p>
                                 <h4 class="text-lg font-semibold text-gray-900 mt-1">Detail Berita</h4>
                             </div>
-                            <div>
+                            <div class="p-4 border border-gray-200 rounded-2xl bg-white/80">
                                 <label class="block text-sm font-medium text-gray-700">Judul Berita</label>
                                 <input type="text" name="title" :value="editingNews ? editingNews.title : '{{ $formContext === 'news' ? old('title') : '' }}'" class="mt-1 w-full rounded-xl border-gray-200 focus:border-indigo-500 focus:ring-indigo-500" />
                                 @error('title', 'news')
@@ -282,21 +312,21 @@
                                 @enderror
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
+                                <div class="p-4 border border-gray-200 rounded-2xl bg-white/80">
                                     <label class="block text-sm font-medium text-gray-700">Kategori</label>
                                     <input type="text" name="category" :value="editingNews ? editingNews.category : '{{ $formContext === 'news' ? old('category') : '' }}'" class="mt-1 w-full rounded-xl border-gray-200 focus:border-indigo-500 focus:ring-indigo-500" />
                                     @error('category', 'news')
                                     <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
-                                <div>
+                                <div class="p-4 border border-gray-200 rounded-2xl bg-white/80">
                                     <label class="block text-sm font-medium text-gray-700">Penulis</label>
                                     <input type="text" name="writer" :value="editingNews ? editingNews.writer : '{{ $formContext === 'news' ? old('writer', auth()->user()->name ?? 'Admin Desa') : (auth()->user()->name ?? 'Admin Desa') }}'" class="mt-1 w-full rounded-xl border-gray-200 focus:border-indigo-500 focus:ring-indigo-500" />
                                     @error('writer', 'news')
                                     <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
-                                <div>
+                                <div class="p-4 border border-gray-200 rounded-2xl bg-white/80">
                                     <label class="block text-sm font-medium text-gray-700">Status</label>
                                     <select name="status" class="mt-1 w-full rounded-xl border-gray-200 focus:border-indigo-500 focus:ring-indigo-500">
                                         @foreach(['draft' => 'Draft', 'published' => 'Publish', 'archived' => 'Arsip'] as $value => $label)
@@ -307,7 +337,7 @@
                                     <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
-                                <div>
+                                <div class="p-4 border border-gray-200 rounded-2xl bg-white/80">
                                     <label class="block text-sm font-medium text-gray-700">Tanggal Publikasi</label>
                                     <input type="date" name="published_at" :value="editingNews ? editingNews.published_at : '{{ $formContext === 'news' ? old('published_at') : '' }}'" class="mt-1 w-full rounded-xl border-gray-200 focus:border-indigo-500 focus:ring-indigo-500" />
                                     @error('published_at', 'news')
@@ -315,31 +345,37 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <input type="checkbox" name="is_featured" id="is_featured" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" :checked="editingNews ? editingNews.is_featured : {{ ($formContext === 'news' ? old('is_featured') : false) ? 'true' : 'false' }}">
+                            <div class="flex flex-col gap-2 p-4 border border-gray-200 rounded-2xl bg-white/80">
+                                <div class="flex items-center gap-2">
+                                <input type="hidden" name="is_featured" value="0">
+                                <input type="checkbox" name="is_featured" id="is_featured" value="1" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" :checked="editingNews ? editingNews.is_featured : {{ ($formContext === 'news' ? old('is_featured') : false) ? 'true' : 'false' }}">
                                 <label for="is_featured" class="text-sm text-gray-700">Tandai sebagai berita unggulan</label>
+                                </div>
+                                @error('is_featured', 'news')
+                                <p class="text-xs text-red-500">{{ $message }}</p>
+                                @enderror
                             </div>
                         </section>
-                        <section class="space-y-5">
+                        <section class="space-y-5 border border-gray-200 rounded-2xl p-5 bg-gray-50/60">
                             <div>
                                 <p class="text-xs font-semibold uppercase tracking-[0.25em] text-indigo-500">Konten</p>
                                 <h4 class="text-lg font-semibold text-gray-900 mt-1">Isi Berita</h4>
                             </div>
-                            <div>
+                            <div class="p-4 border border-gray-200 rounded-2xl bg-white/80">
                                 <label class="block text-sm font-medium text-gray-700">Ringkasan</label>
                                 <textarea name="summary" rows="3" class="mt-1 w-full rounded-xl border-gray-200 focus:border-indigo-500 focus:ring-indigo-500" x-bind:value="editingNews ? editingNews.summary : ''">{{ $formContext === 'news' ? old('summary') : '' }}</textarea>
                                 @error('summary', 'news')
                                 <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
-                            <div>
+                            <div class="p-4 border border-gray-200 rounded-2xl bg-white/80">
                                 <label class="block text-sm font-medium text-gray-700">Konten Lengkap</label>
                                 <textarea name="content" rows="6" class="mt-1 w-full rounded-xl border-gray-200 focus:border-indigo-500 focus:ring-indigo-500" x-bind:value="editingNews ? editingNews.content : ''">{{ $formContext === 'news' ? old('content') : '' }}</textarea>
                                 @error('content', 'news')
                                 <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
-                            <div>
+                            <div class="p-4 border border-gray-200 rounded-2xl bg-white/80">
                                 <label class="block text-sm font-medium text-gray-700">Gambar Utama</label>
                                 <template x-if="editingNews && editingNews.featured_image_url">
                                     <div class="mb-2">

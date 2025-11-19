@@ -28,19 +28,28 @@ class VillageNewsController extends Controller
             'is_featured' => ['nullable', 'boolean'],
         ]);
 
-        $validated['slug'] = $this->generateUniqueSlug($validated['title']);
-        $validated['village_id'] = $village->id;
-        $validated['is_featured'] = $request->boolean('is_featured');
+        try {
+            $validated['slug'] = $this->generateUniqueSlug($validated['title']);
+            $validated['village_id'] = $village->id;
+            $validated['is_featured'] = $request->boolean('is_featured');
 
-        if ($validated['status'] === VillageNews::STATUS_PUBLISHED && empty($validated['published_at'])) {
-            $validated['published_at'] = now();
+            if ($validated['status'] === VillageNews::STATUS_PUBLISHED && empty($validated['published_at'])) {
+                $validated['published_at'] = now();
+            }
+
+            if ($request->hasFile('featured_image')) {
+                $validated['featured_image'] = $request->file('featured_image')->store('villages/news', 'public');
+            }
+
+            VillageNews::create($validated);
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat menambahkan berita. Silakan coba lagi.')
+                ->withErrors(['system' => 'Terjadi kesalahan pada sistem. Coba ulangi beberapa saat lagi.'], 'news');
         }
-
-        if ($request->hasFile('featured_image')) {
-            $validated['featured_image'] = $request->file('featured_image')->store('villages/news', 'public');
-        }
-
-        VillageNews::create($validated);
 
         return redirect()
             ->route('admin.desa-management.news')
@@ -61,25 +70,34 @@ class VillageNewsController extends Controller
             'is_featured' => ['nullable', 'boolean'],
         ]);
 
-        if ($news->title !== $validated['title']) {
-            $validated['slug'] = $this->generateUniqueSlug($validated['title'], $news->id);
-        }
-
-        $validated['is_featured'] = $request->boolean('is_featured');
-
-        if ($validated['status'] === VillageNews::STATUS_PUBLISHED && empty($validated['published_at'])) {
-            $validated['published_at'] = now();
-        }
-
-        if ($request->hasFile('featured_image')) {
-            if ($news->featured_image) {
-                Storage::disk('public')->delete($news->featured_image);
+        try {
+            if ($news->title !== $validated['title']) {
+                $validated['slug'] = $this->generateUniqueSlug($validated['title'], $news->id);
             }
 
-            $validated['featured_image'] = $request->file('featured_image')->store('villages/news', 'public');
-        }
+            $validated['is_featured'] = $request->boolean('is_featured');
 
-        $news->update($validated);
+            if ($validated['status'] === VillageNews::STATUS_PUBLISHED && empty($validated['published_at'])) {
+                $validated['published_at'] = now();
+            }
+
+            if ($request->hasFile('featured_image')) {
+                if ($news->featured_image) {
+                    Storage::disk('public')->delete($news->featured_image);
+                }
+
+                $validated['featured_image'] = $request->file('featured_image')->store('villages/news', 'public');
+            }
+
+            $news->update($validated);
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat memperbarui berita.')
+                ->withErrors(['system' => 'Perubahan tidak dapat disimpan saat ini.'], 'news');
+        }
 
         return redirect()
             ->route('admin.desa-management.news')
@@ -88,11 +106,18 @@ class VillageNewsController extends Controller
 
     public function destroy(VillageNews $news): RedirectResponse
     {
-        if ($news->featured_image) {
-            Storage::disk('public')->delete($news->featured_image);
-        }
+        try {
+            if ($news->featured_image) {
+                Storage::disk('public')->delete($news->featured_image);
+            }
 
-        $news->delete();
+            $news->delete();
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return back()
+                ->with('error', 'Terjadi kesalahan saat menghapus berita.');
+        }
 
         return redirect()
             ->route('admin.desa-management.news')
