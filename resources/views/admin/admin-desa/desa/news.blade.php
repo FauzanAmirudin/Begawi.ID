@@ -329,7 +329,7 @@
                                 <div class="p-4 border border-gray-200 rounded-2xl bg-white/80">
                                     <label class="block text-sm font-medium text-gray-700">Status</label>
                                     <select name="status" class="mt-1 w-full rounded-xl border-gray-200 focus:border-indigo-500 focus:ring-indigo-500">
-                                        @foreach(['draft' => 'Draft', 'published' => 'Publish', 'archived' => 'Arsip'] as $value => $label)
+                                        @foreach(['draft' => 'Draft', 'published' => 'Publish'] as $value => $label)
                                         <option :value="'{{ $value }}'" :selected="editingNews ? editingNews.status === '{{ $value }}' : {{ ($formContext === 'news' ? old('status') : null) === $value ? 'true' : 'false' }}">{{ $label }}</option>
                                         @endforeach
                                     </select>
