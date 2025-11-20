@@ -14,12 +14,12 @@
 <body class="bg-gray-50 font-inter">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <aside class="w-64 bg-white shadow-sm border-r border-gray-200 flex flex-col">
+        <aside id="admin-sidebar" class="w-64 bg-white shadow-sm border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out">
             @include('admin.partials.sidebar')
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div id="admin-main-content" class="flex-1 flex flex-col overflow-hidden transition-all duration-300 ease-in-out">
             <!-- Top Header -->
             <header class="bg-white border-b border-gray-200 px-6 py-4">
                 @include('admin.partials.header')

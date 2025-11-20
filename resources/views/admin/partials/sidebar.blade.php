@@ -1,16 +1,23 @@
-<div class="p-6 flex flex-col h-full">
+<div class="p-6 flex flex-col h-full relative">
+    <!-- Toggle Button -->
+    <button id="sidebar-toggle" onclick="toggleSidebar()" class="absolute -right-3 top-6 z-50 w-6 h-6 bg-white border-2 border-gray-300 rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 group">
+        <svg id="sidebar-toggle-icon" class="w-4 h-4 text-gray-600 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+    </button>
+
     <!-- Logo -->
-    <div class="flex items-center gap-3 mb-8">
-        <div class="w-8 h-8 flex items-center justify-center">
+    <div id="sidebar-logo" class="flex items-center gap-3 mb-8 transition-opacity duration-300">
+        <div class="w-8 h-8 flex items-center justify-center flex-shrink-0">
             <img src="{{ asset('images/Logo-Begawi.png') }}" alt="Begawi.id" class="w-8 h-8 object-contain">
         </div>
-        <span class="text-xl font-semibold text-gray-800">Begawi.id</span>
+        <span id="sidebar-logo-text" class="sidebar-text text-xl font-semibold text-gray-800 whitespace-nowrap transition-all duration-300">Begawi.id</span>
     </div>
 
     <!-- Navigation Menu -->
-    <nav class="space-y-2 flex-1 overflow-y-auto pr-2">
+    <nav id="sidebar-nav" class="space-y-2 flex-1 overflow-y-auto pr-2 transition-opacity duration-300">
         <!-- Dashboard -->
-        <a href="{{ route('admin.dashboard.index') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-orange-500 to-pink-500 rounded-xl font-medium {{ request()->routeIs('admin.dashboard.*') ? 'ring-2 ring-orange-300' : '' }}">
+        <a href="{{ route('admin.dashboard.index') }}" class="flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-orange-500 to-pink-500 rounded-xl font-medium {{ request()->routeIs('admin.dashboard.*') ? 'ring-2 ring-orange-300' : '' }}">
             <div class="flex items-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
@@ -21,48 +28,48 @@
 
         @if(auth()->user()->role === \App\Models\User::ROLE_SUPER_ADMIN)
         <!-- Direktori Platform -->
-        <a href="{{ route('admin.platform-directory.index') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl font-medium {{ request()->routeIs('admin.platform-directory.*') ? 'ring-2 ring-emerald-300' : '' }}">
+        <a href="{{ route('admin.platform-directory.index') }}" class="flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl font-medium {{ request()->routeIs('admin.platform-directory.*') ? 'ring-2 ring-emerald-300' : '' }}">
             <div class="flex items-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h12m-7 5h7"></path>
                 </svg>
                 <span>Direktori Platform</span>
             </div>
-            <span class="bg-white/20 text-xs px-2 py-1 rounded-full">{{ \App\Models\Website::where('status', 'active')->count() }}</span>
+            <span class="ml-auto bg-white/20 text-xs px-2 py-1 rounded-full">{{ \App\Models\Website::where('status', 'active')->count() }}</span>
         </a>
 
         <!-- Manajemen Pengguna -->
-        <a href="{{ route('admin.users.index') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl font-medium {{ request()->routeIs('admin.users.*') ? 'ring-2 ring-emerald-300' : '' }}">
+        <a href="{{ route('admin.users.index') }}" class="flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl font-medium {{ request()->routeIs('admin.users.*') ? 'ring-2 ring-emerald-300' : '' }}">
             <div class="flex items-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"></path>
                 </svg>
                 <span>Manajemen Pengguna</span>
             </div>
-            <span class="bg-white/20 text-xs px-2 py-1 rounded-full">{{ \App\Models\User::count() }}</span>
+            <span class="ml-auto bg-white/20 text-xs px-2 py-1 rounded-full">{{ \App\Models\User::count() }}</span>
         </a>
 
         <!-- Pesan Kontak -->
-        <a href="{{ route('admin.contact-messages.index') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl font-medium {{ request()->routeIs('admin.contact-messages.*') ? 'ring-2 ring-cyan-300' : '' }}">
+        <a href="{{ route('admin.contact-messages.index') }}" class="flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl font-medium {{ request()->routeIs('admin.contact-messages.*') ? 'ring-2 ring-cyan-300' : '' }}">
             <div class="flex items-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>
                 <span>Pesan Kontak</span>
             </div>
-            <span class="bg-white/20 text-xs px-2 py-1 rounded-full">{{ \App\Models\ContactMessage::where('status', 'unread')->count() }}</span>
+            <span class="ml-auto bg-white/20 text-xs px-2 py-1 rounded-full">{{ \App\Models\ContactMessage::where('status', 'unread')->count() }}</span>
         </a>
 
         <!-- Manajemen Website - Dropdown -->
         <div class="space-y-1">
-            <button onclick="toggleDropdown('website-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl font-medium {{ request()->routeIs('admin.websites.*') ? 'ring-2 ring-blue-300' : '' }} hover:opacity-90 transition">
+            <button onclick="toggleDropdown('website-dropdown')" class="w-full flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl font-medium {{ request()->routeIs('admin.websites.*') ? 'ring-2 ring-blue-300' : '' }} hover:opacity-90 transition">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
                     </svg>
                     <span>Manajemen Website</span>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="ml-auto flex items-center gap-2">
                     <span class="bg-white/20 text-xs px-2 py-1 rounded-full">{{ \App\Models\Website::count() }}</span>
                     <svg id="website-dropdown-icon" class="w-4 h-4 transition-transform duration-200 {{ request()->routeIs('admin.websites.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -99,14 +106,14 @@
 
         <!-- Keuangan & Transaksi - Dropdown -->
         <div class="space-y-1">
-            <button onclick="toggleDropdown('finance-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl font-medium {{ request()->routeIs('admin.finance.*') ? 'ring-2 ring-purple-300' : '' }} hover:opacity-90 transition">
+            <button onclick="toggleDropdown('finance-dropdown')" class="w-full flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl font-medium {{ request()->routeIs('admin.finance.*') ? 'ring-2 ring-purple-300' : '' }} hover:opacity-90 transition">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     <span>Keuangan & Transaksi</span>
                 </div>
-                <svg id="finance-dropdown-icon" class="w-4 h-4 transition-transform duration-200 {{ request()->routeIs('admin.finance.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg id="finance-dropdown-icon" class="w-4 h-4 ml-auto transition-transform duration-200 {{ request()->routeIs('admin.finance.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
@@ -141,14 +148,14 @@
 
         <!-- Konten & Edukasi - Dropdown -->
         <div class="space-y-1">
-            <button onclick="toggleDropdown('content-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-xl font-medium {{ request()->routeIs('admin.content.*') ? 'ring-2 ring-indigo-300' : '' }} hover:opacity-90 transition">
+            <button onclick="toggleDropdown('content-dropdown')" class="w-full flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-xl font-medium {{ request()->routeIs('admin.content.*') ? 'ring-2 ring-indigo-300' : '' }} hover:opacity-90 transition">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                     </svg>
                     <span>Konten & Edukasi</span>
                 </div>
-                <svg id="content-dropdown-icon" class="w-4 h-4 transition-transform duration-200 {{ request()->routeIs('admin.content.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg id="content-dropdown-icon" class="w-4 h-4 ml-auto transition-transform duration-200 {{ request()->routeIs('admin.content.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
@@ -176,14 +183,14 @@
 
         <!-- Audit & Log Aktivitas - Dropdown -->
         <div class="space-y-1">
-            <button onclick="toggleDropdown('logs-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl font-medium {{ request()->routeIs('admin.logs.*') ? 'ring-2 ring-gray-600' : '' }} hover:opacity-90 transition">
+            <button onclick="toggleDropdown('logs-dropdown')" class="w-full flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl font-medium {{ request()->routeIs('admin.logs.*') ? 'ring-2 ring-gray-600' : '' }} hover:opacity-90 transition">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h6m-8 8h8a2 2 0 002-2V7a2 2 0 00-2-2H9a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                     </svg>
                     <span>Audit & Log Aktivitas</span>
                 </div>
-                <svg id="logs-dropdown-icon" class="w-4 h-4 transition-transform duration-200 {{ request()->routeIs('admin.logs.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg id="logs-dropdown-icon" class="w-4 h-4 ml-auto transition-transform duration-200 {{ request()->routeIs('admin.logs.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
@@ -205,14 +212,14 @@
 
         <!-- Support & Pengaduan -->
         <div class="space-y-1">
-            <button onclick="toggleDropdown('support-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl font-medium {{ request()->routeIs('admin.support.*') ? 'ring-2 ring-cyan-300' : '' }} hover:opacity-90 transition">
+            <button onclick="toggleDropdown('support-dropdown')" class="w-full flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl font-medium {{ request()->routeIs('admin.support.*') ? 'ring-2 ring-cyan-300' : '' }} hover:opacity-90 transition">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-1.414 1.414M6.05 17.95l-1.414 1.414M9 5H5a2 2 0 00-2 2v4m16 0v4a2 2 0 01-2 2h-4M15 9h.01M19 9h.01M9 15h.01M5 15h.01"></path>
                     </svg>
                     <span>Support & Pengaduan</span>
                 </div>
-                <svg id="support-dropdown-icon" class="w-4 h-4 transition-transform duration-200 {{ request()->routeIs('admin.support.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg id="support-dropdown-icon" class="w-4 h-4 ml-auto transition-transform duration-200 {{ request()->routeIs('admin.support.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
@@ -240,14 +247,14 @@
         @elseif(auth()->user()->role === \App\Models\User::ROLE_ADMIN_DESA)
         <!-- Manajemen Website Desa -->
         <div class="space-y-1">
-            <button onclick="toggleDropdown('village-content-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.desa-management.index') || request()->routeIs('admin.desa-management.profile') || request()->routeIs('admin.desa-management.news') || request()->routeIs('admin.desa-management.agendas') || request()->routeIs('admin.desa-management.gallery') || request()->routeIs('admin.desa-management.potentials') || request()->routeIs('admin.desa-management.achievements') ? 'ring-2 ring-indigo-300' : '' }}">
+            <button onclick="toggleDropdown('village-content-dropdown')" class="w-full flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.desa-management.index') || request()->routeIs('admin.desa-management.profile') || request()->routeIs('admin.desa-management.news') || request()->routeIs('admin.desa-management.agendas') || request()->routeIs('admin.desa-management.gallery') || request()->routeIs('admin.desa-management.potentials') || request()->routeIs('admin.desa-management.achievements') ? 'ring-2 ring-indigo-300' : '' }}">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                     </svg>
                     <span>Manajemen Desa</span>
                 </div>
-                <svg id="village-content-dropdown-icon" class="w-4 h-4 transition-transform duration-200 {{ request()->routeIs('admin.desa-management.index') || request()->routeIs('admin.desa-management.profile') || request()->routeIs('admin.desa-management.news') || request()->routeIs('admin.desa-management.agendas') || request()->routeIs('admin.desa-management.gallery') || request()->routeIs('admin.desa-management.potentials') || request()->routeIs('admin.desa-management.achievements') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg id="village-content-dropdown-icon" class="w-4 h-4 ml-auto transition-transform duration-200 {{ request()->routeIs('admin.desa-management.index') || request()->routeIs('admin.desa-management.profile') || request()->routeIs('admin.desa-management.news') || request()->routeIs('admin.desa-management.agendas') || request()->routeIs('admin.desa-management.gallery') || request()->routeIs('admin.desa-management.potentials') || request()->routeIs('admin.desa-management.achievements') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
@@ -299,14 +306,14 @@
 
         <!-- Manajemen UMKM Desa -->
         <div class="space-y-1">
-            <button onclick="toggleDropdown('umkm-management-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-purple-500 to-indigo-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.desa-management.umkm-management.*') ? 'ring-2 ring-purple-300' : '' }}">
+            <button onclick="toggleDropdown('umkm-management-dropdown')" class="w-full flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-purple-500 to-indigo-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.desa-management.umkm-management.*') ? 'ring-2 ring-purple-300' : '' }}">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 9l1 9a2 2 0 002 2h10a2 2 0 002-2l1-9M5 9h14l-1.5-4.5A1 1 0 0016.57 4H7.43a1 1 0 00-.93.6L5 9zm4 4h6"></path>
                     </svg>
                     <span>Manajemen UMKM</span>
                 </div>
-                <svg id="umkm-management-dropdown-icon" class="w-4 h-4 transition-transform duration-200 {{ request()->routeIs('admin.desa-management.umkm-management.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg id="umkm-management-dropdown-icon" class="w-4 h-4 ml-auto transition-transform duration-200 {{ request()->routeIs('admin.desa-management.umkm-management.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
@@ -343,14 +350,14 @@
 
         <!-- Manajemen Pengguna Lokal -->
         <div class="space-y-1">
-            <button onclick="toggleDropdown('local-users-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-teal-500 to-cyan-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.desa-management.local-users.*') ? 'ring-2 ring-teal-300' : '' }}">
+            <button onclick="toggleDropdown('local-users-dropdown')" class="w-full flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-teal-500 to-cyan-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.desa-management.local-users.*') ? 'ring-2 ring-teal-300' : '' }}">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"></path>
                     </svg>
-                    <span>Manajemen Pengguna Lokal</span>
+                    <span>Manajemen Pengguna</span>
                 </div>
-                <svg id="local-users-dropdown-icon" class="w-4 h-4 transition-transform duration-200 {{ request()->routeIs('admin.desa-management.local-users.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg id="local-users-dropdown-icon" class="w-4 h-4 ml-auto transition-transform duration-200 {{ request()->routeIs('admin.desa-management.local-users.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
@@ -377,41 +384,41 @@
         </div>
 
         <!-- Surat Online -->
-        <a href="{{ route('admin.desa-management.letters.index') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-teal-500 to-emerald-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.desa-management.letters.*') ? 'ring-2 ring-teal-300' : '' }}">
+        <a href="{{ route('admin.desa-management.letters.index') }}" class="flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-teal-500 to-emerald-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.desa-management.letters.*') ? 'ring-2 ring-teal-300' : '' }}">
             <div class="flex items-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
                 <span>Surat Online</span>
             </div>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
             </svg>
         </a>
 
         <!-- Pengaduan Warga -->
-        <a href="{{ route('admin.desa-management.complaints.index') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.desa-management.complaints.*') ? 'ring-2 ring-orange-300' : '' }}">
+        <a href="{{ route('admin.desa-management.complaints.index') }}" class="flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.desa-management.complaints.*') ? 'ring-2 ring-orange-300' : '' }}">
             <div class="flex items-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
                 </svg>
                 <span>Pengaduan Warga</span>
             </div>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
             </svg>
         </a>
 
         <!-- Laporan & Statistik -->
         <div class="space-y-1">
-            <button onclick="toggleDropdown('reports-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.desa-management.reports.*') ? 'ring-2 ring-indigo-300' : '' }}">
+            <button onclick="toggleDropdown('reports-dropdown')" class="w-full flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.desa-management.reports.*') ? 'ring-2 ring-indigo-300' : '' }}">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                     </svg>
                     <span>Laporan & Statistik</span>
                 </div>
-                <svg id="reports-dropdown-icon" class="w-4 h-4 transition-transform duration-200 {{ request()->routeIs('admin.desa-management.reports.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg id="reports-dropdown-icon" class="w-4 h-4 ml-auto transition-transform duration-200 {{ request()->routeIs('admin.desa-management.reports.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
@@ -450,14 +457,14 @@
         </div>
 
         <!-- Support -->
-        <a href="{{ route('admin.support.index') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl font-medium hover:opacity-95 transition">
+        <a href="{{ route('admin.support.index') }}" class="flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl font-medium hover:opacity-95 transition">
             <div class="flex items-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-1.414 1.414M6.05 17.95l-1.414 1.414M9 5H5a2 2 0 00-2 2v4m16 0v4a2 2 0 01-2 2h-4M15 9h.01M19 9h.01M9 15h.01M5 15h.01"></path>
                 </svg>
                 <span>Pusat Bantuan</span>
             </div>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
             </svg>
         </a>
@@ -465,14 +472,14 @@
         @elseif(auth()->user()->role === \App\Models\User::ROLE_ADMIN_UMKM)
         <!-- Manajemen Produk -->
         <div class="space-y-1">
-            <button onclick="toggleDropdown('umkm-products-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-purple-500 to-indigo-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.umkm.products.*') ? 'ring-2 ring-purple-300' : '' }}">
+            <button onclick="toggleDropdown('umkm-products-dropdown')" class="w-full flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-purple-500 to-indigo-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.umkm.products.*') ? 'ring-2 ring-purple-300' : '' }}">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 9l1 9a2 2 0 002 2h10a2 2 0 002-2l1-9M5 9h14l-1.5-4.5A1 1 0 0016.57 4H7.43a1 1 0 00-.93.6L5 9zm4 4h6"></path>
                     </svg>
                     <span>Manajemen Produk</span>
                 </div>
-                <svg id="umkm-products-dropdown-icon" class="w-4 h-4 transition-transform duration-200 {{ request()->routeIs('admin.umkm.products.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg id="umkm-products-dropdown-icon" class="w-4 h-4 ml-auto transition-transform duration-200 {{ request()->routeIs('admin.umkm.products.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
@@ -505,28 +512,28 @@
         </div>
 
         <!-- Profil Usaha -->
-        <a href="{{ route('admin.umkm.profile.index') }}" class="flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.umkm.profile.*') ? 'ring-2 ring-blue-300' : '' }}">
+        <a href="{{ route('admin.umkm.profile.index') }}" class="flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.umkm.profile.*') ? 'ring-2 ring-blue-300' : '' }}">
             <div class="flex items-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zm-4 5c-4.418 0-8 2.239-8 5v1a1 1 0 001 1h14a1 1 0 001-1v-1c0-2.761-3.582-5-8-5z"></path>
                 </svg>
                 <span>Profil Usaha</span>
             </div>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
             </svg>
         </a>
 
         <!-- Statistik & Analitik -->
         <div class="space-y-1">
-            <button onclick="toggleDropdown('umkm-statistics-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.umkm.statistics.*') ? 'ring-2 ring-indigo-300' : '' }}">
+            <button onclick="toggleDropdown('umkm-statistics-dropdown')" class="w-full flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.umkm.statistics.*') ? 'ring-2 ring-indigo-300' : '' }}">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                     </svg>
                     <span>Statistik & Analitik</span>
                 </div>
-                <svg id="umkm-statistics-dropdown-icon" class="w-4 h-4 transition-transform duration-200 {{ request()->routeIs('admin.umkm.statistics.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg id="umkm-statistics-dropdown-icon" class="w-4 h-4 ml-auto transition-transform duration-200 {{ request()->routeIs('admin.umkm.statistics.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
@@ -560,14 +567,14 @@
 
         <!-- Laporan UMKM -->
         <div class="space-y-1">
-            <button onclick="toggleDropdown('umkm-reports-dropdown')" class="w-full flex items-center justify-between px-4 py-3 text-white bg-gradient-to-r from-orange-500 to-pink-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.umkm.reports.*') ? 'ring-2 ring-orange-300' : '' }}">
+            <button onclick="toggleDropdown('umkm-reports-dropdown')" class="w-full flex items-center justify-start px-4 py-3 text-white bg-gradient-to-r from-orange-500 to-pink-500 rounded-xl font-medium hover:opacity-95 transition {{ request()->routeIs('admin.umkm.reports.*') ? 'ring-2 ring-orange-300' : '' }}">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                     <span>Laporan UMKM</span>
                 </div>
-                <svg id="umkm-reports-dropdown-icon" class="w-4 h-4 transition-transform duration-200 {{ request()->routeIs('admin.umkm.reports.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg id="umkm-reports-dropdown-icon" class="w-4 h-4 ml-auto transition-transform duration-200 {{ request()->routeIs('admin.umkm.reports.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
@@ -596,12 +603,12 @@
     </nav>
 
     <!-- User Info (Bottom) -->
-    <div class="mt-auto pt-6 border-t border-gray-200">
+    <div id="sidebar-user-info" class="mt-auto pt-6 border-t border-gray-200 transition-opacity duration-300">
         <div class="flex items-center gap-3 px-4 py-3">
-            <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+            <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">
                 {{ substr(auth()->user()->name, 0, 2) }}
             </div>
-            <div class="flex-1 min-w-0">
+            <div id="sidebar-user-details" class="flex-1 min-w-0 transition-opacity duration-300">
                 <div class="text-sm font-medium text-gray-900 truncate">{{ auth()->user()->name }}</div>
                 <div class="text-xs text-gray-500 truncate">{{ ucfirst(str_replace('_', ' ', auth()->user()->role)) }}</div>
             </div>
@@ -776,4 +783,170 @@
         }
         @endif
     });
+
+    // Sidebar Toggle Functionality
+    function toggleSidebar() {
+        const sidebar = document.getElementById('admin-sidebar');
+        const toggleIcon = document.getElementById('sidebar-toggle-icon');
+        
+        if (!sidebar) return;
+
+        const isCollapsed = sidebar.classList.contains('sidebar-collapsed');
+        
+        if (isCollapsed) {
+            // Expand sidebar
+            sidebar.classList.remove('sidebar-collapsed');
+            if (toggleIcon) toggleIcon.classList.remove('rotate-180');
+            localStorage.setItem('sidebarCollapsed', 'false');
+        } else {
+            // Collapse sidebar
+            sidebar.classList.add('sidebar-collapsed');
+            if (toggleIcon) toggleIcon.classList.add('rotate-180');
+            localStorage.setItem('sidebarCollapsed', 'true');
+        }
+    }
+
+    // Initialize sidebar state on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('admin-sidebar');
+        const toggleIcon = document.getElementById('sidebar-toggle-icon');
+        
+        if (!sidebar) return;
+
+        const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+        
+        if (isCollapsed) {
+            sidebar.classList.add('sidebar-collapsed');
+            if (toggleIcon) toggleIcon.classList.add('rotate-180');
+        } else {
+            sidebar.classList.remove('sidebar-collapsed');
+            if (toggleIcon) toggleIcon.classList.remove('rotate-180');
+        }
+    });
 </script>
+
+<style>
+    /* Sidebar collapsed state */
+    #admin-sidebar.sidebar-collapsed {
+        width: 4rem !important;
+    }
+    
+    /* Hide logo text when collapsed */
+    #admin-sidebar.sidebar-collapsed #sidebar-logo-text {
+        opacity: 0;
+        width: 0;
+        overflow: hidden;
+        margin: 0;
+    }
+    
+    /* Hide all text content in navigation links and buttons when collapsed */
+    #admin-sidebar.sidebar-collapsed nav a > div > span:not(svg),
+    #admin-sidebar.sidebar-collapsed nav button > div > span:not(svg),
+    #admin-sidebar.sidebar-collapsed nav a > span:not(svg):not(.icon),
+    #admin-sidebar.sidebar-collapsed nav button > span:not(svg):not(.icon) {
+        opacity: 0 !important;
+        width: 0 !important;
+        overflow: hidden !important;
+        white-space: nowrap !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* Hide text in dropdown items */
+    #admin-sidebar.sidebar-collapsed nav [id$="-dropdown"] a span:not(svg),
+    #admin-sidebar.sidebar-collapsed nav [id$="-dropdown"] span:not(svg) {
+        opacity: 0 !important;
+        width: 0 !important;
+        overflow: hidden !important;
+    }
+    
+    /* Hide all text spans that are direct children of flex containers in nav */
+    #admin-sidebar.sidebar-collapsed nav .flex.items-center span:not(svg):not(.icon) {
+        opacity: 0 !important;
+        width: 0 !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+    }
+    
+    /* Center menu items when collapsed */
+    #admin-sidebar.sidebar-collapsed nav > a,
+    #admin-sidebar.sidebar-collapsed nav > div > button {
+        justify-content: center !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+    
+    /* Hide badges, counts, and ml-auto elements when collapsed */
+    #admin-sidebar.sidebar-collapsed .ml-auto {
+        display: none !important;
+    }
+    
+    /* Hide dropdown arrows when collapsed */
+    #admin-sidebar.sidebar-collapsed [id$="-dropdown-icon"] {
+        display: none !important;
+    }
+    
+    /* Hide dropdown menus when collapsed */
+    #admin-sidebar.sidebar-collapsed [id$="-dropdown"] {
+        display: none !important;
+    }
+    
+    /* Hide user details text when collapsed */
+    #admin-sidebar.sidebar-collapsed #sidebar-user-details {
+        opacity: 0;
+        width: 0;
+        overflow: hidden;
+    }
+    
+    /* Adjust padding when collapsed */
+    #admin-sidebar.sidebar-collapsed > div {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    /* Keep icons visible and properly sized */
+    #admin-sidebar.sidebar-collapsed svg {
+        opacity: 1 !important;
+        flex-shrink: 0;
+    }
+    
+    /* Adjust toggle button position when collapsed */
+    #admin-sidebar.sidebar-collapsed #sidebar-toggle {
+        right: -0.75rem;
+    }
+    
+    /* Ensure flex containers work properly when collapsed */
+    #admin-sidebar.sidebar-collapsed nav a > div,
+    #admin-sidebar.sidebar-collapsed nav button > div {
+        justify-content: center;
+        gap: 0;
+    }
+    
+    /* Hide gap between icon and text when collapsed */
+    #admin-sidebar.sidebar-collapsed nav a > div.gap-3,
+    #admin-sidebar.sidebar-collapsed nav button > div.gap-3 {
+        gap: 0;
+    }
+    
+    /* Hide all text nodes in navigation when collapsed - comprehensive approach */
+    #admin-sidebar.sidebar-collapsed nav * {
+        position: relative;
+    }
+    
+    #admin-sidebar.sidebar-collapsed nav a span,
+    #admin-sidebar.sidebar-collapsed nav button span {
+        display: inline-block;
+    }
+    
+    /* Specifically target text spans that are not inside SVG - fallback for browsers that don't support :has() */
+    #admin-sidebar.sidebar-collapsed nav a > div > span,
+    #admin-sidebar.sidebar-collapsed nav button > div > span {
+        max-width: 0;
+        min-width: 0;
+    }
+    
+    /* Ensure user info section is properly handled */
+    #admin-sidebar.sidebar-collapsed #sidebar-user-info .flex-1 {
+        min-width: 0;
+    }
+</style>

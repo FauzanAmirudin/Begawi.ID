@@ -10,7 +10,7 @@
             <div class="max-w-4xl mx-auto text-center">
                 <h1 class="font-manrope font-extrabold text-4xl md:text-6xl text-charcoal-grey mb-6">
                     Template Website
-                    <span class="text-gradient">Premium Gratis</span>
+                    <span class="text-gradient">Premium </span>
                 </h1>
                 <p class="text-xl text-gray-600 mb-8 leading-relaxed">
                     Koleksi template profesional yang dirancang khusus untuk Desa dan UMKM Indonesia. Semua gratis dan mudah dikustomisasi.

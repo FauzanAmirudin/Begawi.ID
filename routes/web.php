@@ -186,6 +186,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         
         Route::put('/profile', [VillageProfileController::class, 'update'])->name('profile.update');
         
+        // Structures Management
+        Route::post('/structures', [VillageProfileController::class, 'storeStructure'])->name('structures.store');
+        Route::put('/structures/{index}', [VillageProfileController::class, 'updateStructure'])->name('structures.update');
+        Route::delete('/structures/{index}', [VillageProfileController::class, 'destroyStructure'])->name('structures.destroy');
+        
         // Reports & Statistics
         Route::prefix('reports')->name('reports.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\ReportsController::class, 'index'])->name('index');

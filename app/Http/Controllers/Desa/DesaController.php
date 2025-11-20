@@ -7,6 +7,7 @@ use App\Models\UmkmBusiness;
 use App\Models\UmkmContentValidation;
 use App\Models\UmkmProduct;
 use App\Models\Village;
+use App\Models\VillageAgenda;
 use App\Models\VillageGalleryItem;
 use App\Models\VillageNews;
 use App\Models\VillagePotential;
@@ -385,45 +386,61 @@ class DesaController extends Controller
 
     private function getKegiatanDesa(): array
     {
-        return $this->village()->programs()
-            ->orderByDesc('start_date')
+        $agendas = $this->village()->agendas()
+            ->where('is_published', true)
+            ->where('date', '>=', now()->toDateString())
+            ->orderBy('date')
+            ->orderBy('time')
             ->take(5)
-            ->get()
-            ->map(function (VillageProgram $program) {
-                return [
-                    'judul' => $program->title,
-                    'tanggal' => optional($program->start_date)->toDateString() ?? now()->toDateString(),
-                    'waktu' => '09:00',
+            ->get();
+
+        return $agendas->map(function (VillageAgenda $agenda) {
+            $date = \Carbon\Carbon::parse($agenda->date);
+            return [
+                'id' => $agenda->id,
+                'judul' => $agenda->title,
+                'tanggal' => $date->format('Y-m-d'),
+                'waktu' => \Carbon\Carbon::parse($agenda->time)->format('H:i'),
+                'tempat' => $agenda->location,
+                'kategori' => $agenda->category,
+                'jenis' => strtolower($agenda->category),
+                'deskripsi' => $agenda->description ?? '',
+            ];
+        })->whenEmpty(function () {
+            return collect([
+                [
+                    'id' => null,
+                    'judul' => 'Rapat RT/RW',
+                    'tanggal' => now()->addDays(5)->toDateString(),
+                    'waktu' => '19:00',
                     'tempat' => 'Balai Desa',
-                    'jenis' => $program->status === VillageProgram::STATUS_ACTIVE ? 'acara' : 'rapat',
-                ];
-            })
-            ->whenEmpty(function () {
-                return collect([
-                    [
-                        'judul' => 'Rapat RT/RW',
-                        'tanggal' => now()->addDays(5)->toDateString(),
-                        'waktu' => '19:00',
-                        'tempat' => 'Balai Desa',
-                        'jenis' => 'rapat',
-                    ],
-                    [
-                        'judul' => 'Pelatihan Komputer',
-                        'tanggal' => now()->addDays(7)->toDateString(),
-                        'waktu' => '09:00',
-                        'tempat' => 'Ruang Serbaguna',
-                        'jenis' => 'pelatihan',
-                    ],
-                    [
-                        'judul' => 'Pasar Minggu Desa',
-                        'tanggal' => now()->addDays(14)->toDateString(),
-                        'waktu' => '06:00',
-                        'tempat' => 'Lapangan Desa',
-                        'jenis' => 'acara',
-                    ],
-                ]);
-            })
-            ->toArray();
+                    'kategori' => 'Rapat',
+                    'jenis' => 'rapat',
+                    'deskripsi' => '',
+                ],
+                [
+                    'id' => null,
+                    'judul' => 'Pelatihan Komputer',
+                    'tanggal' => now()->addDays(7)->toDateString(),
+                    'waktu' => '09:00',
+                    'tempat' => 'Ruang Serbaguna',
+                    'kategori' => 'Pelatihan',
+                    'jenis' => 'pelatihan',
+                    'deskripsi' => '',
+                ],
+                [
+                    'id' => null,
+                    'judul' => 'Pasar Minggu Desa',
+                    'tanggal' => now()->addDays(14)->toDateString(),
+                    'waktu' => '06:00',
+                    'tempat' => 'Lapangan Desa',
+                    'kategori' => 'Acara',
+                    'jenis' => 'acara',
+                    'deskripsi' => '',
+                ],
+            ]);
+        })
+        ->toArray();
     }
 
     private function getIdentitasDesa(): array
@@ -468,6 +485,16 @@ class DesaController extends Controller
         $village = $this->village();
         $structures = $village->structures ?? [];
 
+        // Convert structures format to match view expectations
+        $perangkatDesa = collect($structures)->map(function ($structure) {
+            return [
+                'nama' => $structure['name'] ?? 'Nama Tidak Tersedia',
+                'jabatan' => $structure['role'] ?? 'Jabatan Tidak Tersedia',
+                'foto' => $structure['photo'] ?? 'https://via.placeholder.com/200x200?text=No+Photo',
+                'periode' => $structure['since'] ?? '',
+            ];
+        })->toArray();
+
         return [
             'kepala_desa' => [
                 'nama' => $village->head,
@@ -475,7 +502,7 @@ class DesaController extends Controller
                 'foto' => $this->mediaUrl($village->logo_path, 'https://via.placeholder.com/200x200'),
                 'periode' => '2019-2025',
             ],
-            'perangkat_desa' => $structures,
+            'perangkat_desa' => $perangkatDesa,
             'lembaga' => [
                 [
                     'nama' => 'Badan Permusyawaratan Desa',

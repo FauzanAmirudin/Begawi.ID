@@ -26,15 +26,16 @@
         <!-- Template Grid -->
         <div class="template-grid grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <!-- Template Card 1 -->
-            <div class="template-card group" data-category="desa">
-                <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover-tilt">
+            <a href="{{ route('desa.home') }}" target="_blank" class="template-card group block no-underline text-inherit" data-category="desa">
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover-tilt h-full">
                     <div class="relative overflow-hidden">
                         <img src="{{ asset('images/preview-desa.png') }}" alt="Template Desa Modern" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                        <!-- Desktop hover overlay -->
+                        <div class="hidden md:block absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
                             <div class="absolute bottom-4 left-4 right-4 flex space-x-2">
-                                <a href="{{ route('desa.home') }}" target="_blank" class="flex-1 bg-white/20 backdrop-blur-sm text-white font-medium py-2 px-4 rounded-lg hover:bg-white/30 transition-all text-center">
+                                <div class="flex-1 bg-white/20 backdrop-blur-sm text-white font-medium py-2 px-4 rounded-lg hover:bg-white/30 transition-all text-center">
                                     👁️ Preview
-                                </a>
+                                </div>
                             </div>
                         </div>
                         <div class="absolute top-4 left-4">
@@ -66,20 +67,27 @@
                                 ⭐⭐⭐⭐⭐
                             </div>
                         </div>
+                        <!-- Mobile button at bottom -->
+                        <div class="md:hidden mt-4">
+                            <div class="bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-semibold py-3 px-4 rounded-lg text-center shadow-md">
+                                👁️ Lihat Preview Template
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
             
             <!-- Template Card 2 -->
-            <div class="template-card group" data-category="umkm">
-                <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover-tilt">
+            <a href="{{ route('umkm.home') }}" target="_blank" class="template-card group block no-underline text-inherit" data-category="umkm">
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover-tilt h-full">
                     <div class="relative overflow-hidden">
                         <img src="{{ asset('images/preview-umkm.png') }}" alt="Template Toko Online" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                        <!-- Desktop hover overlay -->
+                        <div class="hidden md:block absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
                             <div class="absolute bottom-4 left-4 right-4 flex space-x-2">
-                                <a href="{{ route('umkm.home') }}" target="_blank"  class="flex-1 bg-white/20 backdrop-blur-sm text-white font-medium py-2 px-4 rounded-lg hover:bg-white/30 transition-all text-center">
+                                <div class="flex-1 bg-white/20 backdrop-blur-sm text-white font-medium py-2 px-4 rounded-lg hover:bg-white/30 transition-all text-center">
                                     👁️ Preview
-                                </a>
+                                </div>
                             </div>
                         </div>
                         <div class="absolute top-4 left-4">
@@ -108,9 +116,15 @@
                                 ⭐⭐⭐⭐⭐
                             </div>
                         </div>
+                        <!-- Mobile button at bottom -->
+                        <div class="md:hidden mt-4">
+                            <div class="bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-semibold py-3 px-4 rounded-lg text-center shadow-md">
+                                👁️ Lihat Preview Template
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
             <!-- More template cards... -->
         </div>
     </div>

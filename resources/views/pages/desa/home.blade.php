@@ -2,6 +2,100 @@
 
 @section('title', 'Beranda - Desa Sejahtera')
 
+@push('styles')
+<style>
+    /* Lightbox Styles */
+    .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.95);
+        overflow: auto;
+    }
+    
+    .lightbox.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .lightbox-content {
+        position: relative;
+        max-width: 90%;
+        max-height: 90%;
+        margin: auto;
+    }
+    
+    .lightbox-image {
+        max-width: 100%;
+        max-height: 90vh;
+        object-fit: contain;
+    }
+    
+    .lightbox-close {
+        position: absolute;
+        top: 20px;
+        right: 35px;
+        color: #fff;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 10000;
+    }
+    
+    .lightbox-close:hover {
+        color: #FACC15;
+    }
+    
+    .lightbox-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        border: none;
+        padding: 1rem;
+        cursor: pointer;
+        font-size: 24px;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+    
+    .lightbox-nav:hover {
+        background: rgba(255, 255, 255, 0.3);
+        color: #FACC15;
+    }
+    
+    .lightbox-prev {
+        left: 20px;
+    }
+    
+    .lightbox-next {
+        right: 20px;
+    }
+    
+    .lightbox-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+        color: #fff;
+        padding: 2rem;
+        text-align: center;
+    }
+</style>
+@endpush
+
 @section('content')
     <!-- 1. Hero Section -->
     <section class="bg-gradient-light py-20">
@@ -168,23 +262,28 @@
                 <p class="text-slate-600 mt-4 text-lg">Dokumentasi kegiatan dan momen berharga di desa</p>
             </div>
 
-            <div class="columns-2 md:columns-3 lg:columns-4 gap-4">
-                @foreach ($galeri as $item)
-                    <div class="mb-4 break-inside-avoid group cursor-pointer">
-                        <div class="relative rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
-                            <img src="{{ $item['gambar'] }}" alt="{{ $item['judul'] }}"
-                                class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300">
-                            <div
-                                class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                </svg>
+            <div class="flex justify-center">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl">
+                    @foreach ($galeri as $item)
+                        <div class="gallery-item group cursor-pointer" 
+                             data-image="{{ $item['gambar'] }}"
+                             data-title="{{ $item['judul'] }}"
+                             data-description="{{ $item['deskripsi'] ?? '' }}">
+                            <div class="relative rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow aspect-[4/3]">
+                                <img src="{{ $item['gambar'] }}" alt="{{ $item['judul'] }}"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                <div
+                                    class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                </div>
                             </div>
+                            <p class="text-sm text-slate-600 mt-2 text-center px-2">{{ $item['judul'] }}</p>
                         </div>
-                        <p class="text-sm text-slate-600 mt-2 text-center px-2">{{ $item['judul'] }}</p>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
 
             <div class="text-center mt-12">
@@ -243,6 +342,24 @@
 
             <!-- Desktop Calendar View -->
             <div class="hidden lg:block bg-white rounded-2xl shadow-lg p-8">
+                @php
+                    $currentMonth = now()->month;
+                    $currentYear = now()->year;
+                    $firstDay = \Carbon\Carbon::create($currentYear, $currentMonth, 1);
+                    $lastDay = $firstDay->copy()->endOfMonth();
+                    $startDate = $firstDay->copy()->startOfWeek(\Carbon\Carbon::SUNDAY);
+                    $endDate = $lastDay->copy()->endOfWeek(\Carbon\Carbon::SATURDAY);
+                    
+                    // Group kegiatan by date
+                    $kegiatanByDate = collect($kegiatan)->groupBy('tanggal');
+                @endphp
+                
+                <div class="mb-6 text-center">
+                    <h3 class="text-xl font-bold text-slate-800">
+                        {{ $firstDay->format('F Y') }}
+                    </h3>
+                </div>
+                
                 <div class="grid grid-cols-7 gap-4 mb-8">
                     <div class="text-center font-semibold text-slate-700 py-3">Minggu</div>
                     <div class="text-center font-semibold text-slate-700 py-3">Senin</div>
@@ -252,26 +369,48 @@
                     <div class="text-center font-semibold text-slate-700 py-3">Jumat</div>
                     <div class="text-center font-semibold text-slate-700 py-3">Sabtu</div>
 
-                    <!-- Calendar Days (simplified) -->
-                    @for ($i = 1; $i <= 31; $i++)
-                        <div
-                            class="aspect-square border border-slate-200 rounded-lg p-2 hover:bg-slate-50 transition-colors cursor-pointer">
-                            <div class="text-sm font-medium text-slate-700">{{ $i }}</div>
-                            @if (in_array($i, [20, 22, 28]))
-                                <div class="mt-1">
-                                    @if ($i == 20)
-                                        <div class="bg-primary-200 text-primary-800 text-xs px-2 py-1 rounded mb-1">Rapat
+                    @php
+                        $currentDate = $startDate->copy();
+                    @endphp
+                    @while($currentDate <= $endDate)
+                        @php
+                            $isCurrentMonth = $currentDate->month == $currentMonth;
+                            $isToday = $currentDate->isToday();
+                            $dateString = $currentDate->toDateString();
+                            $dayKegiatan = $kegiatanByDate->get($dateString, collect());
+                        @endphp
+                        <div class="aspect-square border border-slate-200 rounded-lg p-2 hover:bg-slate-50 transition-colors {{ $isToday ? 'bg-primary-50 border-primary-300' : '' }} {{ !$isCurrentMonth ? 'opacity-40' : '' }}">
+                            <div class="text-sm font-medium {{ $isToday ? 'text-primary-700 font-bold' : 'text-slate-700' }}">
+                                {{ $currentDate->day }}
+                            </div>
+                            @if($dayKegiatan->isNotEmpty())
+                                <div class="mt-1 space-y-1">
+                                    @foreach($dayKegiatan->take(2) as $kegiatanItem)
+                                        @php
+                                            $categoryClass = match(strtolower($kegiatanItem['kategori'])) {
+                                                'rapat' => 'bg-primary-200 text-primary-800',
+                                                'pelatihan' => 'bg-primary-300 text-primary-800',
+                                                'acara' => 'bg-primary-400 text-white',
+                                                'kesehatan' => 'bg-pink-200 text-pink-800',
+                                                default => 'bg-slate-200 text-slate-800',
+                                            };
+                                        @endphp
+                                        <div class="{{ $categoryClass }} text-xs px-2 py-0.5 rounded truncate" title="{{ $kegiatanItem['judul'] }}">
+                                            {{ $kegiatanItem['kategori'] }}
                                         </div>
-                                    @elseif($i == 22)
-                                        <div class="bg-primary-300 text-primary-800 text-xs px-2 py-1 rounded mb-1">
-                                            Pelatihan</div>
-                                    @elseif($i == 28)
-                                        <div class="bg-primary-400 text-white text-xs px-2 py-1 rounded mb-1">Acara</div>
+                                    @endforeach
+                                    @if($dayKegiatan->count() > 2)
+                                        <div class="text-xs text-slate-500 text-center">
+                                            +{{ $dayKegiatan->count() - 2 }} lagi
+                                        </div>
                                     @endif
                                 </div>
                             @endif
                         </div>
-                    @endfor
+                        @php
+                            $currentDate->addDay();
+                        @endphp
+                    @endwhile
                 </div>
             </div>
 
@@ -307,16 +446,19 @@
                                     {{ $acara['tempat'] }}
                                 </div>
                                 <div class="mt-3">
-                                    @if ($acara['jenis'] == 'rapat')
-                                        <span
-                                            class="bg-primary-200 text-primary-800 text-xs px-3 py-1 rounded-full">Rapat</span>
-                                    @elseif($acara['jenis'] == 'pelatihan')
-                                        <span
-                                            class="bg-primary-300 text-primary-800 text-xs px-3 py-1 rounded-full">Pelatihan</span>
-                                    @else
-                                        <span class="bg-primary-400 text-white text-xs px-3 py-1 rounded-full">Acara
-                                            Umum</span>
-                                    @endif
+                                    @php
+                                        $categoryClass = match(strtolower($acara['kategori'] ?? $acara['jenis'] ?? '')) {
+                                            'rapat' => 'bg-primary-200 text-primary-800',
+                                            'pelatihan' => 'bg-primary-300 text-primary-800',
+                                            'acara' => 'bg-primary-400 text-white',
+                                            'kesehatan' => 'bg-pink-200 text-pink-800',
+                                            default => 'bg-slate-200 text-slate-800',
+                                        };
+                                        $categoryLabel = $acara['kategori'] ?? ucfirst($acara['jenis'] ?? 'Acara');
+                                    @endphp
+                                    <span class="{{ $categoryClass }} text-xs px-3 py-1 rounded-full">
+                                        {{ $categoryLabel }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -332,23 +474,135 @@
             </div>
         </div>
     </section>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close" id="lightboxClose">&times;</span>
+        <button class="lightbox-nav lightbox-prev" id="lightboxPrev">&#10094;</button>
+        <button class="lightbox-nav lightbox-next" id="lightboxNext">&#10095;</button>
+        <div class="lightbox-content">
+            <img id="lightboxImage" class="lightbox-image" src="" alt="">
+            <div class="lightbox-info">
+                <h3 id="lightboxTitle" class="text-xl font-bold mb-2"></h3>
+                <p id="lightboxDescription" class="text-sm mt-2 opacity-75"></p>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
     <script>
         // Mobile menu toggle
-        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.toggle('hidden');
-        });
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function() {
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu) {
+                    mobileMenu.classList.toggle('hidden');
+                }
+            });
+        }
 
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Lightbox functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+            const lightboxTitle = document.getElementById('lightboxTitle');
+            const lightboxDescription = document.getElementById('lightboxDescription');
+            const lightboxClose = document.getElementById('lightboxClose');
+            const lightboxPrev = document.getElementById('lightboxPrev');
+            const lightboxNext = document.getElementById('lightboxNext');
+            
+            let currentIndex = 0;
+            let images = [];
+            
+            // Collect all images
+            galleryItems.forEach((item, index) => {
+                images.push({
+                    image: item.dataset.image,
+                    title: item.dataset.title,
+                    description: item.dataset.description || ''
                 });
+                
+                item.addEventListener('click', () => {
+                    openLightbox(index);
+                });
+            });
+            
+            function openLightbox(index) {
+                currentIndex = index;
+                updateLightbox();
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            function closeLightbox() {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+            
+            function updateLightbox() {
+                const current = images[currentIndex];
+                lightboxImage.src = current.image;
+                lightboxTitle.textContent = current.title;
+                lightboxDescription.textContent = current.description || '';
+            }
+            
+            function nextImage() {
+                currentIndex = (currentIndex + 1) % images.length;
+                updateLightbox();
+            }
+            
+            function prevImage() {
+                currentIndex = (currentIndex - 1 + images.length) % images.length;
+                updateLightbox();
+            }
+            
+            // Event listeners
+            if (lightboxClose) {
+                lightboxClose.addEventListener('click', closeLightbox);
+            }
+            if (lightboxNext) {
+                lightboxNext.addEventListener('click', nextImage);
+            }
+            if (lightboxPrev) {
+                lightboxPrev.addEventListener('click', prevImage);
+            }
+            
+            // Close on background click
+            if (lightbox) {
+                lightbox.addEventListener('click', function(e) {
+                    if (e.target === lightbox) {
+                        closeLightbox();
+                    }
+                });
+            }
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (!lightbox || !lightbox.classList.contains('active')) return;
+                
+                if (e.key === 'Escape') {
+                    closeLightbox();
+                } else if (e.key === 'ArrowRight') {
+                    nextImage();
+                } else if (e.key === 'ArrowLeft') {
+                    prevImage();
+                }
             });
         });
     </script>

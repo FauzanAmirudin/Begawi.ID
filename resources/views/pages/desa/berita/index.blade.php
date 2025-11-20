@@ -373,13 +373,7 @@
                         </svg>
                         <span>Agenda Kegiatan</span>
                     </a>
-                    <a href="{{ route('desa.berita.arsip') }}" class="flex items-center space-x-3 text-slate-700 hover:text-green-700 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
-                        </svg>
-                        <span>Arsip Berita</span>
-                    </a>
-                    <a href="{{ route('desa.contact') }}" class="flex items-center space-x-3 text-slate-700 hover:text-green-700 transition-colors">
+                    <a href="{{ route('desa.layanan.index') }}" class="flex items-center space-x-3 text-slate-700 hover:text-green-700 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                         </svg>

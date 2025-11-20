@@ -27,7 +27,7 @@
             <!-- Timeline -->
             <div class="relative">
                 <!-- Timeline Line -->
-                <div class="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-emerald-500 to-emerald-300 rounded-full"></div>
+                <div class="hidden lg:block absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-emerald-500 to-emerald-300 rounded-full"></div>
 
                 <!-- Timeline Items -->
                 <div class="space-y-16">
@@ -73,7 +73,7 @@
                             </div>
                         </div>
                         <!-- Timeline Dot -->
-                        <div class="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-emerald-500 rounded-full border-4 border-white shadow-lg"></div>
+                        <div class="hidden lg:block absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-emerald-500 rounded-full border-4 border-white shadow-lg"></div>
                     </div>
 
                     <!-- Item 2 -->
@@ -118,7 +118,7 @@
                             </div>
                         </div>
                         <!-- Timeline Dot -->
-                        <div class="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-emerald-500 rounded-full border-4 border-white shadow-lg"></div>
+                        <div class="hidden lg:block absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-emerald-500 rounded-full border-4 border-white shadow-lg"></div>
                     </div>
 
                     <!-- Item 3 -->
@@ -163,7 +163,7 @@
                             </div>
                         </div>
                         <!-- Timeline Dot -->
-                        <div class="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-purple-500 rounded-full border-4 border-white shadow-lg"></div>
+                        <div class="hidden lg:block absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-purple-500 rounded-full border-4 border-white shadow-lg"></div>
                     </div>
                 </div>
             </div>

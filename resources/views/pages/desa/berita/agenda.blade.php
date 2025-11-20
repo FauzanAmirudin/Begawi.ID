@@ -177,24 +177,6 @@
                 </a>
             </div>
             
-            <!-- Filter & Add Button -->
-            <div class="hidden md:flex items-center space-x-4">
-                <select class="border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary-600 focus:outline-none text-sm" id="monthFilter">
-                    <option value="">Semua Bulan</option>
-                    <option value="01">Januari</option>
-                    <option value="02">Februari</option>
-                    <option value="03">Maret</option>
-                    <option value="04">April</option>
-                    <option value="05">Mei</option>
-                    <option value="06">Juni</option>
-                    <option value="07">Juli</option>
-                    <option value="08">Agustus</option>
-                    <option value="09">September</option>
-                    <option value="10">Oktober</option>
-                    <option value="11">November</option>
-                    <option value="12">Desember</option>
-                </select>
-            </div>
         </div>
     </div>
 </div>
@@ -239,18 +221,6 @@
                     <h2 class="text-2xl font-display font-bold text-green-900 border-b-4 border-yellow-400 inline-block pb-2">
                         Jadwal Kegiatan
                     </h2>
-                    <div class="flex items-center space-x-2">
-                        <button class="p-2 rounded-lg hover:bg-slate-100 transition-colors" onclick="toggleView('list')" id="listViewBtn">
-                            <svg class="w-5 h-5 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
-                            </svg>
-                        </button>
-                        <button class="p-2 rounded-lg hover:bg-slate-100 transition-colors" onclick="toggleView('calendar')" id="calendarViewBtn">
-                            <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
-                        </button>
-                    </div>
                 </div>
                 
                 <!-- Mobile Filter -->
@@ -321,12 +291,12 @@
                     @endforeach
                 </div>
                 
-                <!-- Load More Button -->
+                {{-- <!-- Load More Button -->
                 <div class="text-center mt-6">
                     <button class="text-green-700 hover:text-green-800 font-medium text-sm hover:underline">
                         Muat Lebih Banyak →
                     </button>
-                </div>
+                </div> --}}
             </div>
         </div>
 

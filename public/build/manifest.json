@@ -1,22 +1,26 @@
 {
-    "resources/css/app.css": {
-        "file": "assets/app-CHkpctCj.css",
-        "src": "resources/css/app.css",
-        "isEntry": true,
-        "name": "app",
-        "names": ["app.css"]
-    },
-    "resources/css/umkm.css": {
-        "file": "assets/umkm-3qgOQ63K.css",
-        "src": "resources/css/umkm.css",
-        "isEntry": true,
-        "name": "umkm",
-        "names": ["umkm.css"]
-    },
-    "resources/js/app.js": {
-        "file": "assets/app-DKvDqhyz.js",
-        "name": "app",
-        "src": "resources/js/app.js",
-        "isEntry": true
-    }
+  "resources/css/app.css": {
+    "file": "assets/app-Cfx-CI8m.css",
+    "src": "resources/css/app.css",
+    "isEntry": true,
+    "name": "app",
+    "names": [
+      "app.css"
+    ]
+  },
+  "resources/css/umkm.css": {
+    "file": "assets/umkm-D2jQ-pJa.css",
+    "src": "resources/css/umkm.css",
+    "isEntry": true,
+    "name": "umkm",
+    "names": [
+      "umkm.css"
+    ]
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-DKvDqhyz.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  }
 }
