@@ -161,62 +161,67 @@ class PusatBantuanController extends Controller
     private function getVideos()
     {
         return [
-            [
-                'id' => 1,
-                'judul' => 'Pengenalan Website Desa Digital',
-                'deskripsi' => 'Video pengenalan fitur-fitur utama website desa dan cara menggunakannya',
-                'durasi' => '12:30',
-                'kategori' => 'Pengenalan',
-                'thumbnail' => 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
-                'youtube_id' => 'dQw4w9WgXcQ',
-                'views' => 1250,
-                'likes' => 98
-            ],
-            [
-                'id' => 2,
-                'judul' => 'Tutorial Lengkap Surat Online',
-                'deskripsi' => 'Panduan step-by-step mengajukan surat keterangan secara online',
-                'durasi' => '8:45',
-                'kategori' => 'Tutorial',
-                'thumbnail' => 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
-                'youtube_id' => 'dQw4w9WgXcQ',
-                'views' => 890,
-                'likes' => 76
-            ],
-            [
-                'id' => 3,
-                'judul' => 'Cara Mendaftar UMKM Online',
-                'deskripsi' => 'Langkah-langkah mendaftarkan usaha UMKM di platform digital desa',
-                'durasi' => '15:20',
-                'kategori' => 'UMKM',
-                'thumbnail' => 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
-                'youtube_id' => 'dQw4w9WgXcQ',
-                'views' => 654,
-                'likes' => 52
-            ],
-            [
-                'id' => 4,
-                'judul' => 'Menyampaikan Aspirasi Digital',
-                'deskripsi' => 'Tata cara menyampaikan pengaduan dan aspirasi melalui platform online',
-                'durasi' => '6:15',
-                'kategori' => 'Tutorial',
-                'thumbnail' => 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
-                'youtube_id' => 'dQw4w9WgXcQ',
-                'views' => 432,
-                'likes' => 38
-            ],
-            [
-                'id' => 5,
-                'judul' => 'Keamanan Data & Privasi',
-                'deskripsi' => 'Tips menjaga keamanan data pribadi saat menggunakan layanan digital',
-                'durasi' => '9:30',
-                'kategori' => 'Keamanan',
-                'thumbnail' => 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
-                'youtube_id' => 'dQw4w9WgXcQ',
-                'views' => 321,
-                'likes' => 29
-            ]
-        ];
+    [
+        'id' => 1,
+        'judul' => 'Pengenalan Website Desa Digital',
+        'deskripsi' => 'Video pengenalan fitur-fitur utama website desa dan cara menggunakannya',
+        'durasi' => '12:30',
+        'kategori' => 'Pengenalan',
+        // Pengenalan website desa (contoh: Website Desa Sriminosari)
+        'thumbnail' => 'https://img.youtube.com/vi/vzAwoDn_isE/maxresdefault.jpg',
+        'youtube_id' => 'vzAwoDn_isE',
+        'views' => 1250,
+        'likes' => 98
+    ],
+    [
+        'id' => 2,
+        'judul' => 'Tutorial Lengkap Surat Online',
+        'deskripsi' => 'Panduan step-by-step mengajukan surat keterangan secara online',
+        'durasi' => '8:45',
+        'kategori' => 'Tutorial',
+        // Tutorial permohonan surat online di sistem desa (OpenSID)
+        'thumbnail' => 'https://img.youtube.com/vi/jL6mjhLDzD8/maxresdefault.jpg',
+        'youtube_id' => 'jL6mjhLDzD8',
+        'views' => 890,
+        'likes' => 76
+    ],
+    [
+        'id' => 3,
+        'judul' => 'Cara Mendaftar UMKM Online',
+        'deskripsi' => 'Langkah-langkah mendaftarkan usaha UMKM di platform digital desa',
+        'durasi' => '15:20',
+        'kategori' => 'UMKM',
+        // Video "Cara mendaftar UMKM online"
+        'thumbnail' => 'https://img.youtube.com/vi/qFuZrULZT_g/maxresdefault.jpg',
+        'youtube_id' => 'qFuZrULZT_g',
+        'views' => 654,
+        'likes' => 52
+    ],
+    [
+        'id' => 4,
+        'judul' => 'Menyampaikan Aspirasi Digital',
+        'deskripsi' => 'Tata cara menyampaikan pengaduan dan aspirasi melalui platform online',
+        'durasi' => '6:15',
+        'kategori' => 'Tutorial',
+        // Sosialisasi layanan aduan & aspirasi desa secara online
+        'thumbnail' => 'https://img.youtube.com/vi/uaawPjhGl5Q/maxresdefault.jpg',
+        'youtube_id' => 'uaawPjhGl5Q',
+        'views' => 432,
+        'likes' => 38
+    ],
+    [
+        'id' => 5,
+        'judul' => 'Keamanan Data & Privasi',
+        'deskripsi' => 'Tips menjaga keamanan data pribadi saat menggunakan layanan digital',
+        'durasi' => '9:30',
+        'kategori' => 'Keamanan',
+        // Penjelasan cara melindungi data pribadi dan privasi
+        'thumbnail' => 'https://img.youtube.com/vi/jdRj3oJvXPQ/maxresdefault.jpg',
+        'youtube_id' => 'jdRj3oJvXPQ',
+        'views' => 321,
+        'likes' => 29
+    ]
+];
     }
     
     private function getArticles()
