@@ -9,7 +9,7 @@
     <section class="mb-8 md:mb-12 w-full relative overflow-hidden">
         <div class="h-[500px] md:h-[700px] relative"
             x-data="{
-            images: ['/images/banner-1.png', '/images/banner-2.png', '/images/banner-3.png'],
+            images: ['/images/banner-1.jpg', '/images/banner-2.jpg', '/images/banner-3.jpg'],
             current: 0,
             next() { this.current = (this.current + 1) % this.images.length; },
             init() { setInterval(() => this.next(), 3000); }

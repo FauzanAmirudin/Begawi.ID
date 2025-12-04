@@ -18,7 +18,7 @@ $inactiveMobile = 'text-charcoal-grey hover:bg-gray-100';
     <div class="flex items-center space-x-3">
       <img src="{{ asset('images/Logo-Begawi.png') }}" alt="Begawi.id" class="w-10 h-10 object-contain">
       <div class="font-manrope font-extrabold text-xl text-gradient">
-        Begawi.id
+        Tata Busana
       </div>
     </div>
 
